@@ -1,0 +1,22 @@
+{
+  "profile": "我的简历",
+  "addresses": "我的地址",
+  "orders": "我的订单",
+  "edit_profile": {
+    "my_personal_info": "我的个人信息",
+    "personal_info": "个人信息",
+    "first_name": "名",
+    "last_name": "姓",
+    "patronymic": "父系",
+    "email": "电子邮件",
+    "recipients": "收件人",
+    "iin": "IIN",
+    "side_a": "A面",
+    "side_b": "B面",
+    "document_instruction": "将身份证正反两面的扫描件或照片作为单独的文件附加，格式为 jpg、png、pdf",
+    "phone_number": "电话号码",
+    "address": "地址",
+    "save": "节省",
+    "change": "改变"
+  }
+}

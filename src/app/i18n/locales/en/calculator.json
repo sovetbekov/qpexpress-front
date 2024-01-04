@@ -1,0 +1,8 @@
+{
+  "title": "Calculator",
+  "description": "Calculate your delivery cost",
+  "country": "Country of delivery",
+  "weight": "Weight (kg)",
+  "price": "Price",
+  "sign_up": "Sign up"
+}
