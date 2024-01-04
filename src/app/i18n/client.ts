@@ -30,7 +30,7 @@ export function useTranslation(language: string, ns: string, options?: any) {
     const { i18n } = ret
     const cookie = cookies['next-i18n-locale']
     if (runsOnServerSide && language && i18n.resolvedLanguage !== language) {
-        i18n.changeLanguage(language)
+        i18n.changeLanguage(language).then(() => {})
     } else {
         // eslint-disable-next-line react-hooks/rules-of-hooks
         const [activeLng, setActiveLng] = useState(i18n.resolvedLanguage)
@@ -42,7 +42,7 @@ export function useTranslation(language: string, ns: string, options?: any) {
         // eslint-disable-next-line react-hooks/rules-of-hooks
         useEffect(() => {
             if (!language || i18n.resolvedLanguage === language) return
-            i18n.changeLanguage(language)
+            i18n.changeLanguage(language).then(() => {})
         }, [language, i18n])
         // eslint-disable-next-line react-hooks/rules-of-hooks
         useEffect(() => {

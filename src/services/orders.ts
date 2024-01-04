@@ -47,10 +47,10 @@ enum OrderStatus {
 export async function getMyOrders(): Promise<Order[]> {
     const session = await getServerSession(authOptions)
     if (!BACKEND_URL) {
-        return Promise.reject('API_URL is not defined')
+        return Promise.reject(Error('API_URL is not defined'))
     }
     if (!session) {
-        return Promise.reject('Not authorized')
+        return Promise.reject(Error('Not authorized'))
     }
     const response = await fetch(`${BACKEND_URL}/v1/my/orders`, {
         headers: {
@@ -58,7 +58,7 @@ export async function getMyOrders(): Promise<Order[]> {
         },
     })
     if (!response.ok) {
-        return Promise.reject(`Failed to fetch: ${response.status}`)
+        return Promise.reject(Error(`Failed to fetch: ${response.status}`))
     }
     try {
         return await response.json()
@@ -70,13 +70,13 @@ export async function getMyOrders(): Promise<Order[]> {
 export async function createOrders(orders: ProductInfo[]) {
     const session = await getServerSession(authOptions)
     if (!BACKEND_URL) {
-        return Promise.reject('API_URL is not defined')
+        return Promise.reject(Error('API_URL is not defined'))
     }
     if (!session) {
-        return Promise.reject('Not authorized')
+        return Promise.reject(Error('Not authorized'))
     }
     if (!session.user.id) {
-        return Promise.reject('Session error')
+        return Promise.reject(Error('Session error'))
     }
     const promises = orders.filter(productInfo => productInfo.country && productInfo.price).map(productInfo => {
         const data = new FormData()
@@ -88,7 +88,7 @@ export async function createOrders(orders: ProductInfo[]) {
         data.append('price', productInfo.price!!.value.toString())
         data.append('currencyId', productInfo.price!!.currency.id)
         data.append('invoice', productInfo.invoice as File)
-        data.append('countryId', productInfo.country!!.id as string)
+        data.append('countryId', productInfo.country!!.id)
         data.append('originalBox', productInfo.originalBox.toString())
         data.append('productLink', productInfo.productLink)
         return createOrder(data)
@@ -101,10 +101,10 @@ export async function createOrders(orders: ProductInfo[]) {
 export async function createOrder(orderData: FormData): Promise<CreateOrderResult> {
     const session = await getServerSession(authOptions)
     if (!BACKEND_URL) {
-        return Promise.reject('API_URL is not defined')
+        return Promise.reject(Error('API_URL is not defined'))
     }
     if (!session) {
-        return Promise.reject('Not authorized')
+        return Promise.reject(Error('Not authorized'))
     }
     const response = await fetch(`${BACKEND_URL}/v1/my/orders`, {
         method: 'POST',
@@ -139,10 +139,10 @@ export async function createOrder(orderData: FormData): Promise<CreateOrderResul
 export async function getOrders(): Promise<Order[]> {
     const session = await getServerSession(authOptions)
     if (!BACKEND_URL) {
-        return Promise.reject('API_URL is not defined')
+        return Promise.reject(Error('API_URL is not defined'))
     }
     if (!session) {
-        return Promise.reject('Not authorized')
+        return Promise.reject(Error('Not authorized'))
     }
     const response = await fetch(`${BACKEND_URL}/v1/orders`, {
         headers: {
@@ -150,7 +150,7 @@ export async function getOrders(): Promise<Order[]> {
         },
     })
     if (!response.ok) {
-        return Promise.reject('Failed to fetch')
+        return Promise.reject(Error('Failed to fetch'))
     }
     try {
         return await response.json()
@@ -162,10 +162,10 @@ export async function getOrders(): Promise<Order[]> {
 export async function getOrderData(orderId: string): Promise<Order> {
     const session = await getServerSession(authOptions)
     if (!BACKEND_URL) {
-        return Promise.reject('API_URL is not defined')
+        return Promise.reject(Error('API_URL is not defined'))
     }
     if (!session) {
-        return Promise.reject('Not authorized')
+        return Promise.reject(Error('Not authorized'))
     }
     const response = await fetch(`${BACKEND_URL}/v1/my/orders/${orderId}`, {
         headers: {
@@ -173,7 +173,7 @@ export async function getOrderData(orderId: string): Promise<Order> {
         },
     })
     if (!response.ok) {
-        return Promise.reject('Failed to fetch')
+        return Promise.reject(Error('Failed to fetch'))
     }
     try {
         return await response.json()

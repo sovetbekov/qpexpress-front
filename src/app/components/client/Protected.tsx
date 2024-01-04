@@ -9,7 +9,7 @@ type Props = {
     role?: string
 }
 
-export default function Protected({children, role}: Props) {
+export default function Protected({children, role}: Readonly<Props>) {
     const auth = useAuthorization()
     if (role && auth.status === 'authenticated' && !auth.roles?.includes(role)) {
         return <Redirect location={'/'}/>

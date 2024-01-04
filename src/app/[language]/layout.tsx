@@ -40,7 +40,7 @@ export default function RootLayout({
                                        params: {
                                            language,
                                        },
-                                   }: Props) {
+                                   }: Readonly<Props>) {
     return (
         <html lang={language} dir={dir(language)}>
         <body>

@@ -10,7 +10,7 @@ type Props = {
     }
 }
 
-export default function Page({params: {language}}: Props) {
+export default function Page({params: {language}}: Readonly<Props>) {
     return (
         <div className={'flex flex-col gap-y-10'}>
             <Description language={language}/>

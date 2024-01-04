@@ -5,7 +5,7 @@ import Protected from '@/app/components/server/Protected'
 export default async function Layout() {
     const orders = await getOrders()
     return (
-        <Protected>
+        <Protected roles={['orders:read']}>
             {
                 orders.map(order => (
                     <div key={order.id}>
