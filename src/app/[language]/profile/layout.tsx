@@ -66,7 +66,7 @@ export default function Layout({children, params: {language}}: Props) {
                     <h2 className={'text-2xl px-5 pt-8 pb-5 md:hidden'}>Личный кабинет</h2>
                     <nav className={'md:bg-gray md:h-fit md:rounded-3xl'}>
                         <ul>
-                            {menuLinks.map((value, index) => <MenuLink key={index} pathname={pathname} language={language} {...value}/>)}
+                            {menuLinks.map((value, index) => <MenuLink key={index} pathname={pathname} {...value}/>)}
                         </ul>
                     </nav>
                     {children}
@@ -81,7 +81,7 @@ export default function Layout({children, params: {language}}: Props) {
                         <h2 className={'text-2xl px-5 pt-8 pb-5 md:hidden'}>Личный кабинет</h2>
                         <nav className={'md:bg-gray md:h-fit md:rounded-3xl'}>
                             <ul>
-                                {menuLinks.map((value, index) => <MenuLink key={index} pathname={pathname} language={language} {...value}/>)}
+                                {menuLinks.map((value, index) => <MenuLink key={index} pathname={pathname} {...value}/>)}
                             </ul>
                         </nav>
                     </div>

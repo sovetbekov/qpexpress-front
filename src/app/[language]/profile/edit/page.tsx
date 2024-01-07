@@ -26,10 +26,7 @@ type RecipientFormData = {
     firstName: string,
     lastName: string,
     patronymic: string,
-    country: string,
     iin: string,
-    dateOfIssue: string,
-    issuedBy: string,
     photo1?: File,
     photo2?: File,
     city: string,
@@ -62,10 +59,7 @@ export default function Page({params: {language}}: Props) {
         firstName: '',
         lastName: '',
         patronymic: '',
-        country: '',
         iin: '',
-        dateOfIssue: '',
-        issuedBy: '',
         photo1: undefined,
         photo2: undefined,
         city: '',
@@ -161,6 +155,48 @@ export default function Page({params: {language}}: Props) {
                     <div className={'flex flex-col gap-y-4 md:flex-row md:gap-y-5 md:gap-x-6 md:flex-wrap'}>
                         <div className={'md:w-[calc(50%-0.75rem)]'}>
                             <Input
+                                id={'firstName'}
+                                inputType={'text'}
+                                wrapperClassname={'relative inline-flex flex-col min-w-0 p-0 w-full'}
+                                inputClassname={'md:p-5 p-3 border rounded-full border-black placeholder:text-black w-full'}
+                                value={recipientInfo.firstName}
+                                onChange={(value) => updateRecipientInfo(draft => {
+                                    draft.firstName = value
+                                })}
+                                label={t('edit_profile.first_name')}
+                                readOnly={!isRecipientInfoEditing}
+                            />
+                        </div>
+                        <div className={'md:w-[calc(50%-0.75rem)]'}>
+                            <Input
+                                id={'lastName'}
+                                inputType={'text'}
+                                wrapperClassname={'relative inline-flex flex-col min-w-0 p-0 w-full'}
+                                inputClassname={'md:p-5 p-3 border rounded-full border-black placeholder:text-black w-full'}
+                                value={recipientInfo.lastName}
+                                onChange={(value) => updateRecipientInfo(draft => {
+                                    draft.lastName = value
+                                })}
+                                label={t('edit_profile.last_name')}
+                                readOnly={!isRecipientInfoEditing}
+                            />
+                        </div>
+                        <div className={'md:w-[calc(50%-0.75rem)]'}>
+                            <Input
+                                id={'patronymic'}
+                                inputType={'text'}
+                                wrapperClassname={'relative inline-flex flex-col min-w-0 p-0 w-full'}
+                                inputClassname={'md:p-5 p-3 border rounded-full border-black placeholder:text-black w-full'}
+                                value={recipientInfo.patronymic}
+                                onChange={(value) => updateRecipientInfo(draft => {
+                                    draft.patronymic = value
+                                })}
+                                label={t('edit_profile.patronymic')}
+                                readOnly={!isRecipientInfoEditing}
+                            />
+                        </div>
+                        <div className={'md:w-[calc(50%-0.75rem)]'}>
+                            <Input
                                 id={'iin'}
                                 inputType={'text'}
                                 wrapperClassname={'relative inline-flex flex-col min-w-0 p-0 w-full'}
@@ -237,7 +273,7 @@ export default function Page({params: {language}}: Props) {
                                 onClick={() => setIsRecipientInfoEditing(true)}
                                 type={'button'}
                             >
-                                {t('edit_profile.change')}
+                            {t('edit_profile.change')}
                             </button>
                         )
                     }
