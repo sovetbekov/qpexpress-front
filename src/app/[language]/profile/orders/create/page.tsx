@@ -1,31 +1,30 @@
-'use client'
-
 import React from 'react'
-import { useRouter } from 'next/navigation'
-import Image from 'next/image'
-import CreateOrderForm from '@/app/[language]/profile/orders/create/CreateOrderForm'
 import PageWrapper from '@/app/[language]/profile/PageWrapper'
+import UserOrderForm from '@/app/components/client/OrderForm/UserOrderForm'
+import Link from 'next/link'
+import Image from 'next/image'
 
-export default function Page() {
-    const router = useRouter()
-    const onBackClick = () => {
-        router.back()
+export const dynamic = 'force-dynamic'
+
+type Props = {
+    params: {
+        language: string
     }
+}
 
+export default async function Page({params: {language}}: Readonly<Props>) {
     return (
         <PageWrapper>
             <div className={'md:p-20'}>
-                <div className={'hidden md:flex md:flex-row md:align-middle md:gap-x-4 md:mb-20'}>
-                    <button onClick={onBackClick}>
+                <div className={'hidden md:flex md:flex-row md:align-center md:gap-x-4 mb-10'}>
+                    <Link href={'.'} className={'flex justify-center'}>
                         <Image src={'/assets/back_arrow.svg'} alt={'back_arrow.svg'} width={24} height={24}/>
-                    </button>
+                    </Link>
                     <p className={'md:text-4xl md:font-bold'}>
                         Добавить заказ
                     </p>
                 </div>
-                <div>
-                    <CreateOrderForm/>
-                </div>
+                <UserOrderForm language={language}/>
             </div>
         </PageWrapper>
     )

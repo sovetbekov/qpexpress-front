@@ -1,24 +1,24 @@
 'use client'
 
-import React, { useRef, useState } from 'react'
+import React, {useRef, useState} from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { usePathname, useRouter } from 'next/navigation'
-import { useAppDispatch } from '@/hooks/client/redux'
-import { openModal } from '@/redux/reducers/modalSlice'
-import { MenuToggle } from '@/app/components/client/MenuToggle'
-import { AnimatePresence, motion } from 'framer-motion'
-import { MenuItem } from '@/app/components/client/MenuItem'
-import { useAuthenticationActions } from '@/hooks/client/useAuthenticationActions'
-import { useTranslation } from '@/app/i18n/client'
+import {usePathname, useRouter} from 'next/navigation'
+import {useAppDispatch} from '@/hooks/client/redux'
+import {openModal} from '@/redux/reducers/modalSlice'
+import {MenuToggle} from '@/app/components/client/MenuToggle'
+import {AnimatePresence, motion} from 'framer-motion'
+import {MenuItem} from '@/app/components/client/MenuItem'
+import {useAuthenticationActions} from '@/hooks/client/useAuthenticationActions'
+import {useTranslation} from '@/app/i18n/client'
 import DropdownInput from '@/app/components/input/DropdownInput'
-import { CN, GB, RU } from 'country-flag-icons/react/3x2'
+import {CN, GB, RU} from 'country-flag-icons/react/3x2'
 
 type Props = {
     language: string
 }
 
-export default function Navigation({language}: Props) {
+export default function Navigation({language}: Readonly<Props>) {
     const pathname = usePathname()
     const pathnameWithoutLanguage = pathname?.replace(/\/(ru|en|zh)/, '')
     const {t} = useTranslation(language, 'navigation')
@@ -30,7 +30,7 @@ export default function Navigation({language}: Props) {
 
     const dispatch = useAppDispatch()
     const showCalculatorModal = () => {
-        dispatch(openModal('calculator'))
+        dispatch(openModal({modalType: 'calculator'}))
     }
 
     const toggleMenu = () => {
@@ -70,7 +70,7 @@ export default function Navigation({language}: Props) {
                     <nav>
                         <ul className={'md:flex md:flex-row md:justify-between md:items-center md:gap-x-10 md:list-none'}>
                             {
-                                pathname?.match('/(ru|en|zh)$') &&
+                                /\/(ru|en|zh)$/.exec(pathname) &&
                                 <>
                                     <li>
                                         <Link href={'#about_us'}>
@@ -90,14 +90,12 @@ export default function Navigation({language}: Props) {
                                 </>
                             }
                             {
-                                pathname?.match('/(ru|en|zh)/profile') &&
-                                <>
-                                    <li className={'md:cursor-pointer'} onClick={showCalculatorModal}>
-                                        <p className={'md:text-base'}>
-                                            {t('calculator')}
-                                        </p>
-                                    </li>
-                                </>
+                                /\/(ru|en|zh)\/profile/.exec(pathname) &&
+                                <li className={'md:cursor-pointer'} onClick={showCalculatorModal}>
+                                    <p className={'md:text-base'}>
+                                        {t('calculator')}
+                                    </p>
+                                </li>
                             }
                             <li>
                                 <DropdownInput
@@ -107,36 +105,7 @@ export default function Navigation({language}: Props) {
                                     label={''}
                                     nullable={false}
                                     selected={language}
-                                    getOptionValue={value => {
-                                        switch (value) {
-                                            case 'ru':
-                                                return (
-                                                    <div
-                                                        className={'flex flex-row items-center justify-start'}>
-                                                        <RU className={'w-5 h-5 mr-2 inline-block'}/>
-                                                        Русский
-                                                    </div>
-                                                )
-                                            case 'en':
-                                                return (
-                                                    <div
-                                                        className={'flex flex-row items-center justify-start'}>
-                                                        <GB className={'w-5 h-5 mr-2 inline-block'}/>
-                                                        English
-                                                    </div>
-                                                )
-                                            case 'zh':
-                                                return (
-                                                    <div
-                                                        className={'flex flex-row items-center justify-start'}>
-                                                        <CN className={'w-5 h-5 mr-2 inline-block'}/>
-                                                        中文
-                                                    </div>
-                                                )
-                                            default:
-                                                return ''
-                                        }
-                                    }}
+                                    getOptionValue={value => <LanguageDropdownItem value={value}/>}
                                     setSelected={value => {
                                         switch (value) {
                                             case 'ru':
@@ -154,7 +123,6 @@ export default function Navigation({language}: Props) {
                                     }}
                                     getOptionId={value => value}
                                     wrapperClassname={'relative inline-flex min-w-0 p-0 w-36'}
-                                    readOnly={true}
                                     inputClassname={'cursor-pointer md:text-[0.9rem] w-full p-4 disabled:bg-gray disabled:text-[#cccccc] disabled:cursor-not-allowed disabled:border-0'}
                                     inputWrapperClassname={'w-full'}
                                     dropdownClassname={'md:max-h-60 z-50 overflow-auto bg-white border md:mx-0 my-3 md:w-full rounded-3xl border-black'}
@@ -192,7 +160,7 @@ export default function Navigation({language}: Props) {
                                        className={'absolute right-0 flex flex-col list-none bg-gray w-full h-full touch-none'}>
                                 <div className={'flex flex-col justify-between h-full'}>
                                     {
-                                        pathname?.match('/(ru|en|zh|kk)$') &&
+                                        /\/(ru|en|zh|kk)$/.exec(pathname) &&
                                         <div>
                                             <MenuItem text={t('about_us')} link={'#about_us'} onClick={toggleMenu}/>
                                             <MenuItem text={t('how_it_works')} link={'#how_it_works'}
@@ -201,7 +169,7 @@ export default function Navigation({language}: Props) {
                                         </div>
                                     }
                                     {
-                                        pathname?.match('/(ru|en|zh|kk)/profile') &&
+                                        /\/(ru|en|zh|kk)\/profile/.exec(pathname) &&
                                         <div className={'hidden md:block'}>
                                             <MenuItem text={t('calculator')} link={'#calculator'}
                                                       onClick={showCalculatorModal}/>
@@ -290,4 +258,35 @@ export default function Navigation({language}: Props) {
             </div>
         </>
     )
+}
+
+function LanguageDropdownItem({value}: Readonly<{ value: string }>) {
+    switch (value) {
+        case 'ru':
+            return (
+                <div
+                    className={'flex flex-row items-center justify-start'}>
+                    <RU className={'w-5 h-5 mr-2 inline-block'}/>
+                    Русский
+                </div>
+            )
+        case 'en':
+            return (
+                <div
+                    className={'flex flex-row items-center justify-start'}>
+                    <GB className={'w-5 h-5 mr-2 inline-block'}/>
+                    English
+                </div>
+            )
+        case 'zh':
+            return (
+                <div
+                    className={'flex flex-row items-center justify-start'}>
+                    <CN className={'w-5 h-5 mr-2 inline-block'}/>
+                    中文
+                </div>
+            )
+        default:
+            return ''
+    }
 }

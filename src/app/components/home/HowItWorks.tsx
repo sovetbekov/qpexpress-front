@@ -6,7 +6,7 @@ type Props = {
     language: string,
 }
 
-export default async function HowItWorks({language}: Props) {
+export default async function HowItWorks({language}: Readonly<Props>) {
     const {t} = await useTranslation(language, 'how_it_works')
     return (
         <div className={'w-full flex flex-col gap-y-5 px-5 md:gap-y-[3.75rem] md:p-20'} id={'how_it_works'}>

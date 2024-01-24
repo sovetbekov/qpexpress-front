@@ -1,0 +1,10 @@
+{
+  "users": "用户",
+  "orders": "命令",
+  "deliveries": "交货",
+  "user_review": {
+    "approving": "批准用户...",
+    "approved": "用户已批准",
+    "error_approving": "批准用户时出错"
+  }
+}

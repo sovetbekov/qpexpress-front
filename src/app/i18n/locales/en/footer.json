@@ -1,3 +1,6 @@
 {
-  "phone_number": "Phone number"
+  "phone_number": "Phone number",
+  "terms_of_service": "Terms of service",
+  "payment_info": "Payment info",
+  "requisites": "Requisites"
 }

@@ -1,6 +1,6 @@
 import { createApi } from '@reduxjs/toolkit/dist/query/react'
-import { CurrencyData } from '@/redux/types'
 import { baseQuery } from '@/redux/interfaces/baseQueryWithAuthorizationHeader'
+import { CurrencyData } from '@/types'
 
 export const currenciesApi = createApi({
     reducerPath: 'currenciesApi',

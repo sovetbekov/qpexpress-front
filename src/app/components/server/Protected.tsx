@@ -17,7 +17,6 @@ export default async function Protected({children, roles, onUnauthorized}: Reado
     }
 
     const userRoles = session?.roles
-    console.log(roles)
     if ((userRoles === undefined && roles && roles?.length > 0) || (userRoles !== undefined && !roles?.some(r => userRoles.includes(r)))) {
         onUnauthorized?.()
         return <Redirect location={'/'}/>

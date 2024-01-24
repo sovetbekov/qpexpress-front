@@ -1,0 +1,10 @@
+{
+  "users": "Users",
+  "orders": "Orders",
+  "deliveries": "Deliveries",
+  "user_review": {
+    "approving": "Approving recipient...",
+    "approved": "Recipient approved successfully",
+    "error_approving": "Error approving recipient"
+  }
+}

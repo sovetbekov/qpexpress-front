@@ -1,13 +1,13 @@
-import React, { useEffect } from 'react'
+import React, { Dispatch, SetStateAction, useEffect } from 'react'
 import DropdownInput from '@/app/components/input/DropdownInput'
-import { CurrencyData } from '@/redux/types'
 import { useGetCurrenciesQuery } from '@/redux/reducers/currenciesApi'
 import clsx from 'clsx'
 import Input from './Input'
+import { CurrencyData, Errors } from '@/types'
 
 type Props = {
     id: string
-    onChange: (value: Money) => void
+    onChange?: (value: Money) => void
     value?: Money
     label?: string
     inputClassname?: string
@@ -21,6 +21,9 @@ type Props = {
     currencyItemClassname?: string
     disabled?: boolean
     required?: boolean
+    readOnly?: boolean
+    errors?: Errors
+    setErrors?: Dispatch<SetStateAction<Errors>>
 }
 
 export type Money = {
@@ -37,18 +40,21 @@ export default function MoneyInput({
                                        inputStyle,
                                        wrapperClassname,
                                        wrapperStyle,
+                                       errors,
+                                       setErrors,
                                        disabled,
+                                       readOnly,
                                        currencyWrapperClassname,
                                        currencyInputClassname,
                                        currencyDropdownClassname,
                                        currencyDropdownStyle,
                                        currencyItemClassname,
                                        required,
-                                   }: Props) {
+                                   }: Readonly<Props>) {
     const {data: currencies} = useGetCurrenciesQuery()
     useEffect(() => {
         if (currencies && value?.currency === undefined) {
-            onChange({
+            onChange?.({
                 value: value?.value ?? 0,
                 currency: currencies[0],
             })
@@ -64,21 +70,24 @@ export default function MoneyInput({
                 value={value?.value === 0 ? '' : value?.value ?? ''}
                 onValueChange={e => {
                     if (value) {
-                        onChange({
+                        onChange?.({
                             value: e.floatValue ?? 0,
                             currency: value.currency,
                         })
                     }
                 }}
+                errors={errors}
+                setErrors={setErrors}
                 wrapperClassname={'relative inline-flex flex-col min-w-0 p-0 w-full basis-1/2'} disabled={disabled}
                 decimalScale={2}
                 className={inputClassname}
                 style={inputStyle}
                 required={required}
+                readOnly={readOnly}
             />
             {
                 currencies && value &&
-                <DropdownInput<CurrencyData> id={'currency'}
+                <DropdownInput<CurrencyData> id={id}
                                              options={currencies}
                                              nullable={false}
                                              wrapperClassname={currencyWrapperClassname}
@@ -90,14 +99,16 @@ export default function MoneyInput({
                                              getOptionValue={(option) => option.name}
                                              getOptionId={(option) => option.id}
                                              selected={value.currency}
+                                             errors={errors}
+                                             setErrors={setErrors}
                                              setSelected={(currency) => {
                                                  if (currency !== undefined) {
-                                                     onChange({
+                                                     onChange?.({
                                                          value: value.value,
                                                          currency,
                                                      })
                                                  }
-                                             }} searchable={true} readOnly={true} disabled={disabled}/>
+                                             }} searchable={false} readOnly={readOnly} disabled={disabled}/>
             }
             {
                 !value &&

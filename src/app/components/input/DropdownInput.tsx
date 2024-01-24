@@ -1,11 +1,12 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
-import { usePopper } from 'react-popper'
+import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import Image from 'next/image'
 import { AnimatePresence, motion, Variants } from 'framer-motion'
 import clsx from 'clsx'
 import Input from '@/app/components/input/Input'
+import { useFloating } from '@floating-ui/react'
+import { Errors } from '@/types'
 
 type NullableProps<T> = {
     nullable: true,
@@ -39,17 +40,23 @@ type Props<T> = {
     dropdownItemClassname?: string,
     dropdownItemStyle?: React.CSSProperties,
     inputWrapperClassname?: string,
+    errorsClassname?: string,
     inputClassname?: string,
     label: string,
+    errors?: Errors,
+    setErrors?: Dispatch<SetStateAction<Errors>>
     disabled?: boolean,
-    readOnly: boolean,
+    readOnly?: boolean,
 } & (NullableProps<T> | NonNullableProps<T>) & (SearchableProps<T> | NonSearchableProps<T>)
 
 export default function DropdownInput<T>({
                                              id,
                                              options,
+                                             errors,
+                                             setErrors,
                                              wrapperClassname,
                                              dropdownClassname,
+                                             errorsClassname,
                                              dropdownStyle,
                                              dropdownItemClassname,
                                              dropdownItemStyle,
@@ -57,6 +64,7 @@ export default function DropdownInput<T>({
                                              disabled,
                                              ...props
                                          }: Props<T>) {
+
     const getOptionId = (option: T | string) => {
         if (props.getOptionId) {
             return props.getOptionId(option as T)
@@ -86,9 +94,7 @@ export default function DropdownInput<T>({
     const [isOpen, setIsOpen] = useState(false)
     const [selected, setSelected] = useState<T | null>(props.selected ?? null)
     const [search, setSearch] = useState<string>(props.searchable ? getOptionValue(props.selected ?? '') as string : '')
-    const [referenceElement, setReferenceElement] = useState<HTMLInputElement | HTMLDivElement | null>(null)
-    const [popperElement, setPopperElement] = useState<HTMLDivElement | null>(null)
-    const {styles: popperStyles, attributes} = usePopper(referenceElement, popperElement, {
+    const {refs, floatingStyles} = useFloating({
         placement: 'bottom-start',
     })
 
@@ -111,7 +117,7 @@ export default function DropdownInput<T>({
         }
         const optionValue = getOptionValue(option)
         if (typeof optionValue === 'string') {
-            return optionValue.toLowerCase().includes(search!!.toLowerCase())
+            return optionValue.toLowerCase().includes(search.toLowerCase())
         }
         return true
     })
@@ -149,6 +155,22 @@ export default function DropdownInput<T>({
         },
     }
 
+    const inputVariants = {
+        initial: {
+            borderColor: '#000000',
+            color: '#000000',
+            outlineColor: '#000000',
+        },
+        error: {
+            borderColor: '#EF4444',
+            color: '#EF4444',
+            outlineColor: '#EF4444',
+        },
+        disabled: {
+            color: '#9FA4BC',
+        }
+    }
+
     return (
         <div className={wrapperClassname}>
             {
@@ -163,6 +185,10 @@ export default function DropdownInput<T>({
                         value={search}
                         onChange={(value) => {
                             if (props.nullable) {
+                                setErrors?.({
+                                    ...errors,
+                                    [id]: [],
+                                })
                                 setSelected(null)
                                 props.setSelected?.(undefined)
                             }
@@ -171,15 +197,22 @@ export default function DropdownInput<T>({
                         onKeyDown={(e) => {
                             if (e.key === 'Backspace' && props.nullable) {
                                 setSearch('')
+                                setErrors?.({
+                                    ...errors,
+                                    [id]: [],
+                                })
                                 setSelected(null)
                                 props.setSelected?.(undefined)
                             }
                         }}
+                        errors={errors}
+                        setErrors={setErrors}
+                        errorsClassname={errorsClassname}
                         readOnly={props.readOnly}
                         onFocus={onFocus}
                         onBlur={onBlur}
-                        inputRef={setReferenceElement}
-                        disabled={disabled}
+                        inputRef={refs.setReference}
+                        disabled={disabled || options.length === 0}
                     />
                     <motion.div
                         variants={arrowAnimation}
@@ -191,23 +224,34 @@ export default function DropdownInput<T>({
             }
             {
                 !props.searchable &&
-                <div className={clsx(props.inputWrapperClassname, 'relative')}>
-                    <div
-                        className={clsx(props.inputClassname, 'w-full')}
+                <motion.div className={clsx(props.inputWrapperClassname, 'relative')} variants={inputVariants} animate={errors?.[id]?.length ? 'error' : 'initial'}
+                            initial={'initial'}>
+                    <motion.div
+                        variants={inputVariants}
+                        animate={errors?.[id]?.length ? 'error' : (disabled || options.length === 0 ? 'disabled' : 'initial')}
+                        className={clsx(props.inputClassname, 'w-full', {
+                            [props.inputClassname?.split(' ').filter(clazz => clazz.startsWith('disabled')).map(clazz => clazz.replace('disabled:', '')).join(' ') ?? '']: disabled || options.length === 0,
+                        })}
                         onClick={() => {
-                            setIsOpen(!isOpen)
+                            if (!disabled && !props.readOnly) {
+                                setIsOpen(!isOpen)
+                            }
                         }}
-                        ref={setReferenceElement}
+                        ref={refs.setReference}
                     >
                         {getOptionValue(selected ?? '')}
-                    </div>
-                    <motion.div
-                        variants={arrowAnimation}
-                        animate={isOpen ? 'open' : 'closed'}
-                        className={'absolute h-full flex items-center justify-center right-5 top-0 pointer-events-none'}>
-                        <Image src={'/assets/arrow.svg'} alt={'arrow'} width={10} height={10}/>
                     </motion.div>
-                </div>
+                    {
+                        !props.readOnly && (
+                            <motion.div
+                                variants={arrowAnimation}
+                                animate={isOpen ? 'open' : 'closed'}
+                                className={'absolute h-full flex items-center justify-center right-5 top-0 pointer-events-none'}>
+                                <Image src={'/assets/arrow.svg'} alt={'arrow'} width={10} height={10}/>
+                            </motion.div>
+                        )
+                    }
+                </motion.div>
             }
             <AnimatePresence>
                 {
@@ -216,9 +260,9 @@ export default function DropdownInput<T>({
                         animate={isOpen ? 'open' : 'closed'}
                         initial={'closed'}
                         exit={'closed'}
-                        ref={setPopperElement}
+                        ref={refs.setFloating}
                         className={dropdownClassname}
-                        style={{...popperStyles.popper, ...dropdownStyle}} {...attributes.popper}>
+                        style={{...floatingStyles, ...dropdownStyle}}>
                         {
                             filteredOptions.map(option => (
                                 <div key={getOptionId(option)} className={dropdownItemClassname}
@@ -227,6 +271,10 @@ export default function DropdownInput<T>({
                                          position: 'relative',
                                      }}
                                      onMouseDown={() => {
+                                         setErrors?.({
+                                             ...errors,
+                                             [id]: [],
+                                         })
                                          props.setSelected?.(option)
                                          setSelected(option)
                                      }}>

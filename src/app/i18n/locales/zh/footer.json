@@ -1,3 +1,6 @@
 {
-  "phone_number": "电话号码"
+  "phone_number": "电话号码",
+  "terms_of_service": "使用条款",
+  "payment_info": "支付",
+  "requisites": "银行账户"
 }

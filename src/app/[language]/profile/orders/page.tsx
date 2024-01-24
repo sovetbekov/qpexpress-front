@@ -2,9 +2,16 @@ import Link from 'next/link'
 import OrderCard from '@/app/[language]/profile/orders/OrderCard'
 import { getMyOrders } from '@/services/orders'
 import PageWrapper from '@/app/[language]/profile/PageWrapper'
+import { isError } from '@/app/lib/utils'
+
+export const dynamic = 'force-dynamic'
 
 export default async function Page() {
-    const orders = await getMyOrders()
+    const ordersResponse = await getMyOrders()
+    if (isError(ordersResponse)) {
+        return <div>Ошибка</div>
+    }
+    const orders = ordersResponse.data
 
     return (
         <PageWrapper>

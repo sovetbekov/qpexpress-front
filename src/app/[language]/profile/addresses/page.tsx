@@ -1,8 +1,16 @@
 import { getAddresses } from '@/services/addresses'
 import PageWrapper from '../PageWrapper'
+import { isError } from '@/app/lib/utils'
+
+export const dynamic = 'force-dynamic'
 
 export default async function Page() {
-    const addresses = await getAddresses()
+    const addressesResponse = await getAddresses()
+    if (isError(addressesResponse)) {
+        return <div>Ошибка</div>
+    }
+    const addresses = addressesResponse.data
+
     return (
         <PageWrapper>
             <div className={'px-5 md:p-0'}>

@@ -1,183 +1,113 @@
 'use server'
 
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/app/lib/auth'
-import { BACKEND_URL } from '@/globals'
-import { ProductInfo } from '@/app/[language]/profile/orders/create/types'
-import { redirect } from 'next/navigation'
 import { revalidateTag } from 'next/cache'
+import { FileMetaData, GoodData, OrderData } from '@/types/entities'
+import { getLanguageBundle, makeRequest } from '@/services/utils'
 
-export type Order = {
-    id: string
-    customOrderId: string
-    trackingNumber: string
-    productType: string
-    name: string,
-    description: string,
-    price: number
-    commission: number
-    invoiceId: string
-    weight: number
-    countryId: string
-    deliveryPrice: number
-    kazPostTrackNumber: string
-    kazPostInvoice: string
-    userId: string
-    status: OrderStatus
+type CreateOrderRequest = {
+    recipientId?: string,
+    goods: CreateGoodRequest[],
 }
 
-type CreateOrderResult = {
-    status: 'success'
-    order: Order
-} | {
-    status: 'error'
-    error: string
+type CreateGoodRequest = {
+    name?: string,
+    customOrderId?: string,
+    description?: string,
+    countryId?: string,
+    link?: string,
+    price?: number,
+    currencyId?: string,
+    invoiceId?: string,
+    trackingNumber?: string,
+    recipientId?: string,
+    originalBox?: boolean,
+    quantity?: number,
+    userId?: string,
 }
 
-enum OrderStatus {
-    CREATED = 'CREATED',
-    DELIVERED_TO_WAREHOUSE = 'DELIVERED_TO_WAREHOUSE',
-    IN_THE_WAY = 'IN_THE_WAY',
-    IN_YOUR_COUNTRY = 'IN_YOUR_COUNTRY',
-    IN_MAIL_OFFICE = 'IN_MAIL_OFFICE',
-    DELIVERED = 'DELIVERED',
-    DELETED = 'DELETED'
+export async function getMyOrders() {
+    return await makeRequest<OrderData[]>('v1/my/orders')
 }
 
-export async function getMyOrders(): Promise<Order[]> {
-    const session = await getServerSession(authOptions)
-    if (!BACKEND_URL) {
-        return Promise.reject(Error('API_URL is not defined'))
-    }
-    if (!session) {
-        return Promise.reject(Error('Not authorized'))
-    }
-    const response = await fetch(`${BACKEND_URL}/v1/my/orders`, {
-        headers: {
-            'Authorization': `Bearer ${session?.accessToken}`,
+export async function createGood(goodData: FormData) {
+    return await makeRequest<GoodData>(`v1/orders/${goodData.get('orderId')}/goods`, {
+        requestOptions: {
+            method: 'POST',
+            body: goodData,
+            next: {
+                tags: ['goods'],
+            },
+        },
+        postRequest: () => revalidateTag('goods'),
+    })
+}
+
+export async function createOrder(orderData: CreateOrderRequest, language: string) {
+    const t = await getLanguageBundle(language, 'common')
+    return await makeRequest<OrderData>('v1/orders', {
+        requestOptions: {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(orderData),
+            next: {
+                tags: ['orders'],
+            },
+        },
+        postRequest: () => revalidateTag('orders'),
+        validateRequest: () => {
+            const errors: Record<string, string[]> = {}
+            if (!orderData.recipientId) {
+                errors.recipient = [t['required_field']]
+            }
+            if (!orderData.goods.length) {
+                errors.goods = [t['required_field']]
+            }
+            orderData.goods.forEach((good, index) => {
+                if (!good.name) {
+                    errors[`name_${index}`] = [t['required_field']]
+                }
+                if (!good.description) {
+                    errors[`description_${index}`] = [t['required_field']]
+                }
+                if (!good.customOrderId) {
+                    errors[`custom_order_id_${index}`] = [t['required_field']]
+                }
+                if (!good.countryId) {
+                    errors[`country_${index}`] = [t['required_field']]
+                }
+                if (!good.link) {
+                    errors[`link_${index}`] = [t['required_field']]
+                }
+                if (!good.price) {
+                    errors[`price_${index}`] = [t['required_field']]
+                }
+                if (!good.currencyId) {
+                    errors[`currency_${index}`] = [t['required_field']]
+                }
+            })
+            return errors
         },
     })
-    if (!response.ok) {
-        return Promise.reject(Error(`Failed to fetch: ${response.status}`))
-    }
-    try {
-        return await response.json()
-    } catch (e) {
-        return Promise.reject(e)
-    }
 }
 
-export async function createOrders(orders: ProductInfo[]) {
-    const session = await getServerSession(authOptions)
-    if (!BACKEND_URL) {
-        return Promise.reject(Error('API_URL is not defined'))
-    }
-    if (!session) {
-        return Promise.reject(Error('Not authorized'))
-    }
-    if (!session.user.id) {
-        return Promise.reject(Error('Session error'))
-    }
-    const promises = orders.filter(productInfo => productInfo.country && productInfo.price).map(productInfo => {
-        const data = new FormData()
-        data.append('trackingNumber', productInfo.trackingNumber)
-        data.append('userId', session.user.id!!)
-        data.append('orderId', productInfo.orderId)
-        data.append('name', productInfo.name)
-        data.append('description', productInfo.description)
-        data.append('price', productInfo.price!!.value.toString())
-        data.append('currencyId', productInfo.price!!.currency.id)
-        data.append('invoice', productInfo.invoice as File)
-        data.append('countryId', productInfo.country!!.id)
-        data.append('originalBox', productInfo.originalBox.toString())
-        data.append('productLink', productInfo.productLink)
-        return createOrder(data)
+export async function getOrders() {
+    return await makeRequest<OrderData[]>('v1/orders', {
+        requestOptions: {
+            next: {
+                tags: ['orders'],
+            },
+        },
     })
-    await Promise.all(promises)
-    revalidateTag('orders')
-    redirect('/profile/orders')
 }
 
-export async function createOrder(orderData: FormData): Promise<CreateOrderResult> {
-    const session = await getServerSession(authOptions)
-    if (!BACKEND_URL) {
-        return Promise.reject(Error('API_URL is not defined'))
-    }
-    if (!session) {
-        return Promise.reject(Error('Not authorized'))
-    }
-    const response = await fetch(`${BACKEND_URL}/v1/my/orders`, {
-        method: 'POST',
-        headers: {
-            'Authorization': `Bearer ${session.accessToken}`,
-        },
-        body: orderData,
-        next: {
-            tags: ['orders'],
+export async function getOrder(orderId: string) {
+    return await makeRequest<OrderData>(`v1/orders/${orderId}`, {
+        requestOptions: {
+            next: {
+                tags: ['orders'],
+            },
         },
     })
-    if (!response.ok) {
-        return {
-            status: 'error',
-            error: response.statusText,
-        }
-    }
-    try {
-        revalidateTag('orders')
-        return {
-            status: 'success',
-            order: await response.json() as Order,
-        }
-    } catch (e: any) {
-        return {
-            status: 'error',
-            error: e.toString(),
-        }
-    }
-}
-
-export async function getOrders(): Promise<Order[]> {
-    const session = await getServerSession(authOptions)
-    if (!BACKEND_URL) {
-        return Promise.reject(Error('API_URL is not defined'))
-    }
-    if (!session) {
-        return Promise.reject(Error('Not authorized'))
-    }
-    const response = await fetch(`${BACKEND_URL}/v1/orders`, {
-        headers: {
-            'Authorization': `Bearer ${session?.accessToken}`,
-        },
-    })
-    if (!response.ok) {
-        return Promise.reject(Error('Failed to fetch'))
-    }
-    try {
-        return await response.json()
-    } catch (e) {
-        return Promise.reject(e)
-    }
-}
-
-export async function getOrderData(orderId: string): Promise<Order> {
-    const session = await getServerSession(authOptions)
-    if (!BACKEND_URL) {
-        return Promise.reject(Error('API_URL is not defined'))
-    }
-    if (!session) {
-        return Promise.reject(Error('Not authorized'))
-    }
-    const response = await fetch(`${BACKEND_URL}/v1/my/orders/${orderId}`, {
-        headers: {
-            'Authorization': `Bearer ${session?.accessToken}`,
-        },
-    })
-    if (!response.ok) {
-        return Promise.reject(Error('Failed to fetch'))
-    }
-    try {
-        return await response.json()
-    } catch (e) {
-        return Promise.reject(e)
-    }
 }

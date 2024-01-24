@@ -1,6 +1,6 @@
 import { createApi } from '@reduxjs/toolkit/dist/query/react'
-import { CountryData } from '@/redux/types'
 import { baseQuery } from '@/redux/interfaces/baseQueryWithAuthorizationHeader'
+import { CountryData } from '@/types'
 
 export const countriesApi = createApi({
     reducerPath: 'countriesApi',

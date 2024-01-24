@@ -1,0 +1,6 @@
+{
+  "required_field": "This field is required",
+  "invalid_email": "Invalid email address",
+  "invalid_phone": "Invalid phone number",
+  "invalid_iin": "Invalid IIN"
+}

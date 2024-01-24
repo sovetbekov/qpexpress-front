@@ -3,29 +3,37 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import modalReducer from '@/redux/reducers/modalSlice'
 import { persistReducer, persistStore, FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE } from 'redux-persist'
-import storage from 'redux-persist/lib/storage'
+import createWebStorage from 'redux-persist/lib/storage/createWebStorage'
 import { countriesApi } from '@/redux/reducers/countriesApi'
 import { currenciesApi } from '@/redux/reducers/currenciesApi'
-import { ordersApi } from '@/redux/reducers/ordersApi'
-import { addressesApi } from '@/redux/reducers/addressesApi'
-import { profileApi } from '@/redux/reducers/profileApi'
-import { calculatorApi } from '@/redux/reducers/calculatorApi'
+
+const createNoopStorage = () => {
+    return {
+        getItem(_key: string) {
+            return Promise.resolve(null)
+        },
+        setItem(_key: string, value: string) {
+            return Promise.resolve(value)
+        },
+        removeItem(_key: string) {
+            return Promise.resolve()
+        },
+    }
+}
+
+const storage = typeof window !== 'undefined' ? createWebStorage('local') : createNoopStorage()
 
 const persistConfig = {
     key: 'root',
     version: 1,
     storage,
-    blacklist: [countriesApi.reducerPath, currenciesApi.reducerPath, ordersApi.reducerPath, addressesApi.reducerPath, profileApi.reducerPath, calculatorApi.reducerPath]
+    blacklist: [countriesApi.reducerPath, currenciesApi.reducerPath]
 }
 
 const rootReducer = combineReducers({
     modal: modalReducer,
     [countriesApi.reducerPath]: countriesApi.reducer,
     [currenciesApi.reducerPath]: currenciesApi.reducer,
-    [ordersApi.reducerPath]: ordersApi.reducer,
-    [addressesApi.reducerPath]: addressesApi.reducer,
-    [profileApi.reducerPath]: profileApi.reducer,
-    [calculatorApi.reducerPath]: calculatorApi.reducer,
 })
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)
@@ -38,11 +46,7 @@ const store = configureStore({
         }
     })
         .concat(countriesApi.middleware)
-        .concat(currenciesApi.middleware)
-        .concat(ordersApi.middleware)
-        .concat(addressesApi.middleware)
-        .concat(profileApi.middleware)
-        .concat(calculatorApi.middleware),
+        .concat(currenciesApi.middleware),
     devTools: process.env.NODE_ENV !== 'production',
 })
 

@@ -2,6 +2,7 @@
   "profile": "我的简历",
   "addresses": "我的地址",
   "orders": "我的订单",
+  "deliveries": "我的包裹",
   "edit_profile": {
     "my_personal_info": "我的个人信息",
     "personal_info": "个人信息",
@@ -16,7 +17,18 @@
     "document_instruction": "将身份证正反两面的扫描件或照片作为单独的文件附加，格式为 jpg、png、pdf",
     "phone_number": "电话号码",
     "address": "地址",
+    "district": "区/市",
     "save": "节省",
-    "change": "改变"
+    "change": "改变",
+    "no_recipients": "要完成注册，请添加收件人",
+    "pending_recipient": "收件人详细信息正在审核中",
+    "approved_recipient": "收件人详细信息已审核",
+    "rejected_recipient": "收件人详细信息被拒绝",
+    "saving_profile": "保存个人资料...",
+    "saved_profile": "个人资料已保存",
+    "error_saving_profile": "保存个人资料时出错",
+    "saving_recipient": "保存收件人信息...",
+    "saved_recipient": "收件人信息已保存",
+    "error_saving_recipient": "保存收件人信息时出错"
   }
 }

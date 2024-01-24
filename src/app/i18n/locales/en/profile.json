@@ -2,6 +2,7 @@
   "profile": "My profile",
   "addresses": "My addresses",
   "orders": "My orders",
+  "deliveries": "My deliveries",
   "edit_profile": {
     "my_personal_info": "My personal information",
     "personal_info": "Personal information",
@@ -15,8 +16,19 @@
     "side_b": "Side B",
     "document_instruction": "Attach a scan or photo of both sides of the ID card as separate files in jpg, png, pdf format",
     "phone_number": "Phone number",
+    "district": "District/city",
     "address": "Address",
     "save": "Save",
-    "change": "Change"
+    "change": "Change",
+    "no_recipients": "To finish the registration, you need to add a recipient",
+    "pending_recipient": "Recipient details are under review",
+    "approved_recipient": "Recipient details are approved",
+    "rejected_recipient": "Recipient details are rejected",
+    "saving_profile": "Saving profile data...",
+    "saved_profile": "Saved profile data",
+    "error_saving_profile": "Error saving profile data",
+    "saving_recipient": "Saving recipient data...",
+    "saved_recipient": "Saved recipient data",
+    "error_saving_recipient": "Error saving recipient data"
   }
 }

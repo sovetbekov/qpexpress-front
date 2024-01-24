@@ -9,7 +9,7 @@ type MobilePageWrapperProps = {
     children: React.ReactNode,
 }
 
-export default function PageWrapper({children}: MobilePageWrapperProps) {
+export default function PageWrapper({children}: Readonly<MobilePageWrapperProps>) {
     const variants = {
         hidden: {
             y: 100,

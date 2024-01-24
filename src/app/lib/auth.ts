@@ -1,4 +1,4 @@
-import type { NextAuthOptions } from 'next-auth'
+import { getServerSession, NextAuthOptions } from 'next-auth'
 import Keycloak from 'next-auth/providers/keycloak'
 import { AUTH_URL } from '@/globals'
 
@@ -41,7 +41,7 @@ export const authOptions: NextAuthOptions = {
     ],
     callbacks: {
         jwt: async ({token, account}) => {
-            if (account && account.expires_at) {
+            if (account?.expires_at) {
                 return {
                     ...token,
                     error: '',
@@ -87,7 +87,7 @@ export const authOptions: NextAuthOptions = {
                 session.accessToken = token.accessToken
                 session.refreshToken = token.refreshToken
                 session.idToken = token.idToken
-                session.roles = parseJwt(token.accessToken as string).realm_access.roles
+                session.roles = parseJwt(token.accessToken as any).realm_access.roles
                 session.accessTokenExpires = token.accessTokenExpires ?? 0
                 session.refreshTokenExpires = token.refreshTokenExpires ?? 0
                 session.error = token.error
@@ -96,4 +96,8 @@ export const authOptions: NextAuthOptions = {
             return session
         },
     },
+}
+
+export async function getServerAuthSession() {
+    return await getServerSession(authOptions)
 }

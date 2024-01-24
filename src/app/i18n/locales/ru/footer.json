@@ -1,3 +1,6 @@
 {
-  "phone_number": "Телефон"
+  "phone_number": "Телефон",
+  "terms_of_service": "Пользовательское соглашение",
+  "payment_info": "Оплата",
+  "requisites": "Реквизиты"
 }

@@ -1,0 +1,6 @@
+{
+  "required_field": "此字段是必需的",
+  "invalid_email": "无效的邮件地址",
+  "invalid_phone": "无效的电话号码",
+  "invalid_iin": "无效的IIN"
+}

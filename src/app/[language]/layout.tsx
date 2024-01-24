@@ -6,7 +6,6 @@ import Footer from '@/app/components/home/Footer'
 import Providers from '@/app/[language]/providers'
 import Navigation from '@/app/components/server/Navigation'
 import Modal from '@/app/components/modal/Modal'
-import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { dir } from 'i18next'
 import { languages } from '@/app/i18n/settings'
@@ -22,9 +21,7 @@ export const viewport: Viewport = {
 }
 
 export async function generateStaticParams() {
-    return languages.map(language => {
-        language
-    })
+    return languages
 }
 
 
@@ -54,19 +51,7 @@ export default function RootLayout({
                     </div>
                     <Footer language={language}/>
                 </div>
-                <Modal/>
-                <ToastContainer
-                    autoClose={4000}
-                    position={'bottom-right'}
-                    hideProgressBar={false}
-                    newestOnTop={false}
-                    closeOnClick
-                    rtl={false}
-                    pauseOnFocusLoss
-                    draggable
-                    pauseOnHover
-                    theme={'light'}
-                />
+                <Modal language={language}/>
             </div>
         </Providers>
         </body>
