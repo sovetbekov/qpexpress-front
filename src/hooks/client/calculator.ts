@@ -26,7 +26,6 @@ export function useCalculatorEffect({
             const response = await getCalculatorValues({
                 countryId: country.id,
                 weight: weightDebounce ?? null,
-                price: null,
             })
             if (isError(response)) {
                 return
@@ -34,7 +33,7 @@ export function useCalculatorEffect({
             setFormData({
                 weight: weightDebounce,
                 country,
-                price: response.data.price ? response.data.price.toString() : '',
+                price: response.data.priceKZT ? response.data.priceKZT.toString() : '',
             })
         }
     }, [country, setFormData, weightDebounce])

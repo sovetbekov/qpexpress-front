@@ -1,13 +1,13 @@
 'use client'
 
 import React, { Dispatch, DragEvent, SetStateAction, useRef, useState } from 'react'
-import Input from '@/app/components/input/Input'
 import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { Errors, FileMetaData } from '@/types'
 import clsx from 'clsx'
 import Link from 'next/link'
 import { BACKEND_URL } from '@/globals'
+import TextInput from '@/app/components/input/TextInput'
 
 type Props = {
     id: string
@@ -76,11 +76,10 @@ export default function FileInput({
             }}
                  onDragOver={handleDragOver}
                  onDrop={handleDrop}>
-                <Input
+                <TextInput
                     id={id}
-                    inputType={'text'}
-                    wrapperClassname={'relative inline-flex flex-col min-w-0 p-0 w-full'}
-                    inputClassname={inputClassname}
+                    type={'text'}
+                    className={inputClassname}
                     errors={errors}
                     setErrors={setErrors}
                     label={label ? (
@@ -89,14 +88,13 @@ export default function FileInput({
                                 <Image src={'/assets/file_upload.svg'} alt={'file_upload'} width={15} height={15}
                                        className={'mr-2'}/>
                             </motion.div>
-                            <span>
+                            <span className={'text-blue'}>
                                 {statusText ?? label + (required ? '*' : '')}
                             </span>
                         </div>
                     ) : ''}
                     value={fileName}
                     disabled={disabled}
-                    labelColor={'#00A7FF'}
                     readOnly/>
                 <input type={'file'}
                        ref={inputRef}

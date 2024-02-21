@@ -1,12 +1,12 @@
 'use client'
 
-import Input from '@/app/components/input/Input'
 import React, { useState } from 'react'
 import { useTranslation } from '@/app/i18n/client'
 import { updateAccount } from '@/services/account'
 import { Errors, ProfileData } from '@/types'
 import { toast } from 'react-toastify'
 import { isSuccess } from '@/app/lib/utils'
+import TextInput from '@/app/components/input/TextInput'
 
 export type FormData = {
     firstName: string
@@ -61,66 +61,62 @@ export default function ProfileInfoForm({initialFormData, language}: Readonly<Pr
             </h3>
             <div className={'flex flex-col gap-y-4 md:flex-row md:gap-y-5 md:gap-x-6 md:flex-wrap'}>
                 <div className={'md:w-[calc(50%-0.75rem)] w-full'}>
-                    <Input
+                    <TextInput
                         id={'first_name'}
                         name={'first_name'}
-                        inputType={'text'}
+                        type={'text'}
                         errors={errors}
                         setErrors={setErrors}
-                        wrapperClassname={'relative inline-flex flex-col min-w-0 p-0 w-full'}
-                        inputClassname={'md:p-5 p-3 border rounded-full border-black placeholder:text-black w-full'}
+                        className={'md:p-5 p-3 border rounded-full border-black placeholder:text-black w-full'}
                         value={formData.firstName}
-                        onChange={(value) => setFormData({
+                        onChange={(e) => setFormData({
                             ...formData,
-                            firstName: value,
+                            firstName: e.target.value,
                         })}
                         label={t('edit_profile.first_name')} readOnly={!isEditing} required/>
                 </div>
                 <div className={'md:w-[calc(50%-0.75rem)] w-full'}>
-                    <Input
+                    <TextInput
                         id={'last_name'}
                         name={'last_name'}
-                        inputType={'text'}
+                        type={'text'}
                         errors={errors}
                         setErrors={setErrors}
-                        wrapperClassname={'relative inline-flex flex-col min-w-0 p-0 w-full'}
-                        inputClassname={'md:p-5 p-3 border rounded-full border-black placeholder:text-black w-full'}
+                        className={'md:p-5 p-3 border rounded-full border-black placeholder:text-black w-full'}
                         value={formData.lastName}
-                        onChange={(value) => setFormData({
+                        onChange={(e) => setFormData({
                             ...formData,
-                            lastName: value,
+                            lastName: e.target.value,
                         })}
                         label={t('edit_profile.last_name')} readOnly={!isEditing} required/>
                 </div>
                 <div className={'md:w-[calc(50%-0.75rem)] w-full'}>
-                    <Input
+                    <TextInput
                         id={'patronymic'}
                         name={'patronymic'}
-                        inputType={'text'}
+                        type={'text'}
                         errors={errors}
                         setErrors={setErrors}
-                        wrapperClassname={'relative inline-flex flex-col min-w-0 p-0 w-full'}
-                        inputClassname={'md:p-5 p-3 border rounded-full border-black placeholder:text-black w-full'}
+                        className={'md:p-5 p-3 border rounded-full border-black placeholder:text-black w-full'}
                         value={formData.patronymic}
-                        onChange={(value) => setFormData({
+                        onChange={(e) => setFormData({
                             ...formData,
-                            patronymic: value,
+                            patronymic: e.target.value,
                         })}
                         label={t('edit_profile.patronymic')} readOnly={!isEditing}/>
                 </div>
                 <div className={'md:w-[calc(50%-0.75rem)] w-full'}>
-                    <Input
+                    <TextInput
                         id={'email'}
                         name={'email'}
-                        inputType={'text'}
+                        type={'text'}
                         errors={errors}
                         setErrors={setErrors}
-                        wrapperClassname={'relative inline-flex flex-col min-w-0 p-0 w-full'}
-                        inputClassname={'md:p-5 p-3 border rounded-full border-black placeholder:text-black w-full'}
+                        className={'md:p-5 p-3 border rounded-full border-black placeholder:text-black w-full'}
                         value={formData.email}
-                        onChange={(value) => setFormData({
+                        onChange={(e) => setFormData({
                             ...formData,
-                            email: value,
+                            email: e.target.value,
                         })}
                         label={t('edit_profile.email')} readOnly={!isEditing} required/>
                 </div>

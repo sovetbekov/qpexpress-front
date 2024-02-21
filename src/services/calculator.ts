@@ -5,13 +5,13 @@ import { makeRequest } from '@/services/utils'
 export type CalculatorResponse = {
     countryId: string
     weight: number | null
-    price: number | null
+    priceKZT: number | null
+    priceUSD: number | null
 }
 
 export type CalculatorRequest = {
     countryId: string
-    weight: number | null
-    price: number | null
+    weight: number
 }
 
 export async function getCalculatorValues(data: CalculatorRequest) {

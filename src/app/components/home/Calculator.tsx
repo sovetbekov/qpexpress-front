@@ -1,10 +1,9 @@
 'use client'
 
 import React, { useState } from 'react'
-import DropdownInput from '@/app/components/input/DropdownInput'
+import DropdownInput from '@/app/components/input/DropdownInput/DropdownInput'
 import Image from 'next/image'
 import { useGetCountriesQuery } from '@/redux/reducers/countriesApi'
-import Input from '@/app/components/input/Input'
 import { useAuthenticationActions } from '@/hooks/client/useAuthenticationActions'
 import { useTranslation } from '@/app/i18n/client'
 import {
@@ -12,6 +11,8 @@ import {
     useCalculatorEffect,
 } from '@/hooks/client/calculator'
 import { CountryData } from '@/types'
+import TextInput from '@/app/components/input/TextInput'
+import NumericInput from '@/app/components/input/NumericInput'
 
 type Props = {
     language: string,
@@ -28,6 +29,14 @@ export default function Calculator({language}: Readonly<Props>) {
     const {onSignUpClick} = useAuthenticationActions()
     useCalculatorEffect(formData, setFormData, 300)
 
+    const countryOptions = countries?.map(country => {
+        return {
+            id: country.id,
+            value: country,
+            label: country.name,
+        }
+    }) ?? []
+
     return (
         <div className={'p-5 w-full flex flex-col md:py-4 md:px-20 md:gap-x-14'} id={'calculator'}>
             <h2 className={'text-[1.5rem] md:text-[3rem]'}>
@@ -40,35 +49,31 @@ export default function Calculator({language}: Readonly<Props>) {
                     </p>
                     <div className={'flex flex-col w-full items-center gap-4'}>
                         <DropdownInput<CountryData> id={'country'}
-                                                    options={countries ?? []}
+                                                    options={countryOptions}
                                                     wrapperClassname={'w-full'}
                                                     inputClassname={'border cursor-pointer flex items-center justify-between w-full md:text-[0.9rem] md:w-[25rem] p-4 rounded-full border-black disabled:bg-gray disabled:text-[#cccccc] disabled:cursor-not-allowed disabled:border-0'}
                                                     dropdownClassname={'w-[calc(100vw-2.5rem)] z-50 md:max-h-60 md:w-[25rem] overflow-auto bg-white border my-4 rounded-3xl border-solid border-black'}
                                                     dropdownItemClassname={'cursor-pointer px-8 py-4 border-b-black border-b border-solid last:border-b-0 hover:bg-gray'}
                                                     label={t('country')}
-                                                    getOptionValue={(option) => option.name}
-                                                    getOptionId={(option) => option.id}
                                                     selected={formData.country}
                                                     setSelected={(country) => setFormData({
                                                         ...formData,
-                                                        country: country,
+                                                        country: country?.value,
                                                     })}
                                                     searchable={true}
                                                     readOnly={true}
                                                     nullable={true}/>
-                        <Input inputType={'numeric'} label={t('weight')} id={'weight'} thousandSeparator={','}
+                        <NumericInput label={t('weight')} id={'weight'} thousandSeparator={','}
                                onValueChange={(value) => setFormData({
                                    ...formData,
                                    weight: value.floatValue ?? 0,
                                })}
-                               wrapperClassname={'relative inline-flex flex-col min-w-0 p-0 w-full'}
-                               disabled={!formData.country} value={formData.weight}
-                               inputClassname={'border cursor-pointer flex items-center justify-between w-full md:text-[0.9rem] md:w-[25rem] p-4 rounded-full border-black disabled:bg-gray disabled:text-[#cccccc] disabled:cursor-not-allowed disabled:border-0'}/>
-                        <Input inputType={'text'} label={t('price')} id={'weight'}
-                               wrapperClassname={'relative inline-flex flex-col min-w-0 p-0 w-full'}
-                               disabled={!formData.country} value={formData.price}
-                               inputClassname={'border cursor-pointer flex items-center justify-between w-full md:text-[0.9rem] md:w-[25rem] p-4 rounded-full border-black disabled:bg-gray disabled:text-[#cccccc] disabled:cursor-not-allowed disabled:border-0'}
-                               readOnly/>
+                               disabled={!formData.country} value={formData.weight === 0 ? '' : formData.weight}
+                               className={'border cursor-pointer flex items-center justify-between w-full md:text-[0.9rem] md:w-[25rem] p-4 rounded-full border-black disabled:bg-gray disabled:text-[#cccccc] disabled:cursor-not-allowed disabled:border-0'}/>
+                        <TextInput type={'text'} label={t('price')} id={'weight'}
+                                   disabled={!formData.country} value={formData.price}
+                                   className={'border cursor-pointer flex items-center justify-between w-full md:text-[0.9rem] md:w-[25rem] p-4 rounded-full border-black disabled:bg-gray disabled:text-[#cccccc] disabled:cursor-not-allowed disabled:border-0'}
+                                   readOnly/>
                         <button
                             className={'bg-blue text-white cursor-pointer w-full md:w-[25rem] mt-4 md:px-8 py-4 rounded-full border-0'}
                             onClick={onSignUpClick}>

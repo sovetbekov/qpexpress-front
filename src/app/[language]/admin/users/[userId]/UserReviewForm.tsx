@@ -1,6 +1,5 @@
 'use client'
 
-import Input from '@/app/components/input/Input'
 import { BACKEND_URL } from '@/globals'
 import { useAppDispatch } from '@/hooks/client/redux'
 import { openModal } from '@/redux/reducers/modalSlice'
@@ -11,6 +10,8 @@ import { acceptRecipient } from '@/services/account'
 import { useTranslation } from '@/app/i18n/client'
 import { toast } from 'react-toastify'
 import { isSuccess } from '@/app/lib/utils'
+import TextInput from '@/app/components/input/TextInput'
+import PatternInput from '@/app/components/input/MaskInput'
 
 type Props = {
     data: UserWithRecipientsData
@@ -47,40 +48,36 @@ export default function UserReviewForm({data: {user, recipients}, language}: Rea
                 </h3>
                 <div className={'flex flex-wrap flex-row gap-6'}>
                     <div className={'md:w-[calc(33%-0.51rem)] w-full'}>
-                        <Input id={'firstName'}
-                               label={'Имя'}
-                               inputType={'text'}
-                               wrapperClassname={'relative inline-flex flex-col min-w-0 p-0 w-full'}
-                               inputClassname={'md:p-5 p-3 border rounded-full border-black placeholder:text-black w-full'}
-                               value={user.firstName}
-                               readOnly/>
+                        <TextInput id={'firstName'}
+                                   label={'Имя'}
+                                   type={'text'}
+                                   className={'md:p-5 p-3 border rounded-full border-black placeholder:text-black w-full'}
+                                   value={user.firstName}
+                                   readOnly/>
                     </div>
                     <div className={'md:w-[calc(33%-0.51rem)] w-full'}>
-                        <Input id={'lastName'}
-                               label={'Фамилия'}
-                               inputType={'text'}
-                               wrapperClassname={'relative inline-flex flex-col min-w-0 p-0 w-full'}
-                               inputClassname={'md:p-5 p-3 border rounded-full border-black placeholder:text-black w-full'}
-                               value={user.lastName}
-                               readOnly/>
+                        <TextInput id={'lastName'}
+                                   label={'Фамилия'}
+                                   type={'text'}
+                                   className={'md:p-5 p-3 border rounded-full border-black placeholder:text-black w-full'}
+                                   value={user.lastName}
+                                   readOnly/>
                     </div>
                     <div className={'md:w-[calc(33%-0.51rem)] w-full'}>
-                        <Input id={'patronymic'}
-                               label={'Отчество'}
-                               inputType={'text'}
-                               wrapperClassname={'relative inline-flex flex-col min-w-0 p-0 w-full'}
-                               inputClassname={'md:p-5 p-3 border rounded-full border-black placeholder:text-black w-full'}
-                               value={user.patronymic}
-                               readOnly/>
+                        <TextInput id={'patronymic'}
+                                   label={'Отчество'}
+                                   type={'text'}
+                                   className={'md:p-5 p-3 border rounded-full border-black placeholder:text-black w-full'}
+                                   value={user.patronymic}
+                                   readOnly/>
                     </div>
                     <div className={'md:w-[calc(33%-0.51rem)] w-full'}>
-                        <Input id={'email'}
-                               label={'Электронная почта'}
-                               inputType={'text'}
-                               wrapperClassname={'relative inline-flex flex-col min-w-0 p-0 w-full'}
-                               inputClassname={'md:p-5 p-3 border rounded-full border-black placeholder:text-black w-full'}
-                               value={user.email}
-                               readOnly/>
+                        <TextInput id={'email'}
+                                   label={'Электронная почта'}
+                                   type={'text'}
+                                   className={'md:p-5 p-3 border rounded-full border-black placeholder:text-black w-full'}
+                                   value={user.email}
+                                   readOnly/>
                     </div>
                 </div>
             </div>
@@ -92,81 +89,72 @@ export default function UserReviewForm({data: {user, recipients}, language}: Rea
                         </h3>
                         <div className={'flex flex-wrap flex-row gap-6'}>
                             <div className={'md:w-[calc(33%-0.51rem)] w-full'}>
-                                <Input id={'firstName'}
-                                       label={'Имя'}
-                                       inputType={'text'}
-                                       wrapperClassname={'relative inline-flex flex-col min-w-0 p-0 w-full'}
-                                       inputClassname={'md:p-5 p-3 border rounded-full border-black placeholder:text-black w-full'}
-                                       value={recipients[0].firstName}
-                                       readOnly/>
+                                <TextInput id={'firstName'}
+                                           label={'Имя'}
+                                           type={'text'}
+                                           className={'md:p-5 p-3 border rounded-full border-black placeholder:text-black w-full'}
+                                           value={recipients[0].firstName}
+                                           readOnly/>
                             </div>
                             <div className={'md:w-[calc(33%-0.51rem)] w-full'}>
-                                <Input id={'lastName'}
-                                       label={'Фамилия'}
-                                       inputType={'text'}
-                                       wrapperClassname={'relative inline-flex flex-col min-w-0 p-0 w-full'}
-                                       inputClassname={'md:p-5 p-3 border rounded-full border-black placeholder:text-black w-full'}
-                                       value={recipients[0].lastName}
-                                       readOnly/>
+                                <TextInput id={'lastName'}
+                                           label={'Фамилия'}
+                                           type={'text'}
+                                           className={'md:p-5 p-3 border rounded-full border-black placeholder:text-black w-full'}
+                                           value={recipients[0].lastName}
+                                           readOnly/>
                             </div>
                             <div className={'md:w-[calc(33%-0.51rem)] w-full'}>
-                                <Input id={'patronymic'}
-                                       label={'Отчество'}
-                                       inputType={'text'}
-                                       wrapperClassname={'relative inline-flex flex-col min-w-0 p-0 w-full'}
-                                       inputClassname={'md:p-5 p-3 border rounded-full border-black placeholder:text-black w-full'}
-                                       value={recipients[0].patronymic}
-                                       readOnly/>
+                                <TextInput id={'patronymic'}
+                                           label={'Отчество'}
+                                           type={'text'}
+                                           className={'md:p-5 p-3 border rounded-full border-black placeholder:text-black w-full'}
+                                           value={recipients[0].patronymic}
+                                           readOnly/>
                             </div>
                             <div className={'md:w-[calc(33%-0.51rem)] w-full'}>
-                                <Input id={'iin'}
-                                       label={'ИИН'}
-                                       inputType={'text'}
-                                       wrapperClassname={'relative inline-flex flex-col min-w-0 p-0 w-full'}
-                                       inputClassname={'md:p-5 p-3 border rounded-full border-black placeholder:text-black w-full'}
-                                       value={recipients[0].iin}
-                                       readOnly/>
+                                <TextInput id={'iin'}
+                                           label={'ИИН'}
+                                           type={'text'}
+                                           className={'md:p-5 p-3 border rounded-full border-black placeholder:text-black w-full'}
+                                           value={recipients[0].iin}
+                                           readOnly/>
                             </div>
                             <Link className={'md:w-[calc(33%-0.51rem)] w-full'}
                                   href={`${BACKEND_URL}/v1/files/${recipients[0].documentSideA.id}/download`}
                                   target={'_blank'}>
-                                <Input id={'photo1'}
-                                       label={'Сторона А'}
-                                       inputType={'text'}
-                                       wrapperClassname={'relative inline-flex flex-col min-w-0 p-0 w-full'}
-                                       inputClassname={'md:p-5 p-3 border rounded-full border-black text-blue w-full cursor-pointer'}
-                                       value={recipients[0].documentSideA.name}
-                                       readOnly/>
+                                <TextInput id={'photo1'}
+                                           label={'Сторона А'}
+                                           type={'text'}
+                                           className={'md:p-5 p-3 border rounded-full border-black text-blue w-full cursor-pointer'}
+                                           value={recipients[0].documentSideA.name}
+                                           readOnly/>
                             </Link>
                             <Link className={'md:w-[calc(33%-0.51rem)] w-full'}
                                   href={`${BACKEND_URL}/v1/files/${recipients[0].documentSideB.id}/download`}
                                   target={'_blank'}>
-                                <Input id={'photo2'}
-                                       label={'Сторона Б'}
-                                       inputType={'text'}
-                                       wrapperClassname={'relative inline-flex flex-col min-w-0 p-0 w-full'}
-                                       inputClassname={'md:p-5 p-3 border rounded-full border-black text-blue w-full cursor-pointer'}
-                                       value={recipients[0].documentSideB.name}
-                                       readOnly/>
+                                <TextInput id={'photo2'}
+                                           label={'Сторона Б'}
+                                           type={'text'}
+                                           className={'md:p-5 p-3 border rounded-full border-black text-blue w-full cursor-pointer'}
+                                           value={recipients[0].documentSideB.name}
+                                           readOnly/>
                             </Link>
                             <div className={'md:w-[calc(33%-0.51rem)] w-full'}>
-                                <Input id={'district'}
-                                       label={'Город/область'}
-                                       inputType={'text'}
-                                       wrapperClassname={'relative inline-flex flex-col min-w-0 p-0 w-full'}
-                                       inputClassname={'md:p-5 p-3 border rounded-full border-black placeholder:text-black w-full'}
-                                       value={`${recipients[0].district}`}
-                                       readOnly/>
+                                <TextInput id={'district'}
+                                           label={'Город/область'}
+                                           type={'text'}
+                                           className={'md:p-5 p-3 border rounded-full border-black placeholder:text-black w-full'}
+                                           value={`${recipients[0].district}`}
+                                           readOnly/>
                             </div>
                             <div className={'md:w-[calc(33%-0.51rem)] w-full'}>
-                                <Input id={'phoneNumber'}
-                                       label={'Номер телефона'}
-                                       inputType={'mask'}
-                                       format={'+7 (999) 999-99-99'}
-                                       wrapperClassname={'relative inline-flex flex-col min-w-0 p-0 w-full'}
-                                       inputClassname={'md:p-5 p-3 border rounded-full border-black placeholder:text-black w-full'}
-                                       value={`${recipients[0].phoneNumber}`}
-                                       readOnly/>
+                                <PatternInput id={'phoneNumber'}
+                                              label={'Номер телефона'}
+                                              format={'+7 (999) 999-99-99'}
+                                              className={'md:p-5 p-3 border rounded-full border-black placeholder:text-black w-full'}
+                                              value={`${recipients[0].phoneNumber}`}
+                                              readOnly/>
                             </div>
                         </div>
                     </div>

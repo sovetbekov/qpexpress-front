@@ -1,10 +1,9 @@
 'use client'
 
-import DropdownInput from '@/app/components/input/DropdownInput'
+import DropdownInput from '@/app/components/input/DropdownInput/DropdownInput'
 import React, { FormEvent, useEffect, useState } from 'react'
 import MoneyInput from '@/app/components/input/MoneyInput'
 import FileInput from '@/app/components/input/FileInput'
-import Input from '@/app/components/input/Input'
 import GoodsTable from '@/app/[language]/admin/deliveries/GoodsTable'
 import { RowSelectionState } from '@tanstack/react-table'
 import { createDelivery } from '@/services/deliveries'
@@ -15,6 +14,8 @@ import { useTranslation } from '@/app/i18n/client'
 import { getGoods } from '@/services/goods'
 import { CreateDeliveryFormData } from '@/types'
 import { isError, isSuccess } from '@/app/lib/utils'
+import TextInput from '@/app/components/input/TextInput'
+import NumericInput from '@/app/components/input/NumericInput'
 
 type Props = {
     recipients: RecipientOverview[]
@@ -37,6 +38,13 @@ export default function CreateDeliveryForm({recipients, currencies, language}: R
     const router = useRouter()
     const [goods, setGoods] = useState<GoodData[]>([])
     const [selected, setSelected] = useState<RowSelectionState>({})
+    const recipientOptions = recipients.map(recipient => {
+        return {
+            id: recipient.id,
+            value: recipient,
+            label: `${recipient.firstName} ${recipient.lastName}`,
+        }
+    })
 
     useEffect(() => {
         if (formData.recipient?.id) {
@@ -89,15 +97,12 @@ export default function CreateDeliveryForm({recipients, currencies, language}: R
                     <p className={'hidden md:block md:text-2xl'}>Получатель</p>
                     <h2 className={'text-xl md:hidden'}>Получатель</h2>
                     <div className={'flex flex-col gap-y-3 md:flex-row md:gap-x-10 w-[25rem]'}>
-                        <DropdownInput<RecipientOverview> id={'user'} options={recipients}
+                        <DropdownInput<RecipientOverview> id={'user'} options={recipientOptions}
                                                           label={'Получатель'} selected={formData.recipient}
-                                                          getOptionValue={recipient => {
-                                                              return `${recipient.firstName} ${recipient.lastName}`
-                                                          }} getOptionId={recipient => recipient.id}
                                                           nullable={true} searchable={true}
                                                           setSelected={recipient => setFormData({
                                                               ...formData,
-                                                              recipient,
+                                                              recipient: recipient?.value,
                                                           })}
                                                           wrapperClassname={'w-full relative'}
                                                           inputClassname={'border cursor-pointer flex items-center justify-between w-full md:text-[0.9rem] md:w-full p-4 rounded-full border-black disabled:bg-gray disabled:text-[#cccccc] disabled:cursor-not-allowed disabled:border-0'}
@@ -122,9 +127,8 @@ export default function CreateDeliveryForm({recipients, currencies, language}: R
                     <div className={'flex flex-col gap-y-3 md:gap-y-5'}>
                         <div className={'flex flex-col gap-y-3 md:flex-row md:gap-x-10'}>
                             <div className={'md:basis-1/3'}>
-                                <Input
+                                <NumericInput
                                     id={'weight'}
-                                    inputType={'numeric'}
                                     thousandSeparator={','}
                                     label={'Вес'}
                                     value={formData.weight === 0 ? '' : formData.weight}
@@ -134,9 +138,8 @@ export default function CreateDeliveryForm({recipients, currencies, language}: R
                                             weight: e.floatValue ?? 0,
                                         })
                                     }}
-                                    wrapperClassname={'relative inline-flex flex-col min-w-0 p-0 w-full'}
                                     decimalScale={2}
-                                    inputClassname={'md:p-4 w-full p-3 placeholder-black rounded-full border border-black disabled:bg-gray-2 disabled:text-light-gray disabled:placeholder-light-gray disabled:cursor-not-allowed disabled:border-0'}
+                                    className={'md:p-4 w-full p-3 placeholder-black rounded-full border border-black disabled:bg-gray-2 disabled:text-light-gray disabled:placeholder-light-gray disabled:cursor-not-allowed disabled:border-0'}
                                     required
                                 />
                             </div>
@@ -170,16 +173,15 @@ export default function CreateDeliveryForm({recipients, currencies, language}: R
                                 required
                             />
                         </div>
-                        <Input
+                        <TextInput
                             id={'kazPostTrackNumber'}
-                            inputType={'text'}
+                            type={'text'}
                             label={'Трек номер от KazPost'}
-                            wrapperClassname={'relative inline-flex flex-col min-w-0 p-0 w-full'}
-                            inputClassname={'md:p-4 w-full p-3 placeholder-black rounded-full border border-black disabled:bg-gray-2 disabled:text-light-gray disabled:placeholder-light-gray disabled:cursor-not-allowed disabled:border-0'}
+                            className={'md:p-4 w-full p-3 placeholder-black rounded-full border border-black disabled:bg-gray-2 disabled:text-light-gray disabled:placeholder-light-gray disabled:cursor-not-allowed disabled:border-0'}
                             value={formData.kazPostTrackNumber}
-                            onChange={kazPostTrackNumber => setFormData({
+                            onChange={e => setFormData({
                                 ...formData,
-                                kazPostTrackNumber,
+                                kazPostTrackNumber: e.target.value,
                             })}
                         />
                     </div>

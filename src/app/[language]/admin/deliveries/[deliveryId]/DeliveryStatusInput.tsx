@@ -1,6 +1,6 @@
 'use client'
 
-import DropdownInput from '@/app/components/input/DropdownInput'
+import DropdownInput from '@/app/components/input/DropdownInput/DropdownInput'
 import { DeliveryStatus } from '@/types'
 
 type Props = {
@@ -8,25 +8,32 @@ type Props = {
     language: string
 }
 
-export default function DeliveryStatusInput({selected, language}: Readonly<Props>) {
-    const selectOptions: Record<DeliveryStatus, string> = {
-        CREATED: 'Создан',
-        IN_THE_WAY: 'В пути',
-        IN_YOUR_COUNTRY: 'В вашей стране',
-        IN_MAIL_OFFICE: 'В почтовом отделении',
-        DELIVERED: 'Доставлен',
-        DELETED: 'Удален',
-    }
+export default function DeliveryStatusInput({selected}: Readonly<Props>) {
+    const statuses: DeliveryStatus[] = [
+        'CREATED',
+        'IN_THE_WAY',
+        'IN_YOUR_COUNTRY',
+        'IN_MAIL_OFFICE',
+        'DELIVERED',
+        'DELETED',
+    ]
+    const statusOptions = statuses.map(option => {
+        return {
+            id: option,
+            value: option,
+            label: option,
+        }
+    })
 
     return (
-        <DropdownInput id={'status'}
-                       options={Object.values(selectOptions)}
+        <DropdownInput<DeliveryStatus> id={'status'}
+                       options={statusOptions}
                        label={'Статус'}
                        nullable={false}
                        searchable={false}
-                       selected={selectOptions[selected]}
+                       selected={selected}
                        setSelected={(value) => {
-                            console.log(value)
+                           console.log(value)
                        }}
         />
     )

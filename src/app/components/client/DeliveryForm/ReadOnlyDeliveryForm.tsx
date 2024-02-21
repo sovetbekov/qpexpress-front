@@ -3,20 +3,21 @@
 import React, { useEffect, useState } from 'react'
 import MoneyInput from '@/app/components/input/MoneyInput'
 import FileInput from '@/app/components/input/FileInput'
-import Input from '@/app/components/input/Input'
 import GoodsTable from '@/app/[language]/admin/deliveries/GoodsTable'
 import { DeliveryData, GoodData } from '@/types/entities'
 import { getGoods } from '@/services/goods'
 import { isError } from '@/app/lib/utils'
+import TextInput from '@/app/components/input/TextInput'
+import NumericInput from '@/app/components/input/NumericInput'
 
 type Props = {
     data: DeliveryData
     language: string
 }
 
-export default function ReadOnlyDeliveryForm({data, language}: Readonly<Props>) {
+export default function ReadOnlyDeliveryForm({data}: Readonly<Props>) {
     const [goods, setGoods] = useState<GoodData[]>([])
-    
+
     useEffect(() => {
         getGoods({recipientId: data.recipient.id}).then(response => {
             if (isError(response)) {
@@ -26,8 +27,10 @@ export default function ReadOnlyDeliveryForm({data, language}: Readonly<Props>) 
         }).then(setGoods)
     }, [data.recipient.id])
 
-    const selectedGoods = data.goods.reduce(((prev, good) => ({...prev, [good.id]: true})), {} satisfies {[key: string]: boolean})
-    
+    const selectedGoods = data.goods.reduce(((prev, good) => ({...prev, [good.id]: true})), {} satisfies {
+        [key: string]: boolean
+    })
+
     return (
         <div className={'flex flex-col gap-y-10 md:gap-y-10'}>
             <div className={'flex flex-col md:gap-y-5'}>
@@ -35,14 +38,13 @@ export default function ReadOnlyDeliveryForm({data, language}: Readonly<Props>) 
                     <p className={'hidden md:block md:text-2xl'}>Получатель</p>
                     <h2 className={'text-xl md:hidden'}>Получатель</h2>
                     <div className={'flex flex-col gap-y-3 md:flex-row md:gap-x-10 w-[25rem]'}>
-                        <Input id={'user'}
-                               inputType={'text'}
-                               value={`${data.recipient.firstName} ${data.recipient.lastName}`}
-                               label={'Получатель'}
-                               wrapperClassname={'w-full relative'}
-                               inputClassname={'border cursor-pointer flex items-center justify-between w-full md:text-[0.9rem] md:w-full p-4 rounded-full border-black disabled:bg-gray disabled:text-[#cccccc] disabled:cursor-not-allowed disabled:border-0'}
-                               readOnly
-                               required
+                        <TextInput id={'user'}
+                                   type={'text'}
+                                   value={`${data.recipient.firstName} ${data.recipient.lastName}`}
+                                   label={'Получатель'}
+                                   className={'border cursor-pointer flex items-center justify-between w-full md:text-[0.9rem] md:w-full p-4 rounded-full border-black disabled:bg-gray disabled:text-[#cccccc] disabled:cursor-not-allowed disabled:border-0'}
+                                   readOnly
+                                   required
                         />
                     </div>
                 </div>
@@ -62,15 +64,13 @@ export default function ReadOnlyDeliveryForm({data, language}: Readonly<Props>) 
                     <div className={'flex flex-col gap-y-3 md:gap-y-5'}>
                         <div className={'flex flex-col gap-y-3 md:flex-row md:gap-x-10'}>
                             <div className={'md:basis-1/3'}>
-                                <Input
+                                <NumericInput
                                     id={'weight'}
-                                    inputType={'numeric'}
                                     thousandSeparator={','}
                                     label={'Вес'}
                                     value={data.weight === 0 ? '' : data.weight}
-                                    wrapperClassname={'relative inline-flex flex-col min-w-0 p-0 w-full'}
                                     decimalScale={2}
-                                    inputClassname={'md:p-4 w-full p-3 placeholder-black rounded-full border border-black disabled:bg-gray-2 disabled:text-light-gray disabled:placeholder-light-gray disabled:cursor-not-allowed disabled:border-0'}
+                                    className={'md:p-4 w-full p-3 placeholder-black rounded-full border border-black disabled:bg-gray-2 disabled:text-light-gray disabled:placeholder-light-gray disabled:cursor-not-allowed disabled:border-0'}
                                     required
                                     readOnly
                                 />
@@ -86,7 +86,7 @@ export default function ReadOnlyDeliveryForm({data, language}: Readonly<Props>) 
                                 label={'Цена'}
                                 value={{
                                     value: data.price,
-                                    currency: data.currency
+                                    currency: data.currency,
                                 }}
                                 required
                                 readOnly
@@ -101,12 +101,11 @@ export default function ReadOnlyDeliveryForm({data, language}: Readonly<Props>) 
                                 readOnly
                             />
                         </div>
-                        <Input
+                        <TextInput
                             id={'kazPostTrackNumber'}
-                            inputType={'text'}
+                            type={'text'}
                             label={'Трек номер от KazPost'}
-                            wrapperClassname={'relative inline-flex flex-col min-w-0 p-0 w-full'}
-                            inputClassname={'md:p-4 w-full p-3 placeholder-black rounded-full border border-black disabled:bg-gray-2 disabled:text-light-gray disabled:placeholder-light-gray disabled:cursor-not-allowed disabled:border-0'}
+                            className={'md:p-4 w-full p-3 placeholder-black rounded-full border border-black disabled:bg-gray-2 disabled:text-light-gray disabled:placeholder-light-gray disabled:cursor-not-allowed disabled:border-0'}
                             value={data.kazPostTrackNumber}
                             readOnly
                         />

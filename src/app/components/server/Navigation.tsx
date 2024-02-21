@@ -11,8 +11,8 @@ import {AnimatePresence, motion} from 'framer-motion'
 import {MenuItem} from '@/app/components/client/MenuItem'
 import {useAuthenticationActions} from '@/hooks/client/useAuthenticationActions'
 import {useTranslation} from '@/app/i18n/client'
-import DropdownInput from '@/app/components/input/DropdownInput'
 import {CN, GB, RU} from 'country-flag-icons/react/3x2'
+import OptionSelect from '@/app/components/input/DropdownInput/OptionSelect'
 
 type Props = {
     language: string
@@ -58,6 +58,12 @@ export default function Navigation({language}: Readonly<Props>) {
             transition: {staggerChildren: 0.05, staggerDirection: -1},
         },
     }
+    const languageOptions = [
+        {id: 'ru', value: 'ru', label: <LanguageDropdownItem value={'ru'}/>},
+        {id: 'en', value: 'en', label: <LanguageDropdownItem value={'en'}/>},
+        {id: 'zh', value: 'zh', label: <LanguageDropdownItem value={'zh'}/>},
+    ]
+    const selectedLanguage = languageOptions.find(option => option.value === language) ?? languageOptions[0]
 
     return (
         <>
@@ -98,16 +104,13 @@ export default function Navigation({language}: Readonly<Props>) {
                                 </li>
                             }
                             <li>
-                                <DropdownInput
+                                <OptionSelect
                                     id={'language'}
-                                    options={['ru', 'en', 'zh']}
+                                    options={languageOptions}
                                     searchable={false}
-                                    label={''}
-                                    nullable={false}
-                                    selected={language}
-                                    getOptionValue={value => <LanguageDropdownItem value={value}/>}
+                                    selected={selectedLanguage}
                                     setSelected={value => {
-                                        switch (value) {
+                                        switch (value?.id) {
                                             case 'ru':
                                                 router.replace(`/ru/${pathnameWithoutLanguage}`)
                                                 break
@@ -121,7 +124,6 @@ export default function Navigation({language}: Readonly<Props>) {
                                                 break
                                         }
                                     }}
-                                    getOptionId={value => value}
                                     wrapperClassname={'relative inline-flex min-w-0 p-0 w-36'}
                                     inputClassname={'cursor-pointer md:text-[0.9rem] w-full p-4 disabled:bg-gray disabled:text-[#cccccc] disabled:cursor-not-allowed disabled:border-0'}
                                     inputWrapperClassname={'w-full'}

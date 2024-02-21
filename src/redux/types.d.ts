@@ -1,7 +1,15 @@
-export type ModalState = {
-    modalType?: 'calculator' | 'denialReason' | 'paymentMethod'
-    data?: any
-}
+import { RecipientData } from '@/types'
+
+export type ModalState = { id: string } & ({
+    modalType: 'calculator'
+} | {
+    modalType: 'denialReason'
+    data: {
+        recipient: RecipientData
+    }
+} | {
+    modalType: 'paymentMethod'
+})
 
 export type CalculatorResponse = {
     countryId: string

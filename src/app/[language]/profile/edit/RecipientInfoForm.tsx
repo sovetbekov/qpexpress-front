@@ -5,10 +5,11 @@ import { Errors, FileMetaData, RecipientData } from '@/types'
 import { toast } from 'react-toastify'
 import { createRecipient, updateRecipient } from '@/services/account'
 import Image from 'next/image'
-import Input from '@/app/components/input/Input'
 import FileInput from '@/app/components/input/FileInput'
 import { useTranslation } from '@/app/i18n/client'
 import { isSuccess } from '@/app/lib/utils'
+import TextInput from '@/app/components/input/TextInput'
+import PatternInput from '@/app/components/input/MaskInput'
 
 type RecipientFormData = {
     id?: string,
@@ -131,16 +132,15 @@ export default function RecipientInfoForm({initialFormData, language}: Readonly<
             }
             <div className={'flex flex-col gap-y-4 md:flex-row md:gap-y-5 md:gap-x-6 md:flex-wrap'}>
                 <div className={'md:w-[calc(50%-0.75rem)]'}>
-                    <Input
+                    <TextInput
                         id={'first_name'}
                         name={'first_name'}
-                        inputType={'text'}
-                        wrapperClassname={'relative inline-flex flex-col min-w-0 p-0 w-full'}
-                        inputClassname={'md:p-5 p-3 border rounded-full border-black placeholder:text-black w-full'}
+                        type={'text'}
+                        className={'md:p-5 p-3 border rounded-full border-black placeholder:text-black w-full'}
                         value={formData.firstName}
-                        onChange={(value) => setFormData({
+                        onChange={(e) => setFormData({
                             ...formData,
-                            firstName: value,
+                            firstName: e.target.value,
                         })}
                         errors={errors}
                         setErrors={setErrors}
@@ -150,16 +150,15 @@ export default function RecipientInfoForm({initialFormData, language}: Readonly<
                     />
                 </div>
                 <div className={'md:w-[calc(50%-0.75rem)]'}>
-                    <Input
+                    <TextInput
                         id={'last_name'}
                         name={'last_name'}
-                        inputType={'text'}
-                        wrapperClassname={'relative inline-flex flex-col min-w-0 p-0 w-full'}
-                        inputClassname={'md:p-5 p-3 border rounded-full border-black placeholder:text-black w-full'}
+                        type={'text'}
+                        className={'md:p-5 p-3 border rounded-full border-black placeholder:text-black w-full'}
                         value={formData.lastName}
-                        onChange={(value) => setFormData({
+                        onChange={(e) => setFormData({
                             ...formData,
-                            lastName: value,
+                            lastName: e.target.value,
                         })}
                         errors={errors}
                         setErrors={setErrors}
@@ -169,16 +168,15 @@ export default function RecipientInfoForm({initialFormData, language}: Readonly<
                     />
                 </div>
                 <div className={'md:w-[calc(50%-0.75rem)]'}>
-                    <Input
+                    <TextInput
                         id={'patronymic'}
                         name={'patronymic'}
-                        inputType={'text'}
-                        wrapperClassname={'relative inline-flex flex-col min-w-0 p-0 w-full'}
-                        inputClassname={'md:p-5 p-3 border rounded-full border-black placeholder:text-black w-full'}
+                        type={'text'}
+                        className={'md:p-5 p-3 border rounded-full border-black placeholder:text-black w-full'}
                         value={formData.patronymic}
-                        onChange={(value) => setFormData({
+                        onChange={(e) => setFormData({
                             ...formData,
-                            patronymic: value,
+                            patronymic: e.target.value,
                         })}
                         errors={errors}
                         setErrors={setErrors}
@@ -187,14 +185,12 @@ export default function RecipientInfoForm({initialFormData, language}: Readonly<
                     />
                 </div>
                 <div className={'md:w-[calc(50%-0.75rem)]'}>
-                    <Input
+                    <PatternInput
                         id={'iin'}
                         name={'iin'}
-                        inputType={'mask'}
                         format={'### ### ### ###'}
                         mask={'_'}
-                        wrapperClassname={'relative inline-flex flex-col min-w-0 p-0 w-full'}
-                        inputClassname={'md:p-5 p-3 border rounded-full border-black placeholder:text-black w-full'}
+                        className={'md:p-5 p-3 border rounded-full border-black placeholder:text-black w-full'}
                         value={formData.iin}
                         onValueChange={(value) => setFormData({
                             ...formData,
@@ -247,16 +243,15 @@ export default function RecipientInfoForm({initialFormData, language}: Readonly<
                     </p>
                 </div>
                 <div className={'md:w-[calc(50%-0.75rem)]'}>
-                    <Input
+                    <TextInput
                         id={'district'}
                         name={'district'}
-                        inputType={'text'}
-                        wrapperClassname={'relative inline-flex flex-col min-w-0 p-0 w-full'}
-                        inputClassname={'md:p-5 p-3 border rounded-full border-black placeholder:text-black w-full'}
+                        type={'text'}
+                        className={'md:p-5 p-3 border rounded-full border-black placeholder:text-black w-full'}
                         value={formData.district}
-                        onChange={(value) => setFormData({
+                        onChange={(e) => setFormData({
                             ...formData,
-                            district: value,
+                            district: e.target.value,
                         })}
                         label={t('edit_profile.district')}
                         errors={errors}
@@ -266,13 +261,11 @@ export default function RecipientInfoForm({initialFormData, language}: Readonly<
                     />
                 </div>
                 <div className={'md:w-[calc(50%-0.75rem)]'}>
-                    <Input
+                    <PatternInput
                         id={'phone_number'}
                         name={'phone_number'}
-                        inputType={'mask'}
                         format={'+7 (###) ###-##-##'}
-                        wrapperClassname={'relative inline-flex flex-col min-w-0 p-0 w-full'}
-                        inputClassname={'md:p-5 p-3 border rounded-full border-black placeholder:text-black w-full'}
+                        className={'md:p-5 p-3 border rounded-full border-black placeholder:text-black w-full'}
                         value={formData.phoneNumber}
                         onValueChange={(value) => setFormData({
                             ...formData,
@@ -288,16 +281,15 @@ export default function RecipientInfoForm({initialFormData, language}: Readonly<
                     />
                 </div>
                 <div className={'md:w-[calc(50%-0.75rem)]'}>
-                    <Input
+                    <TextInput
                         id={'address'}
                         name={'address'}
-                        inputType={'text'}
-                        wrapperClassname={'relative inline-flex flex-col min-w-0 p-0 w-full'}
-                        inputClassname={'md:p-5 p-3 border rounded-full border-black placeholder:text-black w-full'}
+                        type={'text'}
+                        className={'md:p-5 p-3 border rounded-full border-black placeholder:text-black w-full'}
                         value={formData.address}
-                        onChange={(value) => setFormData({
+                        onChange={(e) => setFormData({
                             ...formData,
-                            address: value,
+                            address: e.target.value,
                         })}
                         label={t('edit_profile.address')}
                         errors={errors}

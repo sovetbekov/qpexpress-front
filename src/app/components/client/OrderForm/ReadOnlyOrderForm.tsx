@@ -4,8 +4,8 @@ import React from 'react'
 import MoneyInput from '@/app/components/input/MoneyInput'
 import FileInput from '@/app/components/input/FileInput'
 import CheckboxInput from '@/app/components/input/CheckboxInput'
-import Input from '@/app/components/input/Input'
 import { OrderFormData } from '@/types'
+import TextInput from '@/app/components/input/TextInput'
 
 type Props = {
     data: OrderFormData,
@@ -25,52 +25,48 @@ export default function ReadOnlyOrderForm({data}: Readonly<Props>) {
                                     <div className={'flex flex-col md:flex-row gap-y-3 md:gap-x-10'}>
                                         <div
                                             className={'w-[calc(100vw-2.5rem)] md:w-[calc(33%-6rem)] md:basis-1/3 relative'}>
-                                            <Input
+                                            <TextInput
                                                 id={'country'}
                                                 label={'Страна отправления'}
-                                                inputType={'text'}
+                                                type={'text'}
                                                 value={productInfo.country!!.name}
-                                                wrapperClassname={'relative inline-flex flex-col min-w-0 p-0 w-full'}
-                                                inputClassname={'md:p-4 w-full p-3 placeholder-black rounded-full border border-black disabled:bg-gray-2 disabled:text-light-gray disabled:placeholder-light-gray disabled:cursor-not-allowed disabled:border-0 required:invalid:border-red-500'}
+                                                className={'md:p-4 w-full p-3 placeholder-black rounded-full border border-black disabled:bg-gray-2 disabled:text-light-gray disabled:placeholder-light-gray disabled:cursor-not-allowed disabled:border-0 required:invalid:border-red-500'}
                                                 readOnly
                                             />
                                         </div>
                                         <div
                                             className={'w-[calc(100vw-2.5rem)] md:w-[calc(33%-6rem)] md:basis-1/3 relative'}>
-                                            <Input
+                                            <TextInput
                                                 id={'custom_order_id'}
                                                 label={'ID заказа'}
-                                                inputType={'text'}
+                                                type={'text'}
                                                 disabled={!productInfo.country}
                                                 value={productInfo.customOrderId}
-                                                wrapperClassname={'relative inline-flex flex-col min-w-0 p-0 w-full'}
-                                                inputClassname={'md:p-4 w-full p-3 placeholder-black rounded-full border border-black disabled:bg-gray-2 disabled:text-light-gray disabled:placeholder-light-gray disabled:cursor-not-allowed disabled:border-0 required:invalid:border-red-500'}
+                                                className={'md:p-4 w-full p-3 placeholder-black rounded-full border border-black disabled:bg-gray-2 disabled:text-light-gray disabled:placeholder-light-gray disabled:cursor-not-allowed disabled:border-0 required:invalid:border-red-500'}
                                                 required
                                                 readOnly
                                             />
                                         </div>
                                         <div
                                             className={'w-[calc(100vw-2.5rem)] md:w-[calc(33%-6rem)] md:basis-1/3 relative'}>
-                                            <Input
+                                            <TextInput
                                                 id={'tracking_number'}
                                                 label={'Номер трекинга'}
-                                                inputType={'text'}
-                                                wrapperClassname={'relative inline-flex flex-col min-w-0 p-0 w-full'}
-                                                inputClassname={'md:basis-1/3 md:p-4 w-full p-3 placeholder-black rounded-full border border-black disabled:bg-gray-2 disabled:text-light-gray disabled:placeholder-light-gray disabled:cursor-not-allowed disabled:border-0'}
+                                                type={'text'}
+                                                className={'md:basis-1/3 md:p-4 w-full p-3 placeholder-black rounded-full border border-black disabled:bg-gray-2 disabled:text-light-gray disabled:placeholder-light-gray disabled:cursor-not-allowed disabled:border-0'}
                                                 disabled={!productInfo.country}
                                                 value={productInfo.trackingNumber}
                                                 readOnly
                                             />
                                         </div>
                                     </div>
-                                    <Input
+                                    <TextInput
                                         id={'link'}
                                         label={'Ссылка на товар'}
-                                        inputType={'text'}
+                                        type={'text'}
                                         disabled={!productInfo.country}
                                         value={productInfo.link}
-                                        wrapperClassname={'relative inline-flex flex-col min-w-0 p-0 w-full'}
-                                        inputClassname={'md:basis-1/3 md:p-4 w-full p-3 placeholder-black rounded-full border border-black disabled:bg-gray-2 disabled:text-light-gray disabled:placeholder-light-gray disabled:cursor-not-allowed disabled:border-0 invalid:border-red-500'}
+                                        className={'md:basis-1/3 md:p-4 w-full p-3 placeholder-black rounded-full border border-black disabled:bg-gray-2 disabled:text-light-gray disabled:placeholder-light-gray disabled:cursor-not-allowed disabled:border-0 invalid:border-red-500'}
                                         readOnly
                                         required
                                     />
@@ -82,12 +78,11 @@ export default function ReadOnlyOrderForm({data}: Readonly<Props>) {
                                 <div className={'flex flex-col gap-y-3 md:gap-y-5'}>
                                     <div className={'flex flex-col gap-y-3 md:flex-row md:gap-x-10'}>
                                         <div className={'md:basis-1/3'}>
-                                            <Input
+                                            <TextInput
                                                 id={'name'}
-                                                inputType={'text'}
+                                                type={'text'}
                                                 label={'Наименование'}
-                                                wrapperClassname={'relative inline-flex flex-col min-w-0 p-0 w-full'}
-                                                inputClassname={'md:p-4 w-full p-3 placeholder-black rounded-full border border-black disabled:bg-gray-2 disabled:text-light-gray disabled:placeholder-light-gray disabled:cursor-not-allowed disabled:border-0'}
+                                                className={'md:p-4 w-full p-3 placeholder-black rounded-full border border-black disabled:bg-gray-2 disabled:text-light-gray disabled:placeholder-light-gray disabled:cursor-not-allowed disabled:border-0'}
                                                 value={productInfo.name}
                                                 disabled={!productInfo.country}
                                                 readOnly
@@ -118,12 +113,11 @@ export default function ReadOnlyOrderForm({data}: Readonly<Props>) {
                                             readOnly
                                         />
                                     </div>
-                                    <Input
+                                    <TextInput
                                         id={'description'}
-                                        inputType={'text'}
+                                        type={'text'}
                                         label={'Описание товара'}
-                                        wrapperClassname={'relative inline-flex flex-col min-w-0 p-0 w-full'}
-                                        inputClassname={'md:p-4 w-full p-3 placeholder-black rounded-full border border-black disabled:bg-gray-2 disabled:text-light-gray disabled:placeholder-light-gray disabled:cursor-not-allowed disabled:border-0'}
+                                        className={'md:p-4 w-full p-3 placeholder-black rounded-full border border-black disabled:bg-gray-2 disabled:text-light-gray disabled:placeholder-light-gray disabled:cursor-not-allowed disabled:border-0'}
                                         value={productInfo.description}
                                         disabled={!productInfo.country}
                                         readOnly
@@ -145,11 +139,10 @@ export default function ReadOnlyOrderForm({data}: Readonly<Props>) {
             }
             <div className={'flex flex-col gap-5'}>
                 <p className={'hidden md:block md:text-2xl'}>Получатель</p>
-                <Input id={'recipient'}
-                       inputType={'text'}
+                <TextInput id={'recipient'}
+                       type={'text'}
                        value={`${data.recipient?.firstName} ${data.recipient?.lastName}` ?? ''}
-                       wrapperClassname={'w-[20rem] relative'}
-                       inputClassname={'border border-black rounded-full p-3 md:p-4 cursor-pointer disabled:bg-gray-2 disabled:text-light-gray disabled:placeholder-light-gray disabled:cursor-not-allowed disabled:border-0'}
+                       className={'border border-black rounded-full p-3 md:p-4 cursor-pointer disabled:bg-gray-2 disabled:text-light-gray disabled:placeholder-light-gray disabled:cursor-not-allowed disabled:border-0'}
                        label={'Получатель'}
                        readOnly/>
             </div>

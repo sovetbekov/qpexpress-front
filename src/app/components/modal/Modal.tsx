@@ -1,117 +1,155 @@
 'use client'
 
-import React, { useCallback, useMemo } from 'react'
-import Image from 'next/image'
-import { AnimatePresence, motion, Variants } from 'framer-motion'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '@/hooks/client/redux'
-import { closeModal, selectModalData, selectModalType } from '@/redux/reducers/modalSlice'
+import { closeModal, selectModals } from '@/redux/reducers/modalSlice'
+import { ModalState } from '@/redux/types'
+import { AnimatePresence, motion } from 'framer-motion'
 import CalculatorModal from '@/app/components/modal/CalculatorModal'
 import DenialReasonModal from '@/app/components/modal/DenialReasonModal'
 import PaymentMethodModal from '@/app/components/modal/PaymentMethodModal'
 
-type Props = {
-    width: string,
-    children: React.ReactNode,
-    type: string,
-    onClose?: () => void,
+type WrapperProps = {
+    size: { width: string, height: string }
+    children: React.ReactNode
+    type: string
 }
 
-type ModalProps = {
+type Props = {
     language: string
 }
 
-export default function Modal({language}: ModalProps) {
-    const modalType = useAppSelector(selectModalType)
-    const data = useAppSelector(selectModalData)
+const MotionModalWrapper = motion(ModalWrapper)
 
+function getModalDimensions(modalType: ModalState['modalType']) {
+    switch (modalType) {
+        case 'calculator':
+            return {
+                width: '30rem',
+                height: '28rem',
+            }
+        case 'denialReason':
+            return {
+                width: '40rem',
+                height: '40rem',
+            }
+        case 'paymentMethod':
+            return {
+                width: '25rem',
+                height: '25rem',
+            }
+        default:
+            return {
+                width: '0',
+                height: '0',
+            }
+    }
+}
 
-    const modalWidth = useMemo(() => {
-        if (modalType === 'calculator') {
-            return '30rem'
-        } else if (modalType === 'denialReason') {
-            return '40rem'
-        } else if (modalType === 'paymentMethod') {
-            return '25rem'
-        } else {
-            return '0'
-        }
-    }, [modalType])
+export default function Modal({language}: Readonly<Props>) {
+    const modals = useAppSelector(selectModals)
+
+    const dispatch = useAppDispatch()
+
+    const modalVariants = {
+        hidden: {
+            opacity: 0,
+            y: -100,
+        },
+        visible: {
+            opacity: 1,
+            y: 0,
+        },
+        exit: {
+            opacity: 0,
+            y: 100,
+        },
+    }
+
+    const backgroundVariants = {
+        hidden: {
+            opacity: 0,
+        },
+        visible: {
+            opacity: 1,
+        },
+        exit: {
+            opacity: 0,
+        },
+    }
+
+    const onClose = useCallback(() => {
+        if (modals.length === 0) return
+        dispatch(closeModal({id: modals[0].id}))
+    }, [dispatch, modals])
 
     return (
         <AnimatePresence>
             {
-                modalType && <ModalWrapper width={modalWidth} type={modalType}>
+                modals.length > 0 &&
+                <motion.div className={'bg-black/50 fixed left-0 top-0 right-0 bottom-0'}
+                            variants={backgroundVariants} initial={'hidden'} animate={'visible'} exit={'exit'}
+                            onClick={onClose}>
                     {
-                        modalType === 'calculator' &&
-                        <CalculatorModal/>
+                        !!modals[0] &&
+                        <MotionModalWrapper size={getModalDimensions(modals[0].modalType)} type={modals[0].modalType}
+                                            variants={modalVariants} initial={'hidden'} animate={'visible'}
+                                            exit={'exit'}>
+                            {modals[0].modalType === 'calculator' && <CalculatorModal language={language}/>}
+                            {modals[0].modalType === 'denialReason' && <DenialReasonModal recipient={modals[0].data.recipient} language={language}/>}
+                            {modals[0].modalType === 'paymentMethod' && <PaymentMethodModal/>}
+                        </MotionModalWrapper>
                     }
-                    {
-                        modalType === 'denialReason' &&
-                        <DenialReasonModal recipient={data} language={language}/>
-                    }
-                    {
-                        modalType === 'paymentMethod' &&
-                        <PaymentMethodModal/>
-                    }
-                </ModalWrapper>
+                </motion.div>
             }
         </AnimatePresence>
     )
 }
 
-const modalVariants: Variants = {
-    initial: {
-        opacity: 0,
-        y: -100,
-    },
-    animate: {
-        opacity: 1,
-        y: 0,
-    },
-    exit: {
-        opacity: 0,
-        y: 100,
-    },
-}
+function ModalWrapper({size, type, children}: Readonly<WrapperProps>) {
+    const [prevType, setPrevType] = useState(type)
+    const [prevChildren, setPrevChildren] = useState(children)
+    const contentVariants = {
+        hidden: {
+            opacity: 0,
+        },
+        visible: {
+            opacity: 1,
+        },
+        exit: {
+            opacity: 0,
+        },
+    }
 
-function ModalWrapper({width, onClose, type, children}: Readonly<Props>) {
-    const dispatch = useAppDispatch()
-    const onCloseClick = useCallback(() => {
-        dispatch(closeModal())
-        onClose?.()
-    }, [dispatch, onClose])
+    useEffect(() => {
+        if (prevType === type) {
+            setPrevChildren(children)
+            return
+        }
+        setTimeout(() => {
+            setPrevType(type)
+            setPrevChildren(children)
+        }, 300)
+    }, [children, prevType, type])
 
     return (
-        <motion.div
-            key={'background'}
-            initial={{opacity: 0}}
-            animate={{opacity: 1}}
-            exit={{opacity: 0}}
-            className={'md:w-full md:h-full md:bg-black/50 md:flex md:fixed md:justify-center md:items-center md:z-10 md:left-0 md:top-0'}
-            onClick={onCloseClick}>
+        <div className={'flex w-full h-full justify-center items-center'}>
             <motion.div
-                layout
-                key={'modal'}
-                variants={modalVariants}
-                initial={'initial'}
-                animate={'animate'}
-                exit={'exit'}
-                transition={{
-                    type: 'spring',
-                    duration: .5,
+                style={{
+                    width: size.width,
+                    height: size.height,
                 }}
-                style={{width: width}}
-                className={'md:absolute md:min-h-[20rem] md:bg-gray md:shadow md:rounded-[2rem] md:border-none'}
-                onClick={event => event.stopPropagation()}>
-                <motion.div layout key={type}>
-                    <button
-                        className={'md:absolute md:cursor-pointer md:bg-none md:text-2xl md:transition-[color] md:duration-[0.2s] md:ease-[ease-in-out] md:border-[none] md:right-8 md:top-8 md:hover:text-black'}
-                        onClick={onCloseClick}>
-                        <Image src={'/assets/cross.svg'} alt={'cross'} width={20} height={20}/>
-                    </button>
-                    {children}
-                </motion.div>
+                className={'absolute min-h-[20rem] shadow rounded-xl border-none z-20 bg-white'}
+                onClick={e => e.stopPropagation()}
+                variants={contentVariants}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+            >
+                <div key={type}>
+                    {prevChildren}
+                </div>
             </motion.div>
-        </motion.div>
+        </div>
     )
 }
