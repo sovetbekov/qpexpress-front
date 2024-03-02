@@ -1,18 +1,18 @@
 'use client'
 
-import React, {useRef, useState} from 'react'
+import React, { useRef, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import {usePathname, useRouter} from 'next/navigation'
-import {useAppDispatch} from '@/hooks/client/redux'
-import {openModal} from '@/redux/reducers/modalSlice'
-import {MenuToggle} from '@/app/components/client/MenuToggle'
-import {AnimatePresence, motion} from 'framer-motion'
-import {MenuItem} from '@/app/components/client/MenuItem'
-import {useAuthenticationActions} from '@/hooks/client/useAuthenticationActions'
-import {useTranslation} from '@/app/i18n/client'
-import {CN, GB, RU} from 'country-flag-icons/react/3x2'
+import { usePathname, useRouter } from 'next/navigation'
+import { useAppDispatch } from '@/hooks/client/redux'
+import { openModal } from '@/redux/reducers/modalSlice'
+import { MenuToggle } from '@/app/components/client/MenuToggle'
+import { MenuItem } from '@/app/components/client/MenuItem'
+import { useAuthenticationActions } from '@/hooks/client/useAuthenticationActions'
+import { useTranslation } from '@/app/i18n/client'
+import { CN, GB, RU } from 'country-flag-icons/react/3x2'
 import OptionSelect from '@/app/components/input/DropdownInput/OptionSelect'
+import { animated, useSpring } from '@react-spring/web'
 
 type Props = {
     language: string
@@ -30,7 +30,7 @@ export default function Navigation({language}: Readonly<Props>) {
 
     const dispatch = useAppDispatch()
     const showCalculatorModal = () => {
-        dispatch(openModal({modalType: 'calculator'}))
+        dispatch(openModal({modalType: 'calculator', data: null}))
     }
 
     const toggleMenu = () => {
@@ -47,6 +47,14 @@ export default function Navigation({language}: Readonly<Props>) {
             transition: {staggerChildren: 0.05, staggerDirection: -1},
         },
     }
+
+    const animation = useSpring({
+        opacity: isMenuOpen ? 1 : 0,
+    })
+
+    const menuAnimation = useSpring({
+        transform: isMenuOpen ? 'translateX(33%)' : 'translateX(100%)',
+    })
 
     const menuVariants = {
         open: {
@@ -142,24 +150,16 @@ export default function Navigation({language}: Readonly<Props>) {
                         <Image src={'/assets/logo.svg'} alt={'logo'} width={50} height={58} placeholder={'empty'}
                                objectFit={'contain'}/>
                     </Link>
-                    <motion.nav
-                        initial={false}
-                        animate={isMenuOpen ? 'open' : 'closed'}
-                        ref={containerRef}
-                    >
+                    <animated.nav style={animation}
+                                  ref={containerRef}>
                         <MenuToggle toggle={toggleMenu}/>
-                    </motion.nav>
+                    </animated.nav>
                 </div>
-                <AnimatePresence initial={true}>
                     {
-                        isMenuOpen && <motion.div
-                            className={'absolute top-25 right-0 w-full h-[calc(100dvh-5rem)] z-50 opacity-20'}
-                            variants={variants} animate={isMenuOpen ? 'open' : 'closed'} initial={'closed'}
-                            exit={'closed'}>
+                        isMenuOpen && <animated.div
+                            className={'absolute top-25 right-0 w-full h-[calc(100dvh-5rem)] z-50 opacity-20'}>
                             <div className={'absolute w-full h-full bg-black opacity-70 touch-none'} onClick={toggleMenu}/>
-                            <motion.ul variants={menuVariants} animate={isMenuOpen ? 'open' : 'closed'} initial={'closed'}
-                                       exit={'closed'} transition={{ease: 'easeInOut'}}
-                                       className={'absolute right-0 flex flex-col list-none bg-gray w-full h-full touch-none'}>
+                            <animated.ul className={'absolute right-0 flex flex-col list-none bg-gray w-full h-full touch-none'}>
                                 <div className={'flex flex-col justify-between h-full'}>
                                     {
                                         /\/(ru|en|zh|kk)$/.exec(pathname) &&
@@ -253,10 +253,9 @@ export default function Navigation({language}: Readonly<Props>) {
                                         }
                                     </div>
                                 </div>
-                            </motion.ul>
-                        </motion.div>
+                            </animated.ul>
+                        </animated.div>
                     }
-                </AnimatePresence>
             </div>
         </>
     )

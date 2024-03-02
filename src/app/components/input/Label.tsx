@@ -1,18 +1,19 @@
 'use client'
 
-import { motion, MotionProps } from 'framer-motion'
-import React, { LabelHTMLAttributes, PropsWithChildren } from 'react'
+import React, { LabelHTMLAttributes, PropsWithChildren, useLayoutEffect, useRef, useState } from 'react'
 import { Errors } from '@/types'
 import { ReferenceElement } from '@floating-ui/dom'
+import { animated, useSpring } from '@react-spring/web'
 
 type Props = {
     errors?: Errors
-    inputElement: HTMLElement | ReferenceElement
+    inputElement: HTMLInputElement
     inputChanged: boolean
     focused: boolean
     required?: boolean
+    labelColor?: string
     disabled?: boolean
-} & LabelHTMLAttributes<HTMLLabelElement> & MotionProps
+} & LabelHTMLAttributes<HTMLLabelElement>
 
 export default function Label({
                                   errors,
@@ -20,54 +21,75 @@ export default function Label({
                                   inputElement,
                                   className,
                                   inputChanged,
+                                  labelColor,
                                   children,
                                   required,
                                   disabled,
                                   ...props
                               }: PropsWithChildren<Props>) {
-    const dimensions = inputElement.getBoundingClientRect()
-    const labelVariants = {
-        'initial': {
-            color: props.color,
-            x: '1rem',
+    const wrapperRef = useRef<HTMLDivElement>(null)
+    const [height, setHeight] = useState<number>(0)
+
+    const [labelColorAnimation, labelColorApi] = useSpring(() => ({
+        color: labelColor ?? '#9CA3AF',
+        background: 'white',
+    }))
+
+    const [labelPositionAnimation, labelPositionApi] = useSpring(() => ({
+        y: 0,
+        x: '0.825rem',
+        scale: 1,
+    }))
+    const labelChanged = focused || inputChanged
+    const hasError = props.htmlFor && !!errors?.[props.htmlFor]?.length
+    if (labelChanged) {
+        labelPositionApi.start({
+            y: -height / 2,
+            scale: 0.75,
+            config: {
+                tension: 180,
+                friction: 12,
+            },
+        })
+    } else {
+        labelPositionApi.start({
             y: 0,
             scale: 1,
-            background: 'white',
-        },
-        'changed': {
-            x: '0.5rem',
-            y: dimensions?.height ? -dimensions.height / 2 : 0,
-            scale: 0.75,
-        },
-        'error': {
+            config: {
+                tension: 180,
+                friction: 12,
+            },
+        })
+    }
+
+    if (hasError) {
+        labelColorApi.start({
             color: '#FE5C00',
-        },
-        'disabled': {
+        })
+    } else if (disabled) {
+        labelColorApi.start({
             color: '#9CA3AF',
             background: 'none',
-        },
+        })
+    } else {
+        labelColorApi.start({
+            color: labelColor ?? '#000000',
+            background: 'white',
+        })
     }
-    const labelChanged = focused || inputChanged
-    const animate = labelChanged ? ['changed'] : ['initial']
-    if (props.htmlFor && !!errors?.[props.htmlFor]?.length) {
-        animate.push('error')
-    }
-    if (disabled) {
-        animate.push('disabled')
-    }
+
     return (
-        <div className={'absolute top-0 left-0 flex justify-center items-center pointer-events-none'} style={{height: dimensions?.height ?? 'auto'}}>
-            <motion.label variants={labelVariants}
-                          animate={animate}
-                          initial={'initial'}
-                          className={className}
-                          {...props}>
+        <div className={'absolute top-0 left-0 flex justify-center items-center pointer-events-none'}
+             style={{height: height ?? 'auto'}} ref={wrapperRef}>
+            <animated.label style={{...labelPositionAnimation, ...labelColorAnimation}}
+                            className={className}
+                            {...props}>
                 {children}
                 {
                     required &&
                     <span>*</span>
                 }
-            </motion.label>
+            </animated.label>
         </div>
     )
 }

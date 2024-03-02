@@ -1,6 +1,6 @@
 import * as React from 'react'
-import { motion } from 'framer-motion'
 import Link from 'next/link'
+import { useSpring } from '@react-spring/web'
 
 type MenuItemProps = {
     text?: string,
@@ -27,26 +27,26 @@ const variants = {
 }
 
 export const MenuItem = ({text, link, onClick, children}: MenuItemProps) => {
+    const animation = useSpring({
+        y: 0,
+        opacity: 1,
+    })
+
     return (
         <>
             {children &&
-                <motion.li
-                    variants={variants}
-                    onClick={onClick}
-                    className={'p-5 border-b border-b-light-gray'}
-                >
+                <li onClick={onClick}
+                    className={'p-5 border-b border-b-light-gray'}>
                     {children}
-                </motion.li>
+                </li>
             }
             {
                 link &&
                 <Link href={link}>
-                    <motion.li
-                        variants={variants}
-                        onClick={onClick}
-                        className={'p-5 border-b border-b-light-gray'}
-                    >{text}
-                    </motion.li>
+                    <li onClick={onClick}
+                        className={'p-5 border-b border-b-light-gray'}>
+                        {text}
+                    </li>
                 </Link>
             }
         </>

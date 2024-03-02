@@ -2,13 +2,22 @@ import { RecipientData } from '@/types'
 
 export type ModalState = { id: string } & ({
     modalType: 'calculator'
+    data: null,
 } | {
     modalType: 'denialReason'
     data: {
         recipient: RecipientData
     }
 } | {
-    modalType: 'paymentMethod'
+    modalType: 'paymentMethod',
+    data: {
+        price: number
+    }
+} | {
+    modalType: 'kaspiQr',
+    data: {
+        price: number
+    }
 })
 
 export type CalculatorResponse = {

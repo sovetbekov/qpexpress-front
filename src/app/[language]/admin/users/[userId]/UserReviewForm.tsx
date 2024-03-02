@@ -167,7 +167,7 @@ export default function UserReviewForm({data: {user, recipients}, language}: Rea
                             </button>
                         }
                         <button className={'py-4 px-10 w-[15rem] bg-orange text-white rounded-full'} onClick={() => {
-                            dispatch(openModal({modalType: 'denialReason', data: recipients[0]}))
+                            dispatch(openModal({modalType: 'denialReason', data: {recipient: recipients[0]}}))
                         }}>
                             Отклонить
                         </button>

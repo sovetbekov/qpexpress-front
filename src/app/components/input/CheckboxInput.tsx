@@ -1,7 +1,7 @@
 'use client'
 
-import { motion, useMotionValue, useTransform } from 'framer-motion'
 import React, { useRef } from 'react'
+import { animated, useSpring } from '@react-spring/web'
 
 type Props = {
     id?: string
@@ -28,6 +28,17 @@ export default function CheckboxInput(
         readOnly,
     }: Readonly<Props>,
 ) {
+    const [tickAnimation, tickAnimationApi] = useSpring(() => ({
+        pathLength: 0,
+    }))
+    const [boxAnimation, boxAnimationApi] = useSpring(() => ({
+        scale: 1,
+        strokeWidth: 30,
+    }))
+    const colorAnimation = useSpring({
+        stroke: disabled ? '#ddd' : 'var(--blue-color)',
+    })
+
     const tickVariants = {
         pressed: {pathLength: checked ? 0.85 : 0.2},
         checked: {pathLength: 1},
@@ -46,14 +57,11 @@ export default function CheckboxInput(
     }
 
     const inputRef = useRef<HTMLInputElement>(null)
-    const pathLength = useMotionValue(0)
-    const opacity = useTransform(pathLength, [0.05, 0.15], [0, 1])
 
     return (
-        <motion.div className={wrapperClassname}
-                    onClick={() => inputRef.current?.click()}
-                    whileHover={'hover'}
-                    animate={[checked ? 'checked' : 'unchecked', disabled ? 'disabled' : 'active']}>
+        <animated.div className={wrapperClassname}
+                      onClick={() => inputRef.current?.click()}
+                      style={{...colorAnimation, ...boxAnimation}}>
             <input id={id}
                    type={'checkbox'}
                    checked={checked}
@@ -62,16 +70,16 @@ export default function CheckboxInput(
                    ref={inputRef}
                    readOnly={readOnly}
                    hidden/>
-            <motion.svg
+            <animated.svg
                 viewBox={'0 0 440 440'}
                 className={checkboxClassname}
             >
-                <motion.path
+                <animated.path
                     d="M 72 136 C 72 100.654 100.654 72 136 72 L 304 72 C 339.346 72 368 100.654 368 136 L 368 304 C 368 339.346 339.346 368 304 368 L 136 368 C 100.654 368 72 339.346 72 304 Z"
                     fill="transparent"
-                    variants={boxVariants}
+                    style={{...colorAnimation, ...boxAnimation}}
                 />
-                <motion.path
+                <animated.path
                     d="M 0 128.666 L 128.658 257.373 L 341.808 0"
                     transform="translate(54.917 68.947) rotate(-4 170.904 128.687)"
                     fill="transparent"
@@ -79,11 +87,10 @@ export default function CheckboxInput(
                     stroke="var(--blue-color)"
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    variants={tickVariants}
-                    style={{pathLength, opacity}}
+                    style={{...colorAnimation, ...tickAnimation}}
                 />
-            </motion.svg>
+            </animated.svg>
             <span className={labelClassname}>{label}</span>
-        </motion.div>
+        </animated.div>
     )
 }

@@ -1,7 +1,7 @@
 'use client'
 
-import { AnimatePresence, motion, Variants } from 'framer-motion'
 import React, { forwardRef, PropsWithChildren } from 'react'
+import { animated, useTransition } from '@react-spring/web'
 
 type Props = {
     isOpen: boolean
@@ -20,31 +20,20 @@ const Dropdown = forwardRef<HTMLDivElement, PropsWithChildren<Props>>((props, re
     const {
         isOpen,
     } = props
-    const dropdownAnimation: Variants = {
-        open: {
-            opacity: 1,
-        },
-        closed: {
-            opacity: 0,
-        },
-    }
+    const dropdownTransition = useTransition(isOpen, {
+        from: {opacity: 0},
+        enter: {opacity: 1},
+        leave: {opacity: 0},
+    })
 
-    return (
-        <AnimatePresence>
-            {
-                isOpen && <motion.div
-                    variants={dropdownAnimation}
-                    animate={isOpen ? 'open' : 'closed'}
-                    initial={'closed'}
-                    exit={'closed'}
-                    ref={ref}
-                    className={props.className}
-                    style={{...props.style}}>
-                    {props.children}
-                </motion.div>
-            }
-        </AnimatePresence>
-    )
+    return dropdownTransition((style, isOpen) => (
+        isOpen && <animated.div
+            ref={ref}
+            className={props.className}
+            style={{...props.style, ...style}}>
+            {props.children}
+        </animated.div>
+    ))
 })
 
 Dropdown.displayName = 'Dropdown'

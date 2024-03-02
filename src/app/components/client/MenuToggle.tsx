@@ -1,12 +1,11 @@
 import * as React from "react";
-import { motion } from "framer-motion";
 
 type MenuProps = {
     toggle: () => void;
 }
 
 const Path = (props: any) => (
-    <motion.path
+    <path
         fill="transparent"
         strokeWidth="3"
         stroke="hsl(0, 0%, 18%)"

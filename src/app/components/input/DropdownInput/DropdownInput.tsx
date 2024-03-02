@@ -2,11 +2,11 @@
 
 import React, { Dispatch, PropsWithChildren, SetStateAction, useState } from 'react'
 import Image from 'next/image'
-import { motion, Variants } from 'framer-motion'
 import { useFloating } from '@floating-ui/react'
 import { Errors } from '@/types'
 import TextInput from '@/app/components/input/TextInput'
 import Dropdown, { Option } from '@/app/components/input/DropdownInput/Dropdown'
+import { animated, useSpring } from '@react-spring/web'
 
 type NullableProps<T> = {
     nullable: true,
@@ -86,18 +86,9 @@ export default function DropdownInput<T>({
         setIsOpen(false)
     }
 
-    const arrowAnimation: Variants = {
-        open: {
-            rotateZ: 180,
-            originX: 0.5,
-            originY: 0.5,
-        },
-        closed: {
-            rotateZ: 0,
-            originX: 0.5,
-            originY: 0.5,
-        },
-    }
+    const arrowAnimation = useSpring({
+        transform: isOpen ? 'rotateZ(180deg)' : 'rotateZ(0deg)',
+    })
 
     return (
         <div className={wrapperClassname}>
@@ -136,12 +127,11 @@ export default function DropdownInput<T>({
                     ref={refs.setReference}
                     disabled={disabled ?? options.length === 0}
                 />
-                <motion.div
-                    variants={arrowAnimation}
-                    animate={isOpen ? 'open' : 'closed'}
+                <animated.div
+                    style={arrowAnimation}
                     className={'absolute h-full flex items-center justify-center right-5 top-0 pointer-events-none'}>
                     <Image src={'/assets/arrow.svg'} alt={'arrow'} width={10} height={10}/>
-                </motion.div>
+                </animated.div>
             </div>
             <Dropdown isOpen={isOpen} className={dropdownClassname} ref={refs.setFloating}
                       style={floatingStyles}>

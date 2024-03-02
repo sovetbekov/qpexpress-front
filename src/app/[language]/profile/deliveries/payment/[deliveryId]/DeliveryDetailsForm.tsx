@@ -56,7 +56,7 @@ export default function DeliveryDetailsForm({delivery}: Readonly<Props>) {
                         </div>
                     }
                 </div>
-                <PaymentButton/>
+                <PaymentButton price={delivery.price}/>
             </div>
         </div>
     )

@@ -2,12 +2,12 @@
 
 import React, { Dispatch, DragEvent, SetStateAction, useRef, useState } from 'react'
 import Image from 'next/image'
-import { motion } from 'framer-motion'
 import { Errors, FileMetaData } from '@/types'
 import clsx from 'clsx'
 import Link from 'next/link'
 import { BACKEND_URL } from '@/globals'
 import TextInput from '@/app/components/input/TextInput'
+import { animated, useSpring } from '@react-spring/web'
 
 type Props = {
     id: string
@@ -84,16 +84,17 @@ export default function FileInput({
                     setErrors={setErrors}
                     label={label ? (
                         <div className={'flex flex-row items-center'}>
-                            <motion.div variants={iconVariants}>
+                            <div>
                                 <Image src={'/assets/file_upload.svg'} alt={'file_upload'} width={15} height={15}
                                        className={'mr-2'}/>
-                            </motion.div>
+                            </div>
                             <span className={'text-blue'}>
                                 {statusText ?? label + (required ? '*' : '')}
                             </span>
                         </div>
                     ) : ''}
                     value={fileName}
+                    inputColor={'#00A7FF'}
                     disabled={disabled}
                     readOnly/>
                 <input type={'file'}

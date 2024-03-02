@@ -2,11 +2,11 @@
 
 import React, { Dispatch, PropsWithChildren, SetStateAction, useState } from 'react'
 import Image from 'next/image'
-import { motion, Variants } from 'framer-motion'
 import clsx from 'clsx'
 import { useFloating } from '@floating-ui/react'
 import { Errors } from '@/types'
 import Dropdown, { Option } from '@/app/components/input/DropdownInput/Dropdown'
+import { animated, useSpring } from '@react-spring/web'
 
 type Props<T> = {
     id: string
@@ -51,39 +51,45 @@ export default function OptionSelect<T>({
         placement: 'bottom-start',
     })
 
-    const arrowAnimation: Variants = {
-        open: {
-            rotateZ: 180,
-            originX: 0.5,
-            originY: 0.5,
-        },
-        closed: {
-            rotateZ: 0,
-            originX: 0.5,
-            originY: 0.5,
-        },
-    }
+    const arrowAnimation = useSpring({
+        transform: isOpen ? 'rotateZ(180deg)' : 'rotateZ(0deg)',
+    })
 
-    const inputVariants = {
-        'initial': {
+    const [inputAnimation, inputApi] = useSpring(() => ({
+        from: {
             borderColor: '#000000',
+            color: '#000000',
             outlineColor: '#000000',
-        },
-        'error': {
-            borderColor: '#EF4444',
-            color: '#EF4444',
-            outlineColor: '#EF4444',
-        },
+        }
+    }))
+
+    const isError = !!errors?.[id]?.length
+    const isDisabled = disabled || options.length === 0
+
+    if (isDisabled) {
+        inputApi.start(
+            {
+                borderColor: '#D3D3D3',
+                color: '#D3D3D3',
+                outlineColor: '#D3D3D3',
+            }
+        )
+    } else if (isError) {
+        inputApi.start(
+            {
+                borderColor: '#FE5C00',
+                color: '#FE5C00',
+                outlineColor: '#FE5C00',
+                config: {tension: 180, friction: 12},
+            }
+        )
     }
 
     return (
         <div className={wrapperClassname}>
-            <motion.div className={clsx('relative w-full')} variants={inputVariants}
-                        animate={errors?.[id]?.length ? 'error' : 'initial'}
-                        initial={'initial'}>
-                <motion.div
-                    variants={inputVariants}
-                    animate={errors?.[id]?.length ? 'error' : (disabled || options.length === 0 ? 'disabled' : 'initial')}
+            <div>
+                <animated.div
+                    style={inputAnimation}
                     className={clsx(props.inputClassname, 'w-full', {
                         [props.inputClassname?.split(' ').filter(clazz => clazz.startsWith('disabled')).map(clazz => clazz.replace('disabled:', '')).join(' ') ?? '']: disabled || options.length === 0,
                     })}
@@ -95,18 +101,17 @@ export default function OptionSelect<T>({
                     ref={refs.setReference}
                 >
                     {props.selected?.label}
-                </motion.div>
+                </animated.div>
                 {
                     !props.readOnly && (
-                        <motion.div
-                            variants={arrowAnimation}
-                            animate={isOpen ? 'open' : 'closed'}
+                        <animated.div
+                            style={arrowAnimation}
                             className={'absolute h-full flex items-center justify-center right-5 top-0 pointer-events-none'}>
                             <Image src={'/assets/arrow.svg'} alt={'arrow'} width={10} height={10}/>
-                        </motion.div>
+                        </animated.div>
                     )
                 }
-            </motion.div>
+            </div>
             <Dropdown isOpen={isOpen} className={dropdownClassname} ref={refs.setFloating} style={floatingStyles}>
                 {
                     options.map(option => (

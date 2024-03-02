@@ -1,9 +1,9 @@
 'use client'
 
-import { motion, MotionProps } from 'framer-motion'
 import React, { Dispatch, forwardRef, SetStateAction, useState } from 'react'
 import { Errors } from '@/types'
 import Label from '@/app/components/input/Label'
+import { animated, useSpring } from '@react-spring/web'
 
 type Props = {
     id: string
@@ -11,31 +11,37 @@ type Props = {
     readOnly?: boolean
     label?: string | React.ReactNode
     errors?: Errors
+    inputColor?: string
     setErrors?: Dispatch<SetStateAction<Errors>>
-} & React.InputHTMLAttributes<HTMLInputElement> & MotionProps
+} & React.InputHTMLAttributes<HTMLInputElement>
 
 const TextInput
     = forwardRef<HTMLInputElement, Props>((props, ref) => {
-    const inputVariants = {
-        'initial': {
-            borderColor: '#000000',
-            outlineColor: '#000000',
-            color: '#000000',
-        },
-        'error': {
-            borderColor: '#FE5C00',
-            color: '#FE5C00',
-            outlineColor: '#FE5C00',
-        },
-        'disabled': {
-            borderColor: '#9CA3AF',
-            color: '#9CA3AF',
-            outlineColor: '#9CA3AF',
-        },
-    }
+    const [inputAnimation, inputApi] = useSpring(() => ({
+        borderColor: '#000000',
+        outlineColor: '#000000',
+        color: '#000000',
+    }))
 
     const [inputRef, setInputRef] = useState<HTMLInputElement>()
     const [focused, setFocused] = useState(false)
+    const hasError = !!props.errors?.[props.id]?.length
+
+    if (hasError) {
+        inputApi.start({
+            borderColor: '#FE5C00',
+            color: '#FE5C00',
+            outlineColor: '#FE5C00',
+            config: {tension: 180, friction: 12},
+        })
+    } else {
+        inputApi.start({
+            borderColor: props.disabled ? '#9CA3AF' : '#000000',
+            color: props.disabled ? '#9CA3AF' : '#000000',
+            outlineColor: props.disabled ? '#9CA3AF' : '#000000',
+            config: {tension: 180, friction: 12},
+        })
+    }
 
     const setRef = (node: HTMLInputElement) => {
         setInputRef(node)
@@ -48,19 +54,12 @@ const TextInput
         }
     }
 
-    let animate = ['initial']
-    if (props.disabled) {
-        animate.push('disabled')
-    }
-    if (props.errors?.[props.id]?.length) {
-        animate.push('error')
-    }
-
     return (
         <div className={'relative'}>
             {
                 inputRef &&
                 <Label inputElement={inputRef}
+                       labelColor={props.inputColor}
                        inputChanged={(props?.value as string).length !== 0}
                        focused={focused}
                        htmlFor={props.id}
@@ -68,32 +67,31 @@ const TextInput
                     {props.label}
                 </Label>
             }
-            <motion.input variants={inputVariants}
-                          animate={animate}
-                          initial={'initial'}
-                          ref={setRef}
-                          onFocus={(e) => {
-                              if (props.disabled) {
-                                  return
-                              }
-                              setFocused(true)
-                              props.onFocus?.(e)
-                          }}
-                          onBlur={(e) => {
-                              if (props.disabled) {
-                                  return
-                              }
-                              setFocused(false)
-                              props.onBlur?.(e)
-                          }}
-                          onChange={e => {
-                              props.onChange?.(e)
-                              props.setErrors?.({
-                                  ...props.errors,
-                                  [props.id]: [],
-                              })
-                          }}
-                          {...props}/>
+            <animated.input style={{...inputAnimation, color: props.inputColor ?? '#000'}}
+                            ref={setRef}
+                            onFocus={(e) => {
+                                if (props.disabled) {
+                                    return
+                                }
+                                setFocused(true)
+                                props.onFocus?.(e)
+                            }}
+                            onBlur={(e) => {
+                                if (props.disabled) {
+                                    return
+                                }
+                                setFocused(false)
+                                props.onBlur?.(e)
+                            }}
+                            onChange={e => {
+                                props.onChange?.(e)
+                                props.setErrors?.({
+                                    ...props.errors,
+                                    [props.id]: [],
+                                })
+                            }}
+                            readOnly
+                            {...props}/>
         </div>)
 })
 
