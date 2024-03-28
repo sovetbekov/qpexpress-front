@@ -11,7 +11,7 @@ type Props = {
 }
 
 export default function Header({language}: Readonly<Props>) {
-    const {auth, onLoginClick, onSignUpClick, onSignOutClick} = useAuthenticationActions()
+    const {auth, onLoginClick, onSignUpClick, onSignOutClick} = useAuthenticationActions(language)
     const {t} = useTranslation(language, 'header')
     return (
         <div className={'hidden md:block md:w-full md:flex md:flex-row md:justify-end md:items-center md:bg-black md:gap-12 md:px-20 md:py-4'}>

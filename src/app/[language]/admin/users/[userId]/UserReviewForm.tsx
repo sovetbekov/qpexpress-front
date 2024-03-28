@@ -11,7 +11,7 @@ import { useTranslation } from '@/app/i18n/client'
 import { toast } from 'react-toastify'
 import { isSuccess } from '@/app/lib/utils'
 import TextInput from '@/app/components/input/TextInput'
-import PatternInput from '@/app/components/input/MaskInput'
+import MaskInput from '@/app/components/input/MaskInput'
 
 type Props = {
     data: UserWithRecipientsData
@@ -149,12 +149,12 @@ export default function UserReviewForm({data: {user, recipients}, language}: Rea
                                            readOnly/>
                             </div>
                             <div className={'md:w-[calc(33%-0.51rem)] w-full'}>
-                                <PatternInput id={'phoneNumber'}
-                                              label={'Номер телефона'}
-                                              format={'+7 (999) 999-99-99'}
-                                              className={'md:p-5 p-3 border rounded-full border-black placeholder:text-black w-full'}
-                                              value={`${recipients[0].phoneNumber}`}
-                                              readOnly/>
+                                <MaskInput id={'phoneNumber'}
+                                           label={'Номер телефона'}
+                                           format={'+7 (###) ###-##-##'}
+                                           className={'md:p-5 p-3 border rounded-full border-black placeholder:text-black w-full'}
+                                           value={`${recipients[0].phoneNumber}`}
+                                           readOnly/>
                             </div>
                         </div>
                     </div>

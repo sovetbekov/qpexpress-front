@@ -2,6 +2,7 @@
   "profile": "Моя личная информация",
   "addresses": "Мои адреса",
   "orders": "Мои заказы",
+  "create_order": "+ Добавить заказ",
   "deliveries": "Мои посылки",
   "edit_profile": {
     "my_personal_info": "Моя личная информация",

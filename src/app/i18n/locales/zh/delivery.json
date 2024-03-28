@@ -1,0 +1,17 @@
+{
+  "product_information": "产品信息",
+  "delivery_information": "送货信息",
+  "weight": "重量（公斤）",
+  "price": "价格",
+  "kazpost_track_number": "来自 Kazpost 的跟踪号码",
+  "invoice": "发票",
+  "pay": "支付",
+  "delivery_status": "邮寄状态",
+  "created": "已创建",
+  "delivered_to_warehouse": "已交付到仓库",
+  "in_the_way": "在路上",
+  "in_your_country": "在您的国家",
+  "in_mail_office": "在邮局",
+  "delivered": "已交付",
+  "track_delivery": "跟踪交付"
+}

@@ -9,7 +9,7 @@ import FileInput from '@/app/components/input/FileInput'
 import { useTranslation } from '@/app/i18n/client'
 import { isSuccess } from '@/app/lib/utils'
 import TextInput from '@/app/components/input/TextInput'
-import PatternInput from '@/app/components/input/MaskInput'
+import MaskInput from '@/app/components/input/MaskInput'
 
 type RecipientFormData = {
     id?: string,
@@ -185,7 +185,7 @@ export default function RecipientInfoForm({initialFormData, language}: Readonly<
                     />
                 </div>
                 <div className={'md:w-[calc(50%-0.75rem)]'}>
-                    <PatternInput
+                    <MaskInput
                         id={'iin'}
                         name={'iin'}
                         format={'### ### ### ###'}
@@ -261,7 +261,7 @@ export default function RecipientInfoForm({initialFormData, language}: Readonly<
                     />
                 </div>
                 <div className={'md:w-[calc(50%-0.75rem)]'}>
-                    <PatternInput
+                    <MaskInput
                         id={'phone_number'}
                         name={'phone_number'}
                         format={'+7 (###) ###-##-##'}

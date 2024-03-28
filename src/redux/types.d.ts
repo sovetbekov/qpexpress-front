@@ -12,11 +12,13 @@ export type ModalState = { id: string } & ({
     modalType: 'paymentMethod',
     data: {
         price: number
+        deliveryId: string
     }
 } | {
     modalType: 'kaspiQr',
     data: {
         price: number
+        deliveryId: string
     }
 })
 

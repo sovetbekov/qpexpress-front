@@ -3,8 +3,14 @@
 import Image from 'next/image'
 import React from 'react'
 import { useRouter } from 'next/navigation'
+import { useTranslation } from '@/app/i18n/client'
 
-export default function PageComponent() {
+type Props = {
+    language: string
+}
+
+export default function PageComponent({language}: Readonly<Props>) {
+    const {t} = useTranslation(language, 'delivery')
     const router = useRouter()
     const onBackClick = () => {
         router.back()
@@ -16,7 +22,7 @@ export default function PageComponent() {
                 <Image src={'/assets/back_arrow.svg'} alt={'back_arrow.svg'} width={24} height={24}/>
             </button>
             <p className={'md:text-4xl md:font-bold'}>
-                Данные о посылке
+                {t('delivery_information')}
             </p>
         </div>
     )

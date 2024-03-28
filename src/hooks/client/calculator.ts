@@ -8,19 +8,21 @@ import { isError } from '@/app/lib/utils'
 export type CalculatorFormData = {
     country?: CountryData
     weight?: number
-    price?: string
+    priceUSD?: string
+    priceKZT?: string
 }
 
 export function useCalculatorEffect({
                                         weight,
-                                        price,
+                                        priceUSD,
+                                        priceKZT,
                                         country,
                                     }: CalculatorFormData, setFormData: React.Dispatch<SetStateAction<CalculatorFormData>>, delay: number) {
     const weightDebounce = useDebounce(weight, delay)
     const onCalculatorChange = useCallback(async () => {
         if (!weightDebounce) {
             setFormData({
-                weight: weightDebounce, country, price: '',
+                weight: weightDebounce, country, priceUSD, priceKZT,
             })
         } else if (country) {
             const response = await getCalculatorValues({
@@ -33,7 +35,8 @@ export function useCalculatorEffect({
             setFormData({
                 weight: weightDebounce,
                 country,
-                price: response.data.priceKZT ? response.data.priceKZT.toString() : '',
+                priceKZT: response.data.priceKZT ? response.data.priceKZT.toString() : '',
+                priceUSD: response.data.priceUSD ? response.data.priceUSD.toString() : '',
             })
         }
     }, [country, setFormData, weightDebounce])

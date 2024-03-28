@@ -9,10 +9,10 @@ import {
 } from '@/hooks/client/calculator'
 import { CountryData } from '@/types'
 import NumericInput from '@/app/components/input/NumericInput'
-import TextInput from '@/app/components/input/TextInput'
 import { useTranslation } from '@/app/i18n/client'
 import ModalHeader from '@/app/components/modal/ModalHeader'
 import ModalBody from '@/app/components/modal/ModalBody'
+import { getNameByLanguage } from '@/util'
 
 type Props = {
     language: string,
@@ -23,14 +23,13 @@ export default function CalculatorModal({language}: Readonly<Props>) {
     const [formData, setFormData] = useState<CalculatorFormData>({
         country: undefined,
         weight: 0,
-        price: '',
     })
     const {data: countries} = useGetCountriesQuery()
     const countryOptions = countries?.map(country => {
         return {
             id: country.id,
             value: country,
-            label: country.name,
+            label: getNameByLanguage(country, language),
         }
     }) ?? []
 
@@ -53,7 +52,7 @@ export default function CalculatorModal({language}: Readonly<Props>) {
                                                     dropdownClassname={'w-[calc(100vw-2.5rem)] z-50 md:max-h-60 md:w-[25rem] overflow-auto bg-white border my-4 rounded-3xl border-solid border-black'}
                                                     dropdownItemClassname={'cursor-pointer px-8 py-4 border-b-black border-b border-solid last:border-b-0 hover:bg-gray'}
                                                     label={t('country')}
-                                                    selected={formData.country}
+                                                    selected={formData.country?.id}
                                                     setSelected={(country) => setFormData({
                                                         ...formData,
                                                         country: country?.value,
@@ -69,10 +68,20 @@ export default function CalculatorModal({language}: Readonly<Props>) {
                                   })}
                                   disabled={!formData.country} value={formData.weight === 0 ? '' : formData.weight}
                                   className={'border cursor-pointer flex items-center justify-between w-full md:text-[0.9rem] md:w-[25rem] p-4 rounded-full border-black disabled:bg-gray disabled:text-[#cccccc] disabled:cursor-not-allowed disabled:border-0'}/>
-                    <TextInput type={'text'} label={t('price')} id={'weight'}
-                               disabled={!formData.country} value={formData.price}
-                               className={'border cursor-pointer flex items-center justify-between w-full md:text-[0.9rem] md:w-[25rem] p-4 rounded-full border-black disabled:bg-gray disabled:text-[#cccccc] disabled:cursor-not-allowed disabled:border-0'}
-                               readOnly/>
+                    <div className={'relative'}>
+                        <NumericInput type={'text'} label={t('price')} id={'price'}
+                                      thousandSeparator={','}
+                                      suffix={'$'}
+                                      disabled={!formData.country} value={formData.priceUSD}
+                                      className={'border cursor-pointer flex items-center justify-between w-full md:text-[0.9rem] md:w-[25rem] p-4 rounded-full border-black disabled:bg-gray disabled:text-[#cccccc] disabled:cursor-not-allowed disabled:border-0'}
+                                      readOnly/>
+                        {
+                            formData.priceKZT &&
+                            <span className={'absolute right-5 top-1/2 -translate-y-1/2 text-dark-gray'}>
+                                    {formData.priceKZT} ₸
+                                </span>
+                        }
+                    </div>
                 </div>
             </ModalBody>
         </div>

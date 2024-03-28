@@ -2,6 +2,7 @@
   "profile": "My profile",
   "addresses": "My addresses",
   "orders": "My orders",
+  "create_order": "+ Add order",
   "deliveries": "My deliveries",
   "edit_profile": {
     "my_personal_info": "My personal information",

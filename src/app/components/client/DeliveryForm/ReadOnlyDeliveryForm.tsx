@@ -9,13 +9,15 @@ import { getGoods } from '@/services/goods'
 import { isError } from '@/app/lib/utils'
 import TextInput from '@/app/components/input/TextInput'
 import NumericInput from '@/app/components/input/NumericInput'
+import { useTranslation } from '@/app/i18n/client'
 
 type Props = {
     data: DeliveryData
     language: string
 }
 
-export default function ReadOnlyDeliveryForm({data}: Readonly<Props>) {
+export default function ReadOnlyDeliveryForm({data, language}: Readonly<Props>) {
+    const {t} = useTranslation(language, 'delivery')
     const [goods, setGoods] = useState<GoodData[]>([])
 
     useEffect(() => {
@@ -77,6 +79,7 @@ export default function ReadOnlyDeliveryForm({data}: Readonly<Props>) {
                             </div>
                             <MoneyInput
                                 id={'price'}
+                                language={language}
                                 inputClassname={'md:basis-2/3 p-3 md:p-4 placeholder-black rounded-l-full border border-black disabled:bg-gray-2 disabled:text-light-gray disabled:placeholder-light-gray disabled:cursor-not-allowed disabled:border-0'}
                                 wrapperClassname={'md:basis-1/3 flex flex-row items-center w-full'}
                                 currencyWrapperClassname={'w-1/2 relative'}

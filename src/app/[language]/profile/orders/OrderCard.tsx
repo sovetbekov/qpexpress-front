@@ -1,10 +1,11 @@
 import React from 'react'
-import { getCountries } from '@/services/countries'
 import Link from 'next/link'
 import { OrderData } from '@/types'
+import { useTranslation } from '@/app/i18n'
 
 type Props = {
     order: OrderData
+    language: string
 }
 
 function getAmountOfStick(status: string) {
@@ -28,23 +29,24 @@ function getAmountOfStick(status: string) {
 
 export const dynamic = 'force-dynamic'
 
-export default async function OrderCard({order}: Readonly<Props>) {
+export default async function OrderCard({order, language}: Readonly<Props>) {
+    const {t} = await useTranslation(language, 'order')
     const amountOfSticks = getAmountOfStick(order.status)
 
     const statusNames: { [key: string]: string } = {
-        CREATED: 'Создан',
-        DELIVERED_TO_WAREHOUSE: 'Доставлен на склад',
-        IN_THE_WAY: 'В пути',
-        IN_YOUR_COUNTRY: 'В вашей стране',
-        IN_MAIL_OFFICE: 'В почтовом отделении',
-        DELIVERED: 'Доставлен',
+        CREATED: t('created'),
+        DELIVERED_TO_WAREHOUSE: t('delivered_to_warehouse'),
+        IN_THE_WAY: t('in_the_way'),
+        IN_YOUR_COUNTRY: t('in_your_country'),
+        IN_MAIL_OFFICE: t('in_mail_office'),
+        DELIVERED: t('delivered')
     }
 
     return (
         <Link href={`/profile/orders/${order.id}`}>
             <div className={'bg-gray rounded-3xl p-5 md:p-8'}>
                 <h2 className={'text-xl'}>{order.orderNumber}</h2>
-                <p className={'text-base'}>Статус заказа: {statusNames[order.status]}</p>
+                <p className={'text-base'}>{t('order_status')}: {statusNames[order.status]}</p>
                 <div className={'flex flex-row gap-2 md:gap-5 mt-2 mb-2'}>
                     {
                         Array.from({length: amountOfSticks}).map((_, index) => {

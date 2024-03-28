@@ -1,4 +1,3 @@
-import Link from 'next/link'
 import PageWrapper from '@/app/[language]/profile/PageWrapper'
 import DeliveryCard from '@/app/[language]/profile/deliveries/DeliveryCard'
 import { getMyDeliveries } from '@/services/deliveries'
@@ -6,7 +5,13 @@ import { isError } from '@/app/lib/utils'
 
 export const dynamic = 'force-dynamic'
 
-export default async function Page() {
+type Props = {
+    params: {
+        language: string
+    }
+}
+
+export default async function Page({params: {language}}: Readonly<Props>) {
     const deliveriesResponse = await getMyDeliveries()
     if (isError(deliveriesResponse)) {
         return <div>Ошибка</div>
@@ -19,7 +24,7 @@ export default async function Page() {
                 <h2 className={'text-2xl mb-5 md:hidden'}>Мои посылки</h2>
                 <div className={'mt-5 flex flex-col gap-5 md:mt-10'}>
                     {
-                        deliveries.map(delivery => <DeliveryCard key={delivery.id} delivery={delivery}/>)
+                        deliveries.map(delivery => <DeliveryCard key={delivery.id} delivery={delivery} language={language}/>)
                     }
                 </div>
             </div>

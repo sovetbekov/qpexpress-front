@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useRef } from 'react'
-import { animated, useSpring } from '@react-spring/web'
+import clsx from 'clsx'
 
 type Props = {
     id?: string
@@ -28,40 +28,11 @@ export default function CheckboxInput(
         readOnly,
     }: Readonly<Props>,
 ) {
-    const [tickAnimation, tickAnimationApi] = useSpring(() => ({
-        pathLength: 0,
-    }))
-    const [boxAnimation, boxAnimationApi] = useSpring(() => ({
-        scale: 1,
-        strokeWidth: 30,
-    }))
-    const colorAnimation = useSpring({
-        stroke: disabled ? '#ddd' : 'var(--blue-color)',
-    })
-
-    const tickVariants = {
-        pressed: {pathLength: checked ? 0.85 : 0.2},
-        checked: {pathLength: 1},
-        unchecked: {pathLength: 0},
-        disabled: {stroke: '#ddd'},
-        active: {stroke: disabled ? '#000' : 'var(--blue-color)'},
-    }
-
-    const boxVariants = {
-        hover: {scale: 1.05, strokeWidth: 40},
-        pressed: {scale: 0.95, strokeWidth: 30},
-        checked: {},
-        unchecked: {strokeWidth: 30},
-        disabled: {stroke: '#ddd'},
-        active: {stroke: disabled ? '#000' : 'var(--blue-color)'},
-    }
-
     const inputRef = useRef<HTMLInputElement>(null)
+    const color = disabled ? '#ddd' : 'rgb(0,124,226)'
 
     return (
-        <animated.div className={wrapperClassname}
-                      onClick={() => inputRef.current?.click()}
-                      style={{...colorAnimation, ...boxAnimation}}>
+        <div className={wrapperClassname}>
             <input id={id}
                    type={'checkbox'}
                    checked={checked}
@@ -70,27 +41,20 @@ export default function CheckboxInput(
                    ref={inputRef}
                    readOnly={readOnly}
                    hidden/>
-            <animated.svg
-                viewBox={'0 0 440 440'}
-                className={checkboxClassname}
-            >
-                <animated.path
-                    d="M 72 136 C 72 100.654 100.654 72 136 72 L 304 72 C 339.346 72 368 100.654 368 136 L 368 304 C 368 339.346 339.346 368 304 368 L 136 368 C 100.654 368 72 339.346 72 304 Z"
-                    fill="transparent"
-                    style={{...colorAnimation, ...boxAnimation}}
-                />
-                <animated.path
-                    d="M 0 128.666 L 128.658 257.373 L 341.808 0"
-                    transform="translate(54.917 68.947) rotate(-4 170.904 128.687)"
-                    fill="transparent"
-                    strokeWidth="65"
-                    stroke="var(--blue-color)"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    style={{...colorAnimation, ...tickAnimation}}
-                />
-            </animated.svg>
-            <span className={labelClassname}>{label}</span>
-        </animated.div>
+            <label htmlFor={id}
+                   className={clsx('cursor-pointer w-full flex flex-row gap-2 items-center')} onClick={() => inputRef.current?.click()}>
+                <svg viewBox={'0 0 100 100'} className={clsx('w-[2em] stroke-[5] fill-[white]', checkboxClassname)} style={{stroke: color}}>
+                    <path className={'fill-[white] transition-[stroke-dashoffset] duration-[0.3s] ease-linear'}
+                          d={'M82,89H18c-3.87,0-7-3.13-7-7V18c0-3.87,3.13-7,7-7h64c3.87,0,7,3.13,7,7v64C89,85.87,85.87,89,82,89z'}/>
+                    <polyline className={'fill-none transition-[stroke-dashoffset] duration-[0.2s] ease-linear'}
+                              style={{
+                                  strokeDasharray: '200',
+                                  strokeDashoffset: checked ? '0' : '200',
+                              }}
+                              points={'25.5,53.5 39.5,67.5 72.5,34.5'}/>
+                </svg>
+                <span className={labelClassname}>{label}</span>
+            </label>
+        </div>
     )
 }

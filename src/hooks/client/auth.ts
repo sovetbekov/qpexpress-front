@@ -2,7 +2,6 @@
 
 import { signOut, useSession } from 'next-auth/react'
 import { useEffect, useMemo } from 'react'
-import { notEmpty } from '@/app/lib/utils'
 import { Session } from 'next-auth'
 import { useAppDispatch } from '@/hooks/client/redux'
 

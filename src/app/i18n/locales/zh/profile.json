@@ -2,6 +2,7 @@
   "profile": "我的简历",
   "addresses": "我的地址",
   "orders": "我的订单",
+  "create_order": "+ 添加订单",
   "deliveries": "我的包裹",
   "edit_profile": {
     "my_personal_info": "我的个人信息",

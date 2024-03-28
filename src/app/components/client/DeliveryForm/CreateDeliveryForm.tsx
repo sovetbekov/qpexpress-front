@@ -98,7 +98,7 @@ export default function CreateDeliveryForm({recipients, currencies, language}: R
                     <h2 className={'text-xl md:hidden'}>Получатель</h2>
                     <div className={'flex flex-col gap-y-3 md:flex-row md:gap-x-10 w-[25rem]'}>
                         <DropdownInput<RecipientOverview> id={'user'} options={recipientOptions}
-                                                          label={'Получатель'} selected={formData.recipient}
+                                                          label={'Получатель'} selected={formData.recipient?.id}
                                                           nullable={true} searchable={true}
                                                           setSelected={recipient => setFormData({
                                                               ...formData,
@@ -145,7 +145,8 @@ export default function CreateDeliveryForm({recipients, currencies, language}: R
                             </div>
                             <MoneyInput
                                 id={'price'}
-                                inputClassname={'md:basis-2/3 p-3 md:p-4 placeholder-black rounded-l-full border border-black disabled:bg-gray-2 disabled:text-light-gray disabled:placeholder-light-gray disabled:cursor-not-allowed disabled:border-0'}
+                                language={language}
+                                inputClassname={'md:basis-2/3 w-full p-3 md:p-4 placeholder-black rounded-l-full border border-black disabled:bg-gray-2 disabled:text-light-gray disabled:placeholder-light-gray disabled:cursor-not-allowed disabled:border-0'}
                                 wrapperClassname={'md:basis-1/3 flex flex-row items-center w-full'}
                                 currencyWrapperClassname={'w-1/2 relative'}
                                 currencyInputClassname={'min-w-fit p-3 md:p-4 placeholder-black rounded-r-full border border-black disabled:bg-gray-2 disabled:text-light-gray disabled:placeholder-light-gray disabled:cursor-not-allowed disabled:border-0'}
@@ -155,7 +156,7 @@ export default function CreateDeliveryForm({recipients, currencies, language}: R
                                 value={formData.price}
                                 onChange={price => setFormData({
                                     ...formData,
-                                    price
+                                    price,
                                 })}
                                 required
                             />

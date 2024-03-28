@@ -18,15 +18,20 @@ type Props = {
 
 const AnimatedPatternFormat = animated(PatternFormat)
 
-const PatternInput
-    = forwardRef<HTMLInputElement, Props>(({customInput, ...props}, ref) => {
+const MaskInput = forwardRef<HTMLInputElement, Props>(({customInput, ...props}, ref) => {
+    const {
+        setErrors,
+        errors,
+        label,
+        ...restProps
+    } = props
+
     const [inputAnimation, inputApi] = useSpring(() => ({
         borderColor: '#000000',
         outlineColor: '#000000',
         color: '#000000',
     }))
 
-    const [inputRef, setInputRef] = useState<HTMLInputElement>()
     const [focused, setFocused] = useState(false)
     const hasError = !!props.errors?.[props.id]?.length
 
@@ -46,32 +51,17 @@ const PatternInput
         })
     }
 
-    const setRef = (node: HTMLInputElement) => {
-        setInputRef(node)
-        if (ref) {
-            if (typeof ref === 'function') {
-                ref(node)
-            } else {
-                ref.current = node
-            }
-        }
-    }
-
     return (
         <div className={'relative'}>
-            {
-                inputRef &&
-                <Label inputElement={inputRef}
-                       inputChanged={!!props.value}
-                       focused={focused}
-                       htmlFor={props.id}
-                       disabled={props.disabled}>
-                    {props.label}
-                </Label>
-            }
+            <Label inputChanged={true}
+                   focused={focused}
+                   htmlFor={props.id}
+                   disabled={props.disabled}>
+                {props.label}
+            </Label>
             <AnimatedPatternFormat style={inputAnimation}
                                    value={!props.value ? '' : props.value}
-                                   getInputRef={setRef}
+                                   getInputRef={ref}
                                    onFocus={(e) => {
                                        if (props.disabled) {
                                            return
@@ -93,10 +83,10 @@ const PatternInput
                                            [props.id]: [],
                                        })
                                    }}
-                                   {...props}/>
+                                   {...restProps}/>
         </div>)
 })
 
-PatternInput.displayName = 'TextInput'
+MaskInput.displayName = 'TextInput'
 
-export default PatternInput
+export default MaskInput

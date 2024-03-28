@@ -14,9 +14,7 @@ export default async function Footer({language}: Readonly<Props>) {
             <div className={'flex flex-row justify-between'}>
                 <div className={'flex flex-col gap-y-4'}>
                     <p className={'text-[0.9rem]'}>{t('phone_number')}: +7 (700) 088-80-90</p>
-                    <p className={'text-[0.9rem]'}>Адрес: Казахстан, г. Алматы, Алмалинский район, ул. Карасай батыра,
-                        д.
-                        180, кв. 76, 050008</p>
+                    <p className={'text-[0.9rem]'}>{t('address')}</p>
                     <p className={'text-[0.9rem]'}>Email:&nbsp;<a
                         href={'mailto://qpexpresskz@gmail.com'}>qpexpresskz@gmail.com</a>
                     </p>

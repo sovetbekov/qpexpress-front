@@ -5,6 +5,7 @@ import { Errors } from '@/types'
 import Label from '@/app/components/input/Label'
 import { NumericFormat, NumericFormatProps } from 'react-number-format'
 import { animated, useSpring } from '@react-spring/web'
+import clsx from 'clsx'
 
 type Props = {
     id: string
@@ -12,6 +13,7 @@ type Props = {
     readOnly?: boolean
     label?: string
     errors?: Errors
+    wrapperClassname?: string,
     setErrors?: Dispatch<SetStateAction<Errors>>
     setFocused?: Dispatch<SetStateAction<boolean>>
 } & NumericFormatProps
@@ -19,14 +21,12 @@ type Props = {
 const AnimatedNumericFormat = animated(NumericFormat)
 
 const NumericInput
-    = forwardRef<HTMLInputElement, Props>(({customInput, ...props}, ref) => {
+    = forwardRef<HTMLInputElement, Props>(({customInput, setErrors, wrapperClassname, ...props}, ref) => {
     const [inputAnimation, inputApi] = useSpring(() => ({
         borderColor: '#000000',
         outlineColor: '#000000',
         color: '#000000',
     }))
-
-    const [inputRef, setInputRef] = useState<HTMLInputElement>()
     const [focused, setFocused] = useState(false)
     const hasError = !!props.errors?.[props.id]?.length
 
@@ -46,32 +46,17 @@ const NumericInput
         })
     }
 
-    const setRef = (node: HTMLInputElement) => {
-        setInputRef(node)
-        if (ref) {
-            if (typeof ref === 'function') {
-                ref(node)
-            } else {
-                ref.current = node
-            }
-        }
-    }
-
     return (
-        <div className={'relative'}>
-            {
-                inputRef &&
-                <Label inputElement={inputRef}
-                       inputChanged={!!props.value}
-                       focused={focused}
-                       htmlFor={props.id}
-                       disabled={props.disabled}>
-                    {props.label}
-                </Label>
-            }
+        <div className={clsx('relative', wrapperClassname)}>
+            <Label inputChanged={!!props.value}
+                   focused={focused}
+                   htmlFor={props.id}
+                   disabled={props.disabled}>
+                {props.label}
+            </Label>
             <AnimatedNumericFormat style={inputAnimation}
                                    value={!props.value ? '' : props.value}
-                                   getInputRef={setRef}
+                                   getInputRef={ref}
                                    onFocus={(e) => {
                                        if (props.disabled) {
                                            return
@@ -88,7 +73,7 @@ const NumericInput
                                    }}
                                    onChange={e => {
                                        props.onChange?.(e)
-                                       props.setErrors?.({
+                                       setErrors?.({
                                            ...props.errors,
                                            [props.id]: [],
                                        })

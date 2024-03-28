@@ -39,7 +39,6 @@ export default function UpdateDeliveryForm({data, recipients, language}: Readonl
     const router = useRouter()
     const [goods, setGoods] = useState<GoodData[]>([])
     const [selected, setSelected] = useState<RowSelectionState>({})
-
     useEffect(() => {
         if (formData.recipient?.id) {
             getGoods({recipientId: formData.recipient.id}).then(response => {
@@ -47,9 +46,18 @@ export default function UpdateDeliveryForm({data, recipients, language}: Readonl
                     return []
                 }
                 return response.data
-            }).then(setGoods)
+            }).then(goods => {
+                setGoods(goods)
+                const selectedGoods = goods.filter(good => good.deliveryId === formData.id)
+                const selected = selectedGoods.reduce((acc, good) => {
+                    acc[good.id] = true
+                    return acc
+                }, {} as RowSelectionState)
+                setSelected(selected)
+            })
         }
-    }, [formData.recipient?.id])
+    }, [formData.id, formData.recipient.id])
+
     const recipientOptions = recipients.map(recipient => {
         return {
             id: recipient.id,
@@ -70,7 +78,13 @@ export default function UpdateDeliveryForm({data, recipients, language}: Readonl
         data.append('currencyId', formData.price.currency.id)
         data.append('weight', formData.weight.toString())
         data.append('kazPostTrackNumber', formData.kazPostTrackNumber)
-        data.append('invoice', formData.invoice as File)
+        if (formData.invoice) {
+            if (formData.invoice instanceof File) {
+                data.append('invoice', formData.invoice)
+            } else {
+                data.append('invoiceId', formData.invoice.id)
+            }
+        }
         data.append('products', JSON.stringify(Object.keys(selected)))
         const toastId = toast.loading(t('edit_profile.saving'))
         const response = await updateDelivery(formData.id, data)
@@ -100,7 +114,7 @@ export default function UpdateDeliveryForm({data, recipients, language}: Readonl
                     <h2 className={'text-xl md:hidden'}>Получатель</h2>
                     <div className={'flex flex-col gap-y-3 md:flex-row md:gap-x-10 w-[25rem]'}>
                         <DropdownInput<RecipientOverview> id={'user'} options={recipientOptions}
-                                                          label={'Получатель'} selected={formData.recipient}
+                                                          label={'Получатель'} selected={formData.recipient?.id}
                                                           nullable={false} searchable={true}
                                                           setSelected={recipient => setFormData({
                                                               ...formData,
@@ -147,7 +161,8 @@ export default function UpdateDeliveryForm({data, recipients, language}: Readonl
                             </div>
                             <MoneyInput
                                 id={'price'}
-                                inputClassname={'md:basis-2/3 p-3 md:p-4 placeholder-black rounded-l-full border border-black disabled:bg-gray-2 disabled:text-light-gray disabled:placeholder-light-gray disabled:cursor-not-allowed disabled:border-0'}
+                                language={language}
+                                inputClassname={'md:basis-2/3 p-3 md:p-4 w-full placeholder-black rounded-l-full border border-black disabled:bg-gray-2 disabled:text-light-gray disabled:placeholder-light-gray disabled:cursor-not-allowed disabled:border-0'}
                                 wrapperClassname={'md:basis-1/3 flex flex-row items-center w-full'}
                                 currencyWrapperClassname={'w-1/2 relative'}
                                 currencyInputClassname={'min-w-fit p-3 md:p-4 placeholder-black rounded-r-full border border-black disabled:bg-gray-2 disabled:text-light-gray disabled:placeholder-light-gray disabled:cursor-not-allowed disabled:border-0'}

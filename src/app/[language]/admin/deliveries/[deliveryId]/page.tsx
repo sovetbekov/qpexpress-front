@@ -1,10 +1,13 @@
-import React from 'react'
+'use client'
+
+import React, { useEffect, useState } from 'react'
 import { getDelivery } from '@/services/deliveries'
 import Image from 'next/image'
 import Link from 'next/link'
 import AdminDeliveryForm from '@/app/components/client/DeliveryForm/AdminDeliveryForm'
 import DeliveryStatusInput from '@/app/[language]/admin/deliveries/[deliveryId]/DeliveryStatusInput'
 import { isError } from '@/app/lib/utils'
+import { DeliveryData } from '@/types'
 
 export const dynamic = 'force-dynamic'
 
@@ -15,12 +18,19 @@ type Props = {
     }
 }
 
-export default async function Page({params: {language, deliveryId}}: Readonly<Props>) {
-    const deliveryResponse = await getDelivery(deliveryId)
-    if (isError(deliveryResponse)) {
-        return <div>Ошибка</div>
+export default function Page({params: {language, deliveryId}}: Readonly<Props>) {
+    const [delivery, setDelivery] = useState<DeliveryData>()
+    useEffect(() => {
+        getDelivery(deliveryId).then(response => {
+            if (!isError(response)) {
+                setDelivery(response.data)
+            }
+        })
+    }, [deliveryId])
+
+    if (!delivery) {
+        return <div>Loading...</div>
     }
-    const delivery = deliveryResponse.data
 
     return (
         <div className={'md:p-20'}>
@@ -33,7 +43,7 @@ export default async function Page({params: {language, deliveryId}}: Readonly<Pr
                         {delivery.deliveryNumber}
                     </p>
                 </div>
-                <DeliveryStatusInput selected={delivery.status} language={language}/>
+                <DeliveryStatusInput delivery={delivery} setDelivery={setDelivery} selected={delivery.status} language={language}/>
             </div>
             <AdminDeliveryForm isUpdate={true} language={language} data={delivery}/>
         </div>

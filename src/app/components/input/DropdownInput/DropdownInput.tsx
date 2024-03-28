@@ -10,13 +10,13 @@ import { animated, useSpring } from '@react-spring/web'
 
 type NullableProps<T> = {
     nullable: true,
-    selected?: T
+    selected?: string
     setSelected: (option: Option<T> | undefined) => void,
 }
 
 type NonNullableProps<T> = {
     nullable: false,
-    selected: T
+    selected: string
     setSelected: (option: Option<T>) => void,
 }
 
@@ -58,8 +58,8 @@ export default function DropdownInput<T>({
                                              ...props
                                          }: PropsWithChildren<Props<T>>) {
     const [isOpen, setIsOpen] = useState(false)
-    const [selected, setSelected] = useState<Option<T> | undefined>(options.find(option => option.value === props.selected) ?? undefined)
     const [search, setSearch] = useState<string>('')
+    const selected = options.find(option => option.id === props.selected)
 
     const {refs, floatingStyles} = useFloating({
         placement: 'bottom-start',
@@ -104,7 +104,6 @@ export default function DropdownInput<T>({
                                 ...errors,
                                 [id]: [],
                             })
-                            setSelected(undefined)
                             props.setSelected(undefined)
                         }
                         setSearch(e.target.value)
@@ -115,7 +114,6 @@ export default function DropdownInput<T>({
                                 ...errors,
                                 [id]: [],
                             })
-                            setSelected(undefined)
                             props.setSelected(undefined)
                         }
                     }}
@@ -123,6 +121,7 @@ export default function DropdownInput<T>({
                     setErrors={setErrors}
                     readOnly={props.readOnly}
                     onFocus={onFocus}
+                    onMouseDown={onFocus}
                     onBlur={onBlur}
                     ref={refs.setReference}
                     disabled={disabled ?? options.length === 0}
@@ -133,7 +132,7 @@ export default function DropdownInput<T>({
                     <Image src={'/assets/arrow.svg'} alt={'arrow'} width={10} height={10}/>
                 </animated.div>
             </div>
-            <Dropdown isOpen={isOpen} className={dropdownClassname} ref={refs.setFloating}
+            <Dropdown isOpen={isOpen} onClose={() => setIsOpen(false)} className={dropdownClassname} ref={refs.setFloating}
                       style={floatingStyles}>
                 {
                     filteredOptions.map(option => (
@@ -148,11 +147,10 @@ export default function DropdownInput<T>({
                                      [id]: [],
                                  })
                                  props.setSelected(option)
-                                 setSelected(option)
                              }}>
                             {option.label}
                             {
-                                selected === option &&
+                                props.selected === option.id &&
                                 <span
                                     className={'absolute h-full flex items-center justify-center right-5 top-0'}>
                                             <Image src={'/assets/check.svg'} alt={'check'} width={15} height={15}/>

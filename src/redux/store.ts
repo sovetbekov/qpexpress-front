@@ -3,25 +3,9 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import modalReducer from '@/redux/reducers/modalSlice'
 import { persistReducer, persistStore, FLUSH, PAUSE, PERSIST, PURGE, REGISTER, REHYDRATE } from 'redux-persist'
-import createWebStorage from 'redux-persist/lib/storage/createWebStorage'
+import storage from 'redux-persist/lib/storage'
 import { countriesApi } from '@/redux/reducers/countriesApi'
 import { currenciesApi } from '@/redux/reducers/currenciesApi'
-
-const createNoopStorage = () => {
-    return {
-        getItem(_key: string) {
-            return Promise.resolve(null)
-        },
-        setItem(_key: string, value: string) {
-            return Promise.resolve(value)
-        },
-        removeItem(_key: string) {
-            return Promise.resolve()
-        },
-    }
-}
-
-const storage = typeof window !== 'undefined' ? createWebStorage('local') : createNoopStorage()
 
 const persistConfig = {
     key: 'root',

@@ -1,0 +1,17 @@
+{
+  "product_information": "Product information",
+  "delivery_information": "Information about delivery",
+  "weight": "Weight (kg)",
+  "price": "Price",
+  "kazpost_track_number": "Kazpost tracking number",
+  "invoice": "Invoice",
+  "pay": "Pay",
+  "delivery_status": "Delivery status",
+  "created": "Created",
+  "delivered_to_warehouse": "Delivered to warehouse",
+  "in_the_way": "In the way",
+  "in_your_country": "In your country",
+  "in_mail_office": "In mail office",
+  "delivered": "Delivered",
+  "track_delivery": "Track delivery"
+}

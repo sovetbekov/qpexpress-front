@@ -8,12 +8,13 @@ import { isError } from '@/app/lib/utils'
 type Props = {
     params: {
         orderId: string
+        language: string
     }
 }
 
 export const dynamic = 'force-dynamic'
 
-export default async function Page({params: {orderId}}: Readonly<Props>) {
+export default async function Page({params: {orderId, language}}: Readonly<Props>) {
     const orderResponse = await getOrder(orderId)
     if (isError(orderResponse)) {
         return <div>Order not found</div>
@@ -30,7 +31,7 @@ export default async function Page({params: {orderId}}: Readonly<Props>) {
                     {order.orderNumber}
                 </p>
             </div>
-            <AdminOrderForm order={order}/>
+            <AdminOrderForm order={order} language={language}/>
         </div>
     )
 }

@@ -82,7 +82,7 @@ export default function Modal({language}: Readonly<Props>) {
                 backgroundTransition((backgroundStyle, show) =>
                         show && (
                             <animated.div
-                                className={'bg-black/50 fixed left-0 top-0 right-0 bottom-0'}
+                                className={'bg-black/50 fixed left-0 top-0 right-0 bottom-0 z-50'}
                                 style={backgroundStyle}
                                 onClick={onClose}
                             >
@@ -97,9 +97,9 @@ export default function Modal({language}: Readonly<Props>) {
                                                 <DenialReasonModal recipient={modals[0].data.recipient}
                                                                    language={language}/>}
                                             {modals[0]?.modalType === 'paymentMethod' &&
-                                                <PaymentMethodModal price={modals[0].data.price}/>}
+                                                <PaymentMethodModal price={modals[0].data.price} deliveryId={modals[0].data.deliveryId}/>}
                                             {modals[0]?.modalType === 'kaspiQr' &&
-                                                <KaspiQrModal price={modals[0].data.price}/>}
+                                                <KaspiQrModal price={modals[0].data.price} deliveryId={modals[0].data.deliveryId}/>}
                                         </AnimatedModalWrapper>
                                     ))
                                 }

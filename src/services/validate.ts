@@ -1,5 +1,4 @@
 import _ from 'lodash'
-import { Errors } from '@/types'
 
 export function nonEmptyValidator(value: string): boolean {
     return !_.isEmpty(value)
@@ -34,7 +33,7 @@ export function fileValidator(data: FormData, fieldName: string): boolean {
     if (!file) {
         return false
     }
-    if (file instanceof File) {
+    if (file instanceof Blob) {
         if (isFileEmpty(file)) {
             return false
         }

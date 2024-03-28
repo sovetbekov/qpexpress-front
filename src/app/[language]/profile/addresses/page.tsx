@@ -4,8 +4,14 @@ import { isError } from '@/app/lib/utils'
 
 export const dynamic = 'force-dynamic'
 
-export default async function Page() {
-    const addressesResponse = await getAddresses()
+type Props = {
+    params: {
+        language: string,
+    }
+}
+
+export default async function Page({params: {language}}: Props) {
+    const addressesResponse = await getAddresses(language)
     if (isError(addressesResponse)) {
         return <div>Ошибка</div>
     }

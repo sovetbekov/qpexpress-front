@@ -4,11 +4,13 @@ import React, { Dispatch, forwardRef, SetStateAction, useState } from 'react'
 import { Errors } from '@/types'
 import Label from '@/app/components/input/Label'
 import { animated, useSpring } from '@react-spring/web'
+import clsx from 'clsx'
 
 type Props = {
     id: string
     disabled?: boolean
     readOnly?: boolean
+    wrapperClassname?: string
     label?: string | React.ReactNode
     errors?: Errors
     inputColor?: string
@@ -17,13 +19,13 @@ type Props = {
 
 const TextInput
     = forwardRef<HTMLInputElement, Props>((props, ref) => {
+        const {inputColor, setErrors, ...restProps} = props
     const [inputAnimation, inputApi] = useSpring(() => ({
         borderColor: '#000000',
         outlineColor: '#000000',
         color: '#000000',
     }))
 
-    const [inputRef, setInputRef] = useState<HTMLInputElement>()
     const [focused, setFocused] = useState(false)
     const hasError = !!props.errors?.[props.id]?.length
 
@@ -43,32 +45,17 @@ const TextInput
         })
     }
 
-    const setRef = (node: HTMLInputElement) => {
-        setInputRef(node)
-        if (ref) {
-            if (typeof ref === 'function') {
-                ref(node)
-            } else {
-                ref.current = node
-            }
-        }
-    }
-
     return (
-        <div className={'relative'}>
-            {
-                inputRef &&
-                <Label inputElement={inputRef}
-                       labelColor={props.inputColor}
-                       inputChanged={(props?.value as string).length !== 0}
-                       focused={focused}
-                       htmlFor={props.id}
-                       disabled={props.disabled}>
-                    {props.label}
-                </Label>
-            }
+        <div className={clsx('relative', props.wrapperClassname)}>
+            <Label labelColor={inputColor}
+                   inputChanged={!!props.value}
+                   focused={focused}
+                   htmlFor={props.id}
+                   disabled={props.disabled}>
+                {props.label}
+            </Label>
             <animated.input style={{...inputAnimation, color: props.inputColor ?? '#000'}}
-                            ref={setRef}
+                            ref={ref}
                             onFocus={(e) => {
                                 if (props.disabled) {
                                     return
@@ -90,8 +77,8 @@ const TextInput
                                     [props.id]: [],
                                 })
                             }}
-                            readOnly
-                            {...props}/>
+                            tabIndex={props.readOnly ? -1 : 0}
+                            {...restProps}/>
         </div>)
 })
 

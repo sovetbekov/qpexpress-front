@@ -6,9 +6,11 @@ import { useGetCurrenciesQuery } from '@/redux/reducers/currenciesApi'
 import clsx from 'clsx'
 import { CurrencyData, Errors } from '@/types'
 import NumericInput from '@/app/components/input/NumericInput'
+import { getNameByLanguage } from '@/util'
 
 type Props = {
     id: string
+    language: string
     onChange?: (value: Money) => void
     value?: Money
     label?: string
@@ -35,6 +37,7 @@ export type Money = {
 
 export default function MoneyInput({
                                        id,
+                                       language,
                                        onChange,
                                        value,
                                        label,
@@ -58,7 +61,7 @@ export default function MoneyInput({
         return {
             id: currency.id,
             value: currency,
-            label: currency.name,
+            label: getNameByLanguage(currency, language),
         }
     }) ?? []
     useEffect(() => {
@@ -68,8 +71,9 @@ export default function MoneyInput({
                 currency: currencies[0],
             })
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currencies, value?.currency])
+
     return (
         <div className={wrapperClassname} style={wrapperStyle}>
             <NumericInput
@@ -85,6 +89,7 @@ export default function MoneyInput({
                         })
                     }
                 }}
+                wrapperClassname={'w-full'}
                 errors={errors}
                 setErrors={setErrors} disabled={disabled}
                 decimalScale={2}
@@ -104,7 +109,7 @@ export default function MoneyInput({
                                              dropdownStyle={currencyDropdownStyle}
                                              dropdownItemClassname={currencyItemClassname}
                                              label={''}
-                                             selected={value.currency}
+                                             selected={value.currency.id}
                                              errors={errors}
                                              setErrors={setErrors}
                                              setSelected={(currency) => {

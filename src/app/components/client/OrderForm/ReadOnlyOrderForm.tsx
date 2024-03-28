@@ -6,12 +6,16 @@ import FileInput from '@/app/components/input/FileInput'
 import CheckboxInput from '@/app/components/input/CheckboxInput'
 import { OrderFormData } from '@/types'
 import TextInput from '@/app/components/input/TextInput'
+import { getNameByLanguage } from '@/util'
+import { useTranslation } from '@/app/i18n/client'
 
 type Props = {
     data: OrderFormData,
+    language: string
 }
 
-export default function ReadOnlyOrderForm({data}: Readonly<Props>) {
+export default function ReadOnlyOrderForm({data, language}: Readonly<Props>) {
+    const {t} = useTranslation(language, 'order')
     return (
         <div className={'flex flex-col gap-y-10 md:gap-y-10'}>
             {
@@ -19,8 +23,8 @@ export default function ReadOnlyOrderForm({data}: Readonly<Props>) {
                     return (
                         <div className={'flex flex-col md:gap-y-5'} key={productInfo.id}>
                             <div className={'flex flex-col md:gap-y-5'}>
-                                <p className={'hidden md:block md:text-2xl'}>Информация о товаре</p>
-                                <h2 className={'text-xl md:hidden mb-3'}>Информация о товаре</h2>
+                                <p className={'hidden md:block md:text-2xl'}>{t('product_information')}</p>
+                                <h2 className={'text-xl md:hidden mb-3'}>{t('product_information')}</h2>
                                 <div className={'flex flex-col gap-y-3'}>
                                     <div className={'flex flex-col md:flex-row gap-y-3 md:gap-x-10'}>
                                         <div
@@ -29,7 +33,7 @@ export default function ReadOnlyOrderForm({data}: Readonly<Props>) {
                                                 id={'country'}
                                                 label={'Страна отправления'}
                                                 type={'text'}
-                                                value={productInfo.country!!.name}
+                                                value={getNameByLanguage(productInfo.country!!, language)}
                                                 className={'md:p-4 w-full p-3 placeholder-black rounded-full border border-black disabled:bg-gray-2 disabled:text-light-gray disabled:placeholder-light-gray disabled:cursor-not-allowed disabled:border-0 required:invalid:border-red-500'}
                                                 readOnly
                                             />
@@ -91,7 +95,8 @@ export default function ReadOnlyOrderForm({data}: Readonly<Props>) {
                                         </div>
                                         <MoneyInput
                                             id={'price'}
-                                            inputClassname={'md:basis-2/3 p-3 md:p-4 placeholder-black rounded-l-full border border-black disabled:bg-gray-2 disabled:text-light-gray disabled:placeholder-light-gray disabled:cursor-not-allowed disabled:border-0'}
+                                            language={language}
+                                            inputClassname={'md:basis-2/3 w-full p-3 md:p-4 placeholder-black rounded-l-full border border-black disabled:bg-gray-2 disabled:text-light-gray disabled:placeholder-light-gray disabled:cursor-not-allowed disabled:border-0'}
                                             wrapperClassname={'md:basis-1/3 flex flex-row items-center w-full'}
                                             currencyWrapperClassname={'w-1/2 relative'}
                                             currencyInputClassname={'min-w-fit p-3 md:p-4 placeholder-black rounded-r-full border border-black disabled:bg-gray-2 disabled:text-light-gray disabled:placeholder-light-gray disabled:cursor-not-allowed disabled:border-0'}

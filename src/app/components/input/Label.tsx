@@ -1,13 +1,12 @@
 'use client'
 
-import React, { LabelHTMLAttributes, PropsWithChildren, useLayoutEffect, useRef, useState } from 'react'
+import React, { LabelHTMLAttributes, PropsWithChildren, useEffect, useState } from 'react'
 import { Errors } from '@/types'
-import { ReferenceElement } from '@floating-ui/dom'
 import { animated, useSpring } from '@react-spring/web'
+import clsx from 'clsx'
 
 type Props = {
     errors?: Errors
-    inputElement: HTMLInputElement
     inputChanged: boolean
     focused: boolean
     required?: boolean
@@ -18,7 +17,6 @@ type Props = {
 export default function Label({
                                   errors,
                                   focused,
-                                  inputElement,
                                   className,
                                   inputChanged,
                                   labelColor,
@@ -27,40 +25,53 @@ export default function Label({
                                   disabled,
                                   ...props
                               }: PropsWithChildren<Props>) {
-    const wrapperRef = useRef<HTMLDivElement>(null)
-    const [height, setHeight] = useState<number>(0)
+    const [wrapperRef, setWrapperRef] = useState<HTMLDivElement | null>(null)
+    const labelChanged = focused || inputChanged
 
     const [labelColorAnimation, labelColorApi] = useSpring(() => ({
-        color: labelColor ?? '#9CA3AF',
+        color: labelColor ?? '#000000',
         background: 'white',
     }))
 
-    const [labelPositionAnimation, labelPositionApi] = useSpring(() => ({
-        y: 0,
-        x: '0.825rem',
-        scale: 1,
-    }))
-    const labelChanged = focused || inputChanged
+    const [labelPositionAnimation, labelPositionApi] = useSpring(() => {
+        if (!!wrapperRef) {
+            if (inputChanged) {
+                return {
+                    y: -((wrapperRef?.offsetHeight ?? 0) / 2),
+                    scale: 0.75,
+                }
+            } else {
+                return {
+                    y: 0,
+                    scale: 1,
+                }
+            }
+        }
+    }, [wrapperRef, inputChanged])
+
     const hasError = props.htmlFor && !!errors?.[props.htmlFor]?.length
-    if (labelChanged) {
-        labelPositionApi.start({
-            y: -height / 2,
-            scale: 0.75,
-            config: {
-                tension: 180,
-                friction: 12,
-            },
-        })
-    } else {
-        labelPositionApi.start({
-            y: 0,
-            scale: 1,
-            config: {
-                tension: 180,
-                friction: 12,
-            },
-        })
-    }
+
+    useEffect(() => {
+        if (labelChanged && wrapperRef) {
+            labelPositionApi.start({
+                y: -(wrapperRef?.offsetHeight ?? 0) / 2,
+                scale: 0.75,
+                config: {
+                    tension: 180,
+                    friction: 12,
+                },
+            })
+        } else {
+            labelPositionApi.start({
+                y: 0,
+                scale: 1,
+                config: {
+                    tension: 180,
+                    friction: 12,
+                },
+            })
+        }
+    }, [labelChanged, labelPositionApi, wrapperRef])
 
     if (hasError) {
         labelColorApi.start({
@@ -79,10 +90,10 @@ export default function Label({
     }
 
     return (
-        <div className={'absolute top-0 left-0 flex justify-center items-center pointer-events-none'}
-             style={{height: height ?? 'auto'}} ref={wrapperRef}>
+        <div className={'absolute top-0 left-0 flex h-full w-full items-center pointer-events-none pl-5'}
+             ref={setWrapperRef}>
             <animated.label style={{...labelPositionAnimation, ...labelColorAnimation}}
-                            className={className}
+                            className={clsx('origin-left', className)}
                             {...props}>
                 {children}
                 {

@@ -2,7 +2,9 @@ import { DeliveryStatus, OrderStatus, RecipientStatus } from '@/types/utils'
 
 export type CountryData = {
     id: string,
-    name: string,
+    nameRus: string,
+    nameEng: string,
+    nameChn: string
 }
 
 export type CityData = {
@@ -13,7 +15,9 @@ export type CityData = {
 
 export type CurrencyData = {
     id: string,
-    name: string,
+    nameRus: string,
+    nameEng: string,
+    nameChn: string
 }
 
 export type AddressData = {
@@ -47,6 +51,7 @@ export type GoodData = {
     country: CountryData,
     currency: CurrencyData,
     id: string
+    deliveryId?: string
     name: string
     link: string
     description: string

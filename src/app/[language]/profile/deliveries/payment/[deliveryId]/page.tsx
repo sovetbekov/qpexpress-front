@@ -7,13 +7,14 @@ import { isError } from '@/app/lib/utils'
 
 type Props = {
     params: {
+        language: string
         deliveryId: string
     }
 }
 
 export const dynamic = 'force-dynamic'
 
-export default async function Page({params: {deliveryId}}: Readonly<Props>) {
+export default async function Page({params: {language, deliveryId}}: Readonly<Props>) {
     const deliveryResponse = await getMyDelivery(deliveryId)
     if (isError(deliveryResponse)) {
         return <div>Ошибка</div>
@@ -23,8 +24,8 @@ export default async function Page({params: {deliveryId}}: Readonly<Props>) {
     return (
         <PageWrapper>
             <div className={'md:p-20'}>
-                <PageComponent/>
-                <DeliveryDetailsForm delivery={delivery}/>
+                <PageComponent language={language}/>
+                <DeliveryDetailsForm delivery={delivery} language={language}/>
             </div>
         </PageWrapper>
     )

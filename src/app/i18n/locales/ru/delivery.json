@@ -1,0 +1,17 @@
+{
+  "product_information": "Информация о товаре",
+  "delivery_information": "Данные о посылке",
+  "weight": "Вес (кг)",
+  "price": "Цена",
+  "kazpost_track_number": "Трек-номер от Kazpost",
+  "invoice": "Накладная",
+  "pay": "Оплатить",
+  "delivery_status": "Статус посылки",
+  "created": "Создан",
+  "delivered_to_warehouse": "Доставлен на склад",
+  "in_the_way": "В пути",
+  "in_your_country": "В вашей стране",
+  "in_mail_office": "В почтовом отделении",
+  "delivered": "Доставлен",
+  "track_delivery": "Отследить доставку"
+}
