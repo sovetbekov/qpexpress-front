@@ -163,9 +163,7 @@ export async function acceptRecipient(id: string) {
 export async function getUsers() {
     return await makeRequest<UserWithRecipientsOverview[]>('v1/users', {
         requestOptions: {
-            next: {
-                tags: ['users'],
-            },
+            cache: 'no-cache',
         },
     })
 }
@@ -173,9 +171,7 @@ export async function getUsers() {
 export async function getUser(id: string) {
     return await makeRequest<UserWithRecipientsData>(`v1/users/${id}`, {
         requestOptions: {
-            next: {
-                tags: ['users'],
-            },
+            cache: 'no-cache',
         },
     })
 }

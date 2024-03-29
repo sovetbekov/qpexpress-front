@@ -156,6 +156,13 @@ export default function UserReviewForm({data: {user, recipients}, language}: Rea
                                            value={`${recipients[0].phoneNumber}`}
                                            readOnly/>
                             </div>
+                            <div className={'md:w-[calc(33%-0.51rem)] w-full'}>
+                                <TextInput id={'address'}
+                                           label={'Адрес'}
+                                           className={'md:p-5 p-3 border rounded-full border-black placeholder:text-black w-full'}
+                                           value={`${recipients[0].address}`}
+                                           readOnly/>
+                            </div>
                         </div>
                     </div>
                     <div className={'flex flex-row gap-5'}>

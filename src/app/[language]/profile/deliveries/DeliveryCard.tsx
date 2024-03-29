@@ -90,12 +90,6 @@ export default function DeliveryCard({delivery, language}: Readonly<Props>) {
                     </button>
                 </Link>
             }
-            {
-                delivery.status === 'IN_YOUR_COUNTRY' &&
-                <button className={'bg-blue mt-5 rounded-full w-full md:px-12 py-3 text-white md:mt-5'}>
-                    Отследить посылку
-                </button>
-            }
         </div>
     )
 }

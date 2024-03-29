@@ -21,6 +21,20 @@ export default function PaymentMethodModal({price, deliveryId}: Readonly<Props>)
     const dispatch = useAppDispatch()
     const [priceKZT, setPriceKZT] = useState<number | null>(null)
     const [error, setError] = useState<Errors>()
+    const [jetpayLink, setJetpayLink] = useState<string | null>(null)
+
+    useEffect(() => {
+        if (priceKZT) {
+            getJetpayLink({amount: priceKZT, deliveryId}).then(link => {
+                    if (link.status === 'error') {
+                        console.error(link.error)
+                        return
+                    }
+                    setJetpayLink(link.data.uri)
+                },
+            )
+        }
+    }, [deliveryId, priceKZT])
 
     useEffect(() => {
         const fetchData = async () => {
@@ -31,7 +45,6 @@ export default function PaymentMethodModal({price, deliveryId}: Readonly<Props>)
             }
             setPriceKZT(_.round(priceKZT.data))
         }
-        if (!price) return
         fetchData().catch(console.error)
     }, [price])
     console.log(error)
@@ -49,18 +62,13 @@ export default function PaymentMethodModal({price, deliveryId}: Readonly<Props>)
                 console.error(linkResponse.error)
                 return
             }
-            window.open(linkResponse.data.data.paymentLink)
+            window.location.href = linkResponse.data.data.paymentLink
         }
     }
 
-    const onJetpayClick = async () => {
-        if (priceKZT) {
-            const link = await getJetpayLink({amount: priceKZT, deliveryId})
-            if (link.status === 'error') {
-                console.error(link.error)
-                return
-            }
-            window.open(link.data.uri, '_blank', 'width=1200,height=1200')
+    const onJetpayClick = () => {
+        if (jetpayLink) {
+            window.open(jetpayLink, '_blank', 'width=1200,height=1200,menubar=no,toolbar=no,location=no,status=no')
         }
     }
 
@@ -84,15 +92,18 @@ export default function PaymentMethodModal({price, deliveryId}: Readonly<Props>)
                         <div className={'md:bg-white md:border md:border-white md:h-8'}></div>
                         <Image src={'/assets/kaspi_gold.svg'} alt={'kaspi_gold'} width={36} height={28}/>
                     </button>
-                    <button
-                        className={'bg-blue w-full h-16 rounded-full flex flex-row justify-center items-center gap-x-4'}
-                        onClick={onJetpayClick}>
-                        <p className={'text-base text-white text-nowrap'}>Платежная карта</p>
-                        <div className={'flex flex-row gap-x-2'}>
-                            <Image src={'/assets/visa.svg'} alt={'visa'} width={36} height={28}/>
-                            <Image src={'/assets/mastercard.svg'} alt={'mastercard'} width={36} height={28}/>
-                        </div>
-                    </button>
+                    {
+                        jetpayLink &&
+                        <button
+                            className={'bg-blue w-full h-16 rounded-full flex flex-row justify-center items-center gap-x-4'}
+                            onClick={onJetpayClick}>
+                            <p className={'text-base text-white text-nowrap'}>Платежная карта</p>
+                            <div className={'flex flex-row gap-x-2'}>
+                                <Image src={'/assets/visa.svg'} alt={'visa'} width={36} height={28}/>
+                                <Image src={'/assets/mastercard.svg'} alt={'mastercard'} width={36} height={28}/>
+                            </div>
+                        </button>
+                    }
                 </>
             }
         </div>
