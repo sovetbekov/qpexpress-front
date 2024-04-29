@@ -39,8 +39,8 @@ const MenuLink = ({pathname, link, title}: MenuLinkProps) => {
 export default function Layout({children, params: {language}}: Readonly<Props>) {
     const {t} = useTranslation(language, 'profile')
     const pathname = usePathname()
-    const showMenu = !!pathname && (/\/(ru|en|zh)\/profile\/(edit|addresses|orders|deliveries)$/.exec(pathname) || /\/(ru|en|zh)\/profile$/.exec(pathname))
-    const showMobileMenu = !!pathname && /\/(ru|en|zh)\/profile$/.exec(pathname)
+    const showMenu = !!pathname && (/\/(ru|en|zh|kz)\/profile\/(edit|addresses|orders|deliveries)$/.exec(pathname) || /\/(ru|en|zh|kz)\/profile$/.exec(pathname))
+    const showMobileMenu = !!pathname && /\/(ru|en|zh|kz)\/profile$/.exec(pathname)
     const menuLinks = [
         {
             link: `/${language}/profile/edit`,

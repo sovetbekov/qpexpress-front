@@ -41,17 +41,19 @@ export default function DeliveryCard({delivery, language}: Readonly<Props>) {
         IN_THE_WAY: t('in_the_way'),
         IN_YOUR_COUNTRY: t('in_your_country'),
         IN_MAIL_OFFICE: t('in_mail_office'),
-        DELIVERED: t('delivered')
+        DELIVERED: t('delivered'),
+        DELETED: t('deleted'),
     }
-    
+
     const [isPaidLoading, setIsPaidLoading] = useState(true)
     const [isPaid, setIsPaid] = useState(false)
-    
+
     useEffect(() => {
         async function fetchStatus() {
             const paymentStatus = await getPaymentStatus({deliveryId: delivery.id})
             if (paymentStatus.status === 'error') {
                 console.error(paymentStatus.error)
+                setIsPaidLoading(false)
                 return
             }
             if (paymentStatus.data === 'Processed') {
@@ -59,6 +61,7 @@ export default function DeliveryCard({delivery, language}: Readonly<Props>) {
             }
             setIsPaidLoading(false)
         }
+
         fetchStatus().catch(console.error)
     }, [delivery.id])
 

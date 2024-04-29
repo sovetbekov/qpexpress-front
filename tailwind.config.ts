@@ -22,7 +22,7 @@ module.exports = {
       'transparent': 'transparent',
     },
     fontFamily: {
-      'black': ['Arial Black', 'Arial', 'sans-serif'],
+      'black': ['var(--font-ariblk)', 'Arial', 'sans-serif'],
     },
     extend: {},
   },

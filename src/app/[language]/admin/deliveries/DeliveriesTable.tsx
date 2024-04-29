@@ -81,7 +81,7 @@ export default function DeliveriesTable({deliveries}: Readonly<Props>) {
 
     return (
         <div className={'w-full min-h-[50rem] flex flex-col justify-between gap-y-2 p-10 bg-gray rounded-3xl'}>
-            <div>
+            <div className={'min-h-[61.5rem]'}>
                 <h3>Посылки</h3>
                 <table className={'w-full border-separate border-spacing-y-5'}>
                     <thead>
@@ -154,19 +154,7 @@ export default function DeliveriesTable({deliveries}: Readonly<Props>) {
                     </tbody>
                 </table>
             </div>
-            <div className={'flex flex-row gap-1 justify-center'}>
-                <button
-                    onClick={() => table.setPageIndex(0)}
-                    disabled={!table.getCanPreviousPage()}
-                >
-                    {'<<'}
-                </button>
-                <button
-                    onClick={() => table.previousPage()}
-                    disabled={!table.getCanPreviousPage()}
-                >
-                    {'<'}
-                </button>
+            <div className={'flex flex-row gap-4 justify-center'}>
                 <div className={'flex flex-row gap-1'}>
                     {
                         Array.from({length: 5}, (_, i) => i - 2)
@@ -174,6 +162,11 @@ export default function DeliveriesTable({deliveries}: Readonly<Props>) {
                             .filter(pageIndex => pageIndex >= 0 && pageIndex < table.getPageCount())
                             .map(pageIndex => (
                                     <button
+                                        className={clsx('w-8 h-8', {
+                                            'bg-blue text-white rounded-md': pageIndex === table.getState().pagination.pageIndex,
+                                            'text-black': pageIndex !== table.getState().pagination.pageIndex,
+                                        })}
+                                        type={'button'}
                                         key={pageIndex}
                                         onClick={() => table.setPageIndex(pageIndex)}
                                         disabled={pageIndex < 0 || pageIndex >= table.getPageCount()}
@@ -184,18 +177,6 @@ export default function DeliveriesTable({deliveries}: Readonly<Props>) {
                             )
                     }
                 </div>
-                <button
-                    onClick={() => table.nextPage()}
-                    disabled={!table.getCanNextPage()}
-                >
-                    {'>'}
-                </button>
-                <button
-                    onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-                    disabled={!table.getCanNextPage()}
-                >
-                    {'>>'}
-                </button>
             </div>
         </div>
     )
@@ -218,7 +199,7 @@ function Filter({
         () =>
             typeof firstValue === 'number'
                 ? []
-                : Array.from(column.getFacetedUniqueValues().keys()).sort(),
+                : Array.from(column.getFacetedUniqueValues().keys()).sort((a, b) => a.localeCompare(b)),
         [column, firstValue],
     )
 

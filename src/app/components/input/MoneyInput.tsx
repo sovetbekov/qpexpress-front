@@ -7,6 +7,7 @@ import clsx from 'clsx'
 import { CurrencyData, Errors } from '@/types'
 import NumericInput from '@/app/components/input/NumericInput'
 import { getNameByLanguage } from '@/util'
+import TextInput from '@/app/components/input/TextInput'
 
 type Props = {
     id: string
@@ -99,27 +100,39 @@ export default function MoneyInput({
                 readOnly={readOnly}
             />
             {
-                currencies && value &&
-                <DropdownInput<CurrencyData> id={id}
-                                             options={currencyOptions}
-                                             nullable={false}
-                                             wrapperClassname={currencyWrapperClassname}
-                                             inputClassname={clsx(currencyInputClassname, 'cursor-pointer')}
-                                             dropdownClassname={currencyDropdownClassname}
-                                             dropdownStyle={currencyDropdownStyle}
-                                             dropdownItemClassname={currencyItemClassname}
-                                             label={''}
-                                             selected={value.currency.id}
-                                             errors={errors}
-                                             setErrors={setErrors}
-                                             setSelected={(currency) => {
-                                                 if (currency !== undefined) {
-                                                     onChange?.({
-                                                         value: value.value,
-                                                         currency: currency.value,
-                                                     })
-                                                 }
-                                             }} searchable={false} readOnly={readOnly} disabled={disabled}/>
+                currencies && value && readOnly && (
+                <div className={clsx(currencyWrapperClassname, 'h-full')}>
+                    <TextInput id={'currency'}
+                               value={getNameByLanguage(value.currency, language)}
+                               className={clsx(currencyInputClassname)}
+                               readOnly
+                               disabled={disabled}
+                    />
+                </div>
+            )}
+            {
+                currencies && value && !readOnly && (
+                    <DropdownInput<CurrencyData> id={id}
+                                                 options={currencyOptions}
+                                                 nullable={false}
+                                                 wrapperClassname={currencyWrapperClassname}
+                                                 inputClassname={clsx(currencyInputClassname, 'cursor-pointer')}
+                                                 dropdownClassname={currencyDropdownClassname}
+                                                 dropdownStyle={currencyDropdownStyle}
+                                                 dropdownItemClassname={currencyItemClassname}
+                                                 label={''}
+                                                 selected={value.currency.id}
+                                                 errors={errors}
+                                                 setErrors={setErrors}
+                                                 setSelected={(currency) => {
+                                                     if (currency !== undefined) {
+                                                         onChange?.({
+                                                             value: value.value,
+                                                             currency: currency.value,
+                                                         })
+                                                     }
+                                                 }} searchable={false} readOnly={readOnly} disabled={disabled}/>
+                )
             }
             {
                 !value &&

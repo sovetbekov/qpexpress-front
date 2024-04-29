@@ -7,6 +7,8 @@ export function getNameByLanguage(data: CurrencyData | CountryData, language: st
         return data.nameEng
     } else if (language === 'zh') {
         return data.nameChn
+    } else if (language === 'kz') {
+        return data.nameKaz
     }
     return data.nameRus
 }

@@ -36,10 +36,10 @@ const MenuLink = ({pathname, link, title}: MenuLinkProps) => {
     )
 }
 
-export default function Layout({children, params: {language}}: Props) {
+export default function Layout({children, params: {language}}: Readonly<Props>) {
     const {t} = useTranslation(language, 'admin')
     const pathname = usePathname()
-    const showMenu = !!pathname && (/\/(ru|en|zh)\/admin\/(users|orders|deliveries)$/.exec(pathname) || /\/(ru|en|zh)\/admin$/.exec(pathname))
+    const showMenu = !!pathname && (/\/(ru|en|zh|kz)\/admin\/(users|orders|deliveries)$/.exec(pathname) || /\/(ru|en|zh)\/admin$/.exec(pathname))
     const menuLinks = [
         {
             link: `/${language}/admin/users`,

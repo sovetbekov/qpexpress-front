@@ -3,6 +3,7 @@ import { DeliveryStatus, OrderStatus, RecipientStatus } from '@/types/utils'
 export type CountryData = {
     id: string,
     nameRus: string,
+    nameKaz: string,
     nameEng: string,
     nameChn: string
 }
@@ -16,6 +17,7 @@ export type CityData = {
 export type CurrencyData = {
     id: string,
     nameRus: string,
+    nameKaz: string,
     nameEng: string,
     nameChn: string
 }
@@ -23,12 +25,12 @@ export type CurrencyData = {
 export type AddressData = {
     id: string
     country: string
-    city: string
-    district: string
-    neighborhood: string
-    street: string
-    house: string
-    postcode: string
+    city?: string
+    district?: string
+    neighborhood?: string
+    street?: string
+    house?: string
+    postcode?: string
 }
 
 export type FileMetaData = {

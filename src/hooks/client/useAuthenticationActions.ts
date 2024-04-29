@@ -10,8 +10,7 @@ export const useAuthenticationActions = (language: string) => {
     const onLoginClick = useCallback(async () => {
         if (FRONTEND_URL) {
             await signIn('keycloak', {
-                callbackUrl: FRONTEND_URL,
-                redirect: false,
+                callbackUrl: `${FRONTEND_URL}/${language}/profile`,
             }, {
                 'ui_locales': language,
             })
@@ -24,7 +23,7 @@ export const useAuthenticationActions = (language: string) => {
     }, [auth])
     const onSignUpClick = useCallback(() => {
         if (FRONTEND_URL) {
-            router.push(`${AUTH_URL}/realms/QPExpress/protocol/openid-connect/registrations?client_id=react-app&response_type=code&scope=openid+email&redirect_uri=${encodeURI(FRONTEND_URL)}&ui_locales=${language}`)
+            router.push(`${AUTH_URL}/realms/QPExpress/protocol/openid-connect/registrations?client_id=react-app&response_type=code&scope=openid+email&redirect_uri=${encodeURI(FRONTEND_URL)}/${language}/profile&ui_locales=${language}`)
         }
     }, [language, router])
     const onSignOutClick = useCallback(async () => {

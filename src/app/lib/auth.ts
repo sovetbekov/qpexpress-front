@@ -67,7 +67,7 @@ export const authOptions: NextAuthOptions = {
                     idToken: account.id_token,
                     accessTokenExpires: account.expires_at * 1000,
                     refreshToken: account.refresh_token,
-                    refreshTokenExpires: parseJwt(account.refresh_token as string).exp * 1000,
+                    refreshTokenExpires: parseJwt(account.refresh_token).exp * 1000,
                     user,
                 }
             }
@@ -89,6 +89,9 @@ export const authOptions: NextAuthOptions = {
             }
             return session
         },
+        redirect: async ({url, baseUrl}: {url: string, baseUrl: string}) => {
+            return url.startsWith(baseUrl) ? url : baseUrl
+        }
     },
 }
 

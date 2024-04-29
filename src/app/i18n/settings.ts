@@ -1,7 +1,7 @@
 import { TOptions } from 'i18next'
 
 export const fallbackLanguage = 'ru';
-export const languages = ['ru', 'en', 'zh'];
+export const languages = ['ru', 'en', 'zh', 'kz'];
 export const defaultNS = 'translation'
 export const cookieName = 'next-i18n-locale';
 

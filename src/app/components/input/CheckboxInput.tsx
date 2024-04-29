@@ -30,7 +30,6 @@ export default function CheckboxInput(
 ) {
     const inputRef = useRef<HTMLInputElement>(null)
     const color = disabled ? '#ddd' : 'rgb(0,124,226)'
-
     return (
         <div className={wrapperClassname}>
             <input id={id}
@@ -41,8 +40,7 @@ export default function CheckboxInput(
                    ref={inputRef}
                    readOnly={readOnly}
                    hidden/>
-            <label htmlFor={id}
-                   className={clsx('cursor-pointer w-full flex flex-row gap-2 items-center')} onClick={() => inputRef.current?.click()}>
+            <label className={clsx('cursor-pointer w-full flex flex-row gap-2 items-center')} onClick={() => inputRef.current?.click()}>
                 <svg viewBox={'0 0 100 100'} className={clsx('w-[2em] stroke-[5] fill-[white]', checkboxClassname)} style={{stroke: color}}>
                     <path className={'fill-[white] transition-[stroke-dashoffset] duration-[0.3s] ease-linear'}
                           d={'M82,89H18c-3.87,0-7-3.13-7-7V18c0-3.87,3.13-7,7-7h64c3.87,0,7,3.13,7,7v64C89,85.87,85.87,89,82,89z'}/>

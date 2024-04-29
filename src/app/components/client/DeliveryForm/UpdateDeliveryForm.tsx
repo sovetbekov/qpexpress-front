@@ -79,7 +79,7 @@ export default function UpdateDeliveryForm({data, recipients, language}: Readonl
         data.append('weight', formData.weight.toString())
         data.append('kazPostTrackNumber', formData.kazPostTrackNumber)
         if (formData.invoice) {
-            if (formData.invoice instanceof File) {
+            if (formData.invoice instanceof Blob) {
                 data.append('invoice', formData.invoice)
             } else {
                 data.append('invoiceId', formData.invoice.id)

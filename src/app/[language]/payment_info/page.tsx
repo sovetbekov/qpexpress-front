@@ -1,5 +1,4 @@
 import React from 'react'
-import { useTranslation } from '@/app/i18n'
 
 export const dynamic = 'force-dynamic'
 
@@ -65,6 +64,63 @@ export default async function Page({params: {language}}: Readonly<Props>) {
                 </div>
             </div>
         )
+    } else if (language === 'kz') {
+        return (
+            <div className={'bg-white p-20'}>
+                <p className={'text-base'}>
+                    <strong>Сәлемдемені алған бетте төлеу</strong>
+                </p>
+                <p className={'text-base'}>
+                    Қолма-қол ақшамен төлеу мүмкіндігі бар.
+                </p>
+                <p className={'text-base'}>
+                    <strong>Алдын ала төлем:</strong>
+                </p>
+                <p className={'text-base'}>
+                    Алдын ала төлем әдістері:
+                </p>
+                <p className={'text-base'}>
+                    1. Kaspi шоты
+                </p>
+                <p className={'text-base'}>
+                    2. JetPay жүйесі бойынша
+                </p>
+                <p className={'text-base'}>
+                    Қолма-қол ақшасыз есеп айырысуды пайдалану кезінде төлем ережелері келесідей белгіленеді: сатып
+                    алушы шот-фактура жасалған сәттен бастап 3 (үш) күн ішінде тапсырыс сомасын енгізуге міндетті. Сатып
+                    алушының тапсырысты төлеу жөніндегі міндеттемесі Сатушы көрсеткен есеп айырысу шотына тиісті
+                    қаражатты аудару сәтінде орындалды деп есептеледі.
+                </p>
+                <p className={'text-base'}>
+                    <strong>Онлайн төлем қауіпсіздігі:</strong>
+                </p>
+                <div>
+                    <p className={'text-base'}>
+                        Электрондық пошта мекенжайы және банк картасының нөмірі сияқты сіз берген барлық жеке ақпарат
+                        құпия болып саналады әрі жарияланбайды. Сіздің банктік картаңыздың деректері тек шифрланған
+                        түрде беріледі және оны сатушы сақтамайды.
+                    </p>
+                    <p className={'text-base'}>
+                        Интернет-төлемдерді өңдеу қауіпсіздігін JetPay төлем сервисі қамтамасыз етеді. Төлем
+                        карталарымен жасалатын барлық операциялар жетекші халықаралық төлем жүйелерінің (VISA
+                        International, MasterCard WorldWide және т.б.) талаптарына сәйкес келеді. Ақпаратты беру
+                        онлайн-карточкалық төлемдер үшін арнайы қауіпсіздік технологияларын пайдалана отырып жүзеге
+                        асырылады, ал деректерді өңдеу төлем сервисінің жоғары технологиялық серверлерінде жүзеге
+                        асырылады.
+                    </p>
+                    <p className={'text-base'}>
+                        Авторизация жүйесі, төлем картасының деректемелері (нөмірі, жарамдылық мерзімі, CVV2/CVC2)
+                        алаяқтардың қолына түспеуін қамтамасыз етеді, өйткені бұл деректер серверде шифрланған түрде
+                        сақталмайды және ұрланбайды.
+                    </p>
+                    <p className={'text-base'}>
+                        Сатып алушының төлем деректерін енгізуі интернет-дүкеннің сайтында емес, JetPay авторизация
+                        жүйесінде тікелей жүзеге асырылады, бұл олардың үшінші тұлғаларға қол жетімсіз етуіне кепілдік
+                        береді.
+                    </p>
+                </div>
+            </div>
+        )
     } else {
         return (
             <div className={'bg-white p-20'}>
@@ -89,7 +145,8 @@ export default async function Page({params: {language}}: Readonly<Props>) {
                 <p className={'text-base'}>
                     Rules for payment when using non-cash settlement are established as follows: the buyer must pay the
                     order amount within 3 (three) days from the invoice date. The buyer&apos;s obligation to pay for the
-                    order is considered fulfilled at the moment of crediting the corresponding funds to the Seller&apos;s
+                    order is considered fulfilled at the moment of crediting the corresponding funds to the
+                    Seller&apos;s
                     account.
                 </p>
                 <p className={'text-base'}>

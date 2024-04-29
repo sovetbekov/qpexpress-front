@@ -1,10 +1,17 @@
 import React from 'react'
 import Image from 'next/image'
 import { useTranslation } from '@/app/i18n'
+import localFont from 'next/font/local'
+import clsx from 'clsx'
 
 type Props = {
     language: string,
 }
+
+const arialBlack = localFont({
+    src: '../../fonts/ariblkKZ.ttf',
+    variable: '--font-ariblk'
+})
 
 export default async function Description({language}: Readonly<Props>) {
     const {t} = await useTranslation(language, 'description')
@@ -17,7 +24,7 @@ export default async function Description({language}: Readonly<Props>) {
                        placeholder={'empty'} className={'block md:hidden'}/>
             </div>
             <div className={'flex flex-col items-center'}>
-                <h1 className={'text-[2.5rem] leading-[2.6rem] md:text-[4.5rem] md:text-black md:w-[56.875rem] md:leading-[4.95rem] md:text-center md:break-words font-black md:mb-5'}>
+                <h1 className={clsx('text-[2rem] leading-[2.6rem] md:text-[3.5rem] md:text-black md:w-[56.875rem] md:leading-[4rem] md:text-center md:break-words md:mb-5', arialBlack.className)}>
                     {t('title')}
                 </h1>
                 <br className={'md:h-30'}/>

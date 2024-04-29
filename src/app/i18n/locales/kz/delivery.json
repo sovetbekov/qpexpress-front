@@ -1,0 +1,18 @@
+{
+  "product_information": "Тауар туралы ақпарат",
+  "delivery_information": "Жеткізу туралы ақпарат",
+  "weight": "Салмағы (кг)",
+  "price": "Бағасы",
+  "kazpost_track_number": "Қазпоштаның бақылау нөмірі",
+  "invoice": "Жүкқұжат",
+  "pay": "Төлеу",
+  "delivery_status": "Жеткізу күйі",
+  "created": "Жасалған",
+  "delivered_to_warehouse": "Қоймаға жеткізілді",
+  "in_the_way": "Жолда",
+  "in_your_country": "Сіздің еліңізде",
+  "in_mail_office": "Пошта бөлімінде",
+  "delivered": "Жеткізілді",
+  "deleted": "Жойылды",
+  "track_delivery": "Жеткізуді қадағалау"
+}

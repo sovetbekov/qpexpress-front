@@ -56,14 +56,14 @@ export default function RecipientInfoForm({initialFormData, language}: Readonly<
         data.append('phoneNumber', formData.phoneNumber)
         data.append('address', formData.address)
         if (formData.documentSideA) {
-            if (formData.documentSideA instanceof File) {
+            if (formData.documentSideA instanceof Blob) {
                 data.append('documentSideA', formData.documentSideA)
             } else {
                 data.append('documentSideAId', formData.documentSideA.id)
             }
         }
         if (formData.documentSideB) {
-            if (formData.documentSideB instanceof File) {
+            if (formData.documentSideB instanceof Blob) {
                 data.append('documentSideB', formData.documentSideB)
             } else {
                 data.append('documentSideBId', formData.documentSideB.id)

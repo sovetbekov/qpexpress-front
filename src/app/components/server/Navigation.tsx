@@ -10,7 +10,7 @@ import { MenuToggle } from '@/app/components/client/MenuToggle'
 import { MenuItem } from '@/app/components/client/MenuItem'
 import { useAuthenticationActions } from '@/hooks/client/useAuthenticationActions'
 import { useTranslation } from '@/app/i18n/client'
-import { CN, GB, RU } from 'country-flag-icons/react/3x2'
+import { CN, GB, RU, KZ } from 'country-flag-icons/react/3x2'
 import OptionSelect from '@/app/components/input/DropdownInput/OptionSelect'
 import { animated, useTransition } from '@react-spring/web'
 
@@ -20,7 +20,7 @@ type Props = {
 
 export default function Navigation({language}: Readonly<Props>) {
     const pathname = usePathname()
-    const pathnameWithoutLanguage = pathname?.replace(/\/(ru|en|zh)/, '')
+    const pathnameWithoutLanguage = pathname?.replace(/\/(ru|en|zh|kz)/, '')
     const {t} = useTranslation(language, 'navigation')
     const router = useRouter()
     const {t: headerText} = useTranslation(language, 'header')
@@ -65,6 +65,7 @@ export default function Navigation({language}: Readonly<Props>) {
         {id: 'ru', value: 'ru', label: <LanguageDropdownItem value={'ru'}/>},
         {id: 'en', value: 'en', label: <LanguageDropdownItem value={'en'}/>},
         {id: 'zh', value: 'zh', label: <LanguageDropdownItem value={'zh'}/>},
+        {id: 'kz', value: 'kz', label: <LanguageDropdownItem value={'kz'}/>},
     ]
     const selectedLanguage = languageOptions.find(option => option.value === language) ?? languageOptions[0]
 
@@ -79,7 +80,7 @@ export default function Navigation({language}: Readonly<Props>) {
                     <nav>
                         <ul className={'md:flex md:flex-row md:justify-between md:items-center md:gap-x-10 md:list-none'}>
                             {
-                                /\/(ru|en|zh)$/.exec(pathname) &&
+                                /\/(ru|en|zh|kz)$/.exec(pathname) &&
                                 <>
                                     <li>
                                         <Link href={'#about_us'}>
@@ -99,7 +100,7 @@ export default function Navigation({language}: Readonly<Props>) {
                                 </>
                             }
                             {
-                                /\/(ru|en|zh)\/profile/.exec(pathname) &&
+                                /\/(ru|en|zh|kz)\/profile/.exec(pathname) &&
                                 <li className={'md:cursor-pointer'} onClick={showCalculatorModal}>
                                     <p className={'md:text-base'}>
                                         {t('calculator')}
@@ -123,6 +124,9 @@ export default function Navigation({language}: Readonly<Props>) {
                                                     break
                                                 case 'zh':
                                                     router.replace(`/zh/${pathnameWithoutLanguage}`)
+                                                    break
+                                                case 'kz':
+                                                    router.replace(`/kz/${pathnameWithoutLanguage}`)
                                                     break
                                                 default:
                                                     break
@@ -165,6 +169,9 @@ export default function Navigation({language}: Readonly<Props>) {
                                     case 'zh':
                                         router.replace(`/zh/${pathnameWithoutLanguage}`)
                                         break
+                                    case 'kz':
+                                        router.replace(`/kz/${pathnameWithoutLanguage}`)
+                                        break
                                     default:
                                         break
                                 }
@@ -192,7 +199,7 @@ export default function Navigation({language}: Readonly<Props>) {
                                         style={menuStyle}>
                                         <div className={'flex flex-col justify-between h-full'}>
                                             {
-                                                /\/(ru|en|zh|kk)$/.exec(pathname) &&
+                                                /\/(ru|en|zh|kz)$/.exec(pathname) &&
                                                 <div>
                                                     <MenuItem text={t('about_us')} link={'#about_us'}
                                                               onClick={toggleMenu}/>
@@ -203,7 +210,7 @@ export default function Navigation({language}: Readonly<Props>) {
                                                 </div>
                                             }
                                             {
-                                                /\/(ru|en|zh|kk)\/profile/.exec(pathname) &&
+                                                /\/(ru|en|zh|kz)\/profile/.exec(pathname) &&
                                                 <div className={'hidden md:block'}>
                                                     <MenuItem text={t('calculator')} link={'#calculator'}
                                                               onClick={showCalculatorModal}/>
@@ -322,6 +329,14 @@ function LanguageDropdownItem({value}: Readonly<{ value: string }>) {
                     className={'flex flex-row items-center justify-start'}>
                     <CN className={'w-5 h-5 mr-2 inline-block'}/>
                     中文
+                </div>
+            )
+        case 'kz':
+            return (
+                <div
+                    className={'flex flex-row items-center justify-start'}>
+                    <KZ className={'w-5 h-5 mr-2 inline-block'}/>
+                    Қазақша
                 </div>
             )
         default:
