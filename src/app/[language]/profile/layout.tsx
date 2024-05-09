@@ -7,6 +7,7 @@ import clsx from 'clsx'
 import Protected from '@/app/components/client/Protected'
 import Image from 'next/image'
 import {useTranslation} from '@/app/i18n/client'
+import { Toaster } from "react-hot-toast";
 
 type Props = {
     children: React.ReactNode,
@@ -62,6 +63,7 @@ export default function Layout({children, params: {language}}: Readonly<Props>) 
 
     return (
         <Protected>
+            <Toaster position="bottom-center" />
             <div className={'hidden md:block'}>
                 {
                     showMenu && pathname &&

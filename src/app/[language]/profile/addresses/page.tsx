@@ -1,6 +1,7 @@
 import { getAddresses } from '@/services/addresses'
 import PageWrapper from '../PageWrapper'
 import { isError } from '@/app/lib/utils'
+import ClickableElement from './ClickableElement'
 
 export const dynamic = 'force-dynamic'
 
@@ -17,6 +18,15 @@ export default async function Page({params: {language}}: Readonly<Props>) {
     }
     const addresses = addressesResponse.data
 
+    const copyToClipboard = async (text: string) => {
+        try {
+            await navigator.clipboard.writeText(text)
+            console.log('Text copied to clipboard:', text)
+        } catch (error) {
+            console.error('Failed to copy text to clipboard:', error)
+        }
+    }
+
     return (
         <PageWrapper>
             <div className={'px-5 md:p-0'}>
@@ -30,6 +40,36 @@ export default async function Page({params: {language}}: Readonly<Props>) {
                                     <br className={'h-2.5'}/>
                                     <div className={'flex flex-col gap-y-2'}>
                                         {
+                                            address.city && (
+                                                <ClickableElement text={address.city} params={{language}} />
+                                            )  
+                                        }
+                                        {
+                                            address.district && (
+                                                <ClickableElement text={address.district} params={{language}} />
+                                            )  
+                                        }
+                                        {
+                                            address.neighborhood && (
+                                                <ClickableElement text={address.neighborhood} params={{language}} />
+                                            )  
+                                        }
+                                        {
+                                            address.street && (
+                                                <ClickableElement text={address.street} params={{language}} />
+                                            )  
+                                        }
+                                        {
+                                            address.house && (
+                                                <ClickableElement text={address.house} params={{language}} />
+                                            )  
+                                        }
+                                        {
+                                            address.postcode && (
+                                                <ClickableElement text={address.postcode} params={{language}} />
+                                            )  
+                                        }
+                                        {/* {
                                             address.city && (
                                                 <div className={'flex flex-row justify-between w-full'}>
                                                     {address.city.split('~').map(text => (
@@ -76,7 +116,7 @@ export default async function Page({params: {language}}: Readonly<Props>) {
                                                         <p className={'text-base'} key={text}>{text}</p>))}
                                                 </div>
                                             )
-                                        }
+                                        } */}
                                     </div>
                                 </div>
                             )
