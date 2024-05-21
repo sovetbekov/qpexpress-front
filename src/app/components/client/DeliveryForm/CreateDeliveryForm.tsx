@@ -70,7 +70,7 @@ export default function CreateDeliveryForm({recipients, currencies, language}: R
         data.append('kazPostTrackNumber', formData.kazPostTrackNumber)
         data.append('invoice', formData.invoice as File)
         data.append('products', JSON.stringify(Object.keys(selected)))
-        const toastId = toast.loading(t('edit_profile.saving'))
+        const toastId = toast.loading(t('edit_profile.save'))
         const response = await createDelivery(data)
         if (isSuccess(response)) {
             toast.update(toastId, {

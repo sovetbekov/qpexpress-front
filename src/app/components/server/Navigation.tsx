@@ -97,6 +97,11 @@ export default function Navigation({language}: Readonly<Props>) {
                                             {t('calculator')}
                                         </Link>
                                     </li>
+                                    <li>
+                                        <Link href={'marketplaces'}>
+                                            {t('marketplaces')}
+                                        </Link>
+                                    </li>
                                 </>
                             }
                             {

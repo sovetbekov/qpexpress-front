@@ -59,13 +59,16 @@ export async function getMyProfile() {
 }
 
 export async function getMyRecipients() {
-    return await makeRequest<RecipientData[]>('v1/my/recipients', {
+    console.log("Fetching recipients...");
+    const response = await makeRequest<RecipientData[]>('v1/my/recipients', {
         requestOptions: {
             next: {
                 tags: ['recipients'],
             },
         },
-    })
+    });
+    console.log("Received response:", response);
+    return response;
 }
 
 export async function updateAccount(data: PersonalInfoFormData, language: string) {

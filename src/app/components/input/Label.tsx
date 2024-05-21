@@ -1,5 +1,3 @@
-'use client'
-
 import React, { LabelHTMLAttributes, PropsWithChildren, useEffect, useState } from 'react'
 import { Errors } from '@/types'
 import { animated, useSpring } from '@react-spring/web'
@@ -30,7 +28,6 @@ export default function Label({
 
     const [labelColorAnimation, labelColorApi] = useSpring(() => ({
         color: labelColor ?? '#000000',
-        background: 'white',
     }))
 
     const [labelPositionAnimation, labelPositionApi] = useSpring(() => {
@@ -76,30 +73,32 @@ export default function Label({
     if (hasError) {
         labelColorApi.start({
             color: '#FE5C00',
-        })
+        });
     } else if (disabled) {
         labelColorApi.start({
             color: '#9CA3AF',
-            background: 'none',
-        })
+        });
     } else {
         labelColorApi.start({
             color: labelColor ?? '#000000',
-            background: 'white',
-        })
+        });
     }
+    
 
     return (
         <div className={'absolute top-0 left-0 flex h-full w-full items-center pointer-events-none pl-5'}
              ref={setWrapperRef}>
-            <animated.label style={{...labelPositionAnimation, ...labelColorAnimation}}
-                            className={clsx('origin-left', className)}
-                            {...props}>
+            <animated.label
+                style={{
+                    ...labelPositionAnimation,
+                    color: labelColorAnimation.color, // Apply animated color
+                    backgroundColor: labelColorAnimation.background ?? 'white', // Set background color
+                }}
+                className={clsx('origin-left', className)}
+                {...props}
+            >
                 {children}
-                {
-                    required &&
-                    <span>*</span>
-                }
+                {required && <span>*</span>}
             </animated.label>
         </div>
     )

@@ -1,4 +1,5 @@
 import { DeliveryStatus, OrderStatus, RecipientStatus } from '@/types/utils'
+import { StyledString } from 'next/dist/build/swc'
 
 export type CountryData = {
     id: string,
@@ -83,6 +84,25 @@ export type DeliveryData = {
     goods: GoodData[]
     kazPostTrackNumber: string
     invoice: FileMetaData
+}
+
+export type MarketplaceData = {
+    brand: string,
+    category: string,
+    description: string,
+    link: string,
+    country: string,
+    photo_link: string
+}
+
+export type MarketplaceDataOverview = {
+    id: string,
+    brand: string,
+    category: string,
+    description: string,
+    link: string,
+    country: string,
+    photo_link: string
 }
 
 export type UserData = {
