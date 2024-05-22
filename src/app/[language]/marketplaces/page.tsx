@@ -5,6 +5,7 @@ import { useTranslation } from "@/app/i18n/client";
 import styles from '@/styles/custom.module.css'; // Import custom CSS module
 import { getMarketplaces } from '@/services/marketplaces';
 import { MarketplaceDataOverview } from '@/types/entities';
+import CheckboxInput from '@/app/components/input/CheckboxInput'; // Import CheckboxInput component
 
 export const dynamic = 'force-dynamic';
 
@@ -58,14 +59,15 @@ export default function Page({ params: { language } }: Readonly<Props>) {
                         {Array.from(new Set(marketplaces.map(m => m.country))).map((country, index) => (
                             <li key={index} className="w-full border-b border-gray-200 rounded-t-lg">
                                 <div className="flex items-center ps-3">
-                                    <input 
-                                        id={`checkbox-${country}`} 
-                                        type="checkbox" 
+                                    <CheckboxInput
+                                        id={`checkbox-${country}`}
+                                        label={country}
                                         checked={selectedCountries.includes(country)}
                                         onChange={() => handleCountryChange(country)}
-                                        className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
+                                        wrapperClassname="flex items-center"
+                                        labelClassname="w-full py-3 ms-2 text-sm font-medium text-gray-900"
+                                        checkboxClassname="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
                                     />
-                                    <label htmlFor={`checkbox-${country}`} className="w-full py-3 ms-2 text-sm font-medium text-gray-900">{country}</label>
                                 </div>
                             </li>
                         ))}
