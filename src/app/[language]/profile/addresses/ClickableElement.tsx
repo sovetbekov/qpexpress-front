@@ -2,9 +2,9 @@
 
 import React from 'react';
 import { toast } from 'react-hot-toast';
-import { t } from 'i18next';
-import {useTranslation} from "@/app/i18n/client";
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCopy } from '@fortawesome/free-solid-svg-icons';
+import { useTranslation } from "@/app/i18n/client";
 
 type ClickableElementProps = {
     text: string;
@@ -13,27 +13,36 @@ type ClickableElementProps = {
     }
 };
 
-const ClickableElement: React.FC<ClickableElementProps> = ({ text, params: {language}}) => {
-    const {t} = useTranslation(language, 'profile')
+const ClickableElement: React.FC<ClickableElementProps> = ({ text, params: { language }}) => {
+    const { t } = useTranslation(language, 'profile')
 
     const copyToClipboard = async (text: string) => {
         try {
             await navigator.clipboard.writeText(text)
-            toast.success(t('copied') + ': ' + text); 
+            toast.success(t('copied') + ': ' + text);
             console.log('Text copied to clipboard:', text)
         } catch (error) {
             console.error('Failed to copy text to clipboard:', error)
         }
     }
-    
-    return (
-        <div className={'flex flex-row justify-between w-full'} >
-            {text.split('~').map((textItem, index) => (
-                <button onClick={
-                    () => {copyToClipboard(textItem)}
-                }>{textItem}</button>
 
-            ))}
+    // Split the text into label and value parts
+    const [label, value] = text.split(':~');
+
+    return (
+        <div className={'flex flex-row items-center justify-between w-full'}>
+            <span>{label}:</span>
+            {value && (
+                <div className={'flex items-center'}>
+                    <span>{value}</span>
+                    <button
+                        onClick={() => { copyToClipboard(value) }}
+                        className={'ml-4'}
+                    >
+                        <FontAwesomeIcon icon={faCopy} />
+                    </button>
+                </div>
+            )}
         </div>
     );
 };

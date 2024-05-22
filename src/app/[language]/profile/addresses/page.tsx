@@ -18,15 +18,6 @@ export default async function Page({params: {language}}: Readonly<Props>) {
     }
     const addresses = addressesResponse.data
 
-    const copyToClipboard = async (text: string) => {
-        try {
-            await navigator.clipboard.writeText(text)
-            console.log('Text copied to clipboard:', text)
-        } catch (error) {
-            console.error('Failed to copy text to clipboard:', error)
-        }
-    }
-
     return (
         <PageWrapper>
             <div className={'px-5 md:p-0'}>

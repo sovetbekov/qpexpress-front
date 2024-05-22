@@ -73,6 +73,27 @@ export type OrderData = {
     status: OrderStatus
 }
 
+export type EditOrderData = {
+    recipientId: string
+    goods: EditGoodData[]
+}
+
+export type EditGoodData = {
+    id: string
+    name: string
+    customOrderId: string
+    description: string
+    originalBox: boolean,
+    quantity?: number,
+    link: string,
+    price?: number,
+    countryId?: string,
+    currencyId?: string,
+    trackingNumber?: string, // Add trackingNumber property
+    price?: string,
+    invoice?: FileMetaData
+}
+
 export type DeliveryData = {
     id: string
     deliveryNumber: string

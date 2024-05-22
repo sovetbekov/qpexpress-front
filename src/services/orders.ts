@@ -1,7 +1,7 @@
 'use server'
 
 import { revalidateTag } from 'next/cache'
-import { FileMetaData, GoodData, OrderData } from '@/types/entities'
+import { EditOrderData, FileMetaData, GoodData, OrderData } from '@/types/entities'
 import { getLanguageBundle, makeRequest } from '@/services/utils'
 
 type CreateOrderRequest = {
@@ -108,6 +108,20 @@ export async function getOrder(orderId: string) {
             next: {
                 tags: ['orders'],
             },
+        },
+    })
+}
+
+export async function updateOrder(data: EditOrderData, orderId: string) {
+    console.info(orderId, 'orderId')
+    console.info(JSON.stringify(data), 'update')
+    return await makeRequest<EditOrderData>(`v1/my/orders/${orderId}`, {
+        requestOptions: {
+            method: 'PUT',
+            body: JSON.stringify(data),
+            headers: {
+                'Content-Type': 'application/json'
+            }
         },
     })
 }
