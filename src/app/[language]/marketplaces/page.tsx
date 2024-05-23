@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from "@/app/i18n/client";
 import styles from '@/styles/custom.module.css'; // Import custom CSS module
 import { getMarketplaces } from '@/services/marketplaces';
@@ -20,19 +20,21 @@ export default function Page({ params: { language } }: Readonly<Props>) {
     const [selectedCountries, setSelectedCountries] = useState<string[]>([]);
     const [marketplaces, setMarketplaces] = useState<MarketplaceDataOverview[]>([]);
     const [error, setError] = useState<string | null>(null);
+    const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
         const fetchMarketplaces = async () => {
             try {
                 const response = await getMarketplaces();
                 if ('data' in response) {
-                    console.log(response.data, 'marketplaces');
                     setMarketplaces(response.data);
                 } else {
                     setError(response.status);
                 }
             } catch (err) {
                 setError('Failed to fetch marketplaces');
+            } finally {
+                setLoading(false);
             }
         };
 
@@ -45,7 +47,13 @@ export default function Page({ params: { language } }: Readonly<Props>) {
         );
     };
 
-    const filteredData = selectedCountries.length === 0 ? marketplaces : marketplaces.filter(m => selectedCountries.includes(m.country));
+    const filteredData = useMemo(() => {
+        return selectedCountries.length === 0 ? marketplaces : marketplaces.filter(m => selectedCountries.includes(m.country));
+    }, [selectedCountries, marketplaces]);
+
+    if (loading) {
+        return <div>Loading...</div>; // Add your spinner or loading component here
+    }
 
     return (
         <div className="wrapper p-6 md:p-10">
@@ -96,7 +104,7 @@ export default function Page({ params: { language } }: Readonly<Props>) {
                     </div>
                 </div>
             </div>
-            {error && <div className="error">{error}</div>}
+            {error && <div className="error text-red-500 mt-4">{error}</div>}
         </div>
     );
 }

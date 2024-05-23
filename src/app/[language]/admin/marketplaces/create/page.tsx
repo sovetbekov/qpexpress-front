@@ -26,7 +26,7 @@ export default async function Page({ params: { language } }: Readonly<Props>) {
                         <Image src={'/assets/back_arrow.svg'} alt={'back_arrow.svg'} width={24} height={24} />
                     </Link>
                     <p className="md:text-4xl md:font-bold">
-                        {t('add_marketplace')}
+                        Добавить маркетплейс
                     </p>
                 </div>
                 <div className="w-full ">
