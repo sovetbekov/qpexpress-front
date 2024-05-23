@@ -6,5 +6,7 @@
     "approving": "Approving recipient...",
     "approved": "Recipient approved successfully",
     "error_approving": "Error approving recipient"
-  }
+  },
+  "marketplaces": "Marketplaces"
+
 }

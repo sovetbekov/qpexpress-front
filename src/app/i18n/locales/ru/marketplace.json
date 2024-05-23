@@ -1,0 +1,11 @@
+{
+    "add_marketplace": "Добавить маркетплейс",
+    "update": "Обновить",
+    "delete": "Удалить",
+    "category": "Категория",
+    "brand": "Бренд",
+    "country": "Страна",
+    "description": "Описание",
+    "websiteLink": "Ссылка на сайт",
+    "photoLink": "Ссылка на фото"
+}
