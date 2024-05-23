@@ -84,6 +84,7 @@ export default function Label({
         style={{
           ...labelPositionAnimation,
           color: labelColorAnimation.color,
+          backgroundColor: 'white'
         }}
         className={clsx('origin-left', className)}
         {...props}
