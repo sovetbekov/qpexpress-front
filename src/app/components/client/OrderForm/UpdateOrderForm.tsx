@@ -11,7 +11,7 @@ import CheckboxInput from '@/app/components/input/CheckboxInput';
 import { updateOrder } from '@/services/orders';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
-import { getRecipients } from '@/services/account'
+import { getMyRecipients } from '@/services/account'
 import { isError } from '@/app/lib/utils'
 import { getCountries } from '@/services/countries';
 
@@ -30,7 +30,7 @@ export default function UpdateOrderForm({ data, language, orderId }: Props) {
     const [countries, setCountries] = useState<CountryData[]>([]); // State to store countries
 
     useEffect(() => {
-        getRecipients().then(response => {
+        getMyRecipients().then(response => {
             if (!isError(response)) {
                 setRecipients(response.data)
             }

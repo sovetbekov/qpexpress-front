@@ -1,11 +1,11 @@
 import { getAddresses } from '@/services/addresses';
 import PageWrapper from '../PageWrapper';
 import { isError } from '@/app/lib/utils';
-import dynamic from 'next/dynamic';
+import dynamicImport from 'next/dynamic';
 
-const AddressCard = dynamic(() => import('./AddressCard'), { ssr: false });
+const AddressCard = dynamicImport(() => import('./AddressCard'), { ssr: false });
 
-export const dynamics = 'force-dynamic';
+export const dynamic = 'force-dynamic';
 
 type Props = {
     params: {
