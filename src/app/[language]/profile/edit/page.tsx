@@ -27,7 +27,7 @@ export default async function Page({params: {language}}: Readonly<Props>) {
         <PageWrapper>
             <div className={'flex flex-col gap-y-4 md:gap-y-12 px-5'}>
                 <ProfileInfoForm initialFormData={profile} language={language} />
-                <RecipientInfoForm initialFormData={recipients[0]} language={language} />
+                <RecipientInfoForm initialFormData={recipients} language={language} />
             </div>
         </PageWrapper>
     )

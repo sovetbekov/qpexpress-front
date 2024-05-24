@@ -35,6 +35,7 @@ export type AddressData = {
 }
 
 export type FileMetaData = {
+    [x: string]: string | StaticImport
     id: string
     contentType: string
     name: string

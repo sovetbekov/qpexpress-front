@@ -31,6 +31,9 @@
     "error_saving_profile": "Error saving profile data",
     "saving_recipient": "Saving recipient data...",
     "saved_recipient": "Saved recipient data",
-    "error_saving_recipient": "Error saving recipient data"
+    "error_saving_recipient": "Error saving recipient data",
+    "add_recipient": "Add new recipient",
+    "add": "Save the new recipient",
+    "edit": "Edit"
   }
 }

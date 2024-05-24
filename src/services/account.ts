@@ -59,7 +59,6 @@ export async function getMyProfile() {
 }
 
 export async function getMyRecipients() {
-    console.log("Fetching recipients...");
     const response = await makeRequest<RecipientData[]>('v1/my/recipients', {
         requestOptions: {
             next: {
@@ -67,7 +66,6 @@ export async function getMyRecipients() {
             },
         },
     });
-    console.log("Received response:", response);
     return response;
 }
 
@@ -103,6 +101,7 @@ export async function updateAccount(data: PersonalInfoFormData, language: string
 }
 
 export async function createRecipient(data: FormData, language: string) {
+    console.log(data, 'createRecipient')
     const t = await getLanguageBundle(language, 'common')
     return await makeRequest<RecipientData>('v1/my/recipients', {
         requestOptions: {
@@ -115,6 +114,8 @@ export async function createRecipient(data: FormData, language: string) {
 }
 
 export async function updateRecipient(id: string, data: FormData, language: string) {
+    console.log(data, 'updateRecipient')
+
     const t = await getLanguageBundle(language, 'common')
     return await makeRequest<RecipientData>(`v1/my/recipients/${id}`, {
         requestOptions: {
