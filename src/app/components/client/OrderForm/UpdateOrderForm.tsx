@@ -99,7 +99,7 @@ export default function UpdateOrderForm({ data, language, orderId }: Props) {
                 goods: formData.goods.map((good): EditGoodData => ({
                     id: good.id,
                     name: good.name,
-                    customOrderId: good.customOrderId ?? '',
+                    customOrderId: good.id,
                     description: good.description,
                     originalBox: good.originalBox,
                     currencyId: good.price!!.currency.id,
@@ -109,6 +109,7 @@ export default function UpdateOrderForm({ data, language, orderId }: Props) {
                     countryId: good.country?.id, 
                 })),
             };
+            console.info(editOrderData.goods, 'updatedGood:')
             await updateOrder(editOrderData, orderId);
             toast.success('Заказ был успешно обновлен');
             // router.push('/profile/orders'); 
@@ -231,7 +232,7 @@ export default function UpdateOrderForm({ data, language, orderId }: Props) {
                             checked={productInfo.originalBox}
                             wrapperClassname="flex items-center gap-x-3 cursor-pointer outline-none w-fit"
                             checkboxClassname="border-none w-6 h-6 outline-none"
-                            onChange={(e) => handleInputChange(index, 'originalBox', e)}
+                            onChange={(e) => handleInputChange(index, 'originalBox', e.target.checked)}
                         />
                     </div>
                     <div className="flex flex-col gap-3">
