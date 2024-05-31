@@ -1,11 +1,11 @@
 'use server'
 
 import { MarketplaceData, MarketplaceDataOverview } from '@/types/entities'
-import { makeRequest } from '@/services/utils'
+import { makeRequest, makeRequestNoAuth } from '@/services/utils'
 import { revalidateTag } from 'next/cache'
 
 export async function getMarketplaces() {
-    return await makeRequest<MarketplaceDataOverview[]>('v1/marketplaces', {
+    return await makeRequestNoAuth<MarketplaceDataOverview[]>('v1/marketplaces', {
         requestOptions: {
             next: {
                 tags: ['marketplaces'],

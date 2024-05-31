@@ -15,6 +15,56 @@ type MakeRequestOptions = {
     validators?: Record<string, ValidatorProps[]>,
 }
 
+export async function makeRequestNoAuth<T>(url: string, options?: MakeRequestOptions): Promise<ServerActionResponse<T>> {
+    const errors = options?.validateRequest?.() ?? {};
+    if (options?.validators) {
+        Object.entries(options.validators).forEach(([key, validators]) => {
+            validators.forEach(validator => {
+                if (!validator.validate) {
+                    errors[key] = [...(errors[key] ?? []), validator.message];
+                }
+            });
+        });
+    }
+
+    if (Object.keys(errors).length > 0) {
+        console.error(errors);
+        return {
+            status: 'error',
+            error: errors,
+        };
+    }
+
+
+    const backendUrl = await getBackendUrl();
+    if (isError(backendUrl)) {
+        return backendUrl;
+    }
+    const response = await fetch(`${backendUrl.data}/${url}`, {
+        ...options?.requestOptions,
+        headers: {
+            ...options?.requestOptions?.headers,
+        },
+    });
+
+    if (!response.ok) {
+        const errorResponse: ErrorResponse = {
+            status: 'error',
+            error: {
+                serverError: [`Failed to fetch: ${response.status}`],
+            },
+        };
+        console.log(url, errorResponse);
+        return errorResponse;
+    } else {
+        options?.postRequest?.();
+        return {
+            status: 'success',
+            data: await response.json() as T,
+        };
+    }
+}
+
 type SessionAndBackendUrl = {
     session: Session | null
     backendUrl: string
