@@ -212,6 +212,8 @@ export default function Navigation({language}: Readonly<Props>) {
                                                               onClick={toggleMenu}/>
                                                     <MenuItem text={t('calculator')} link={'#calculator'}
                                                               onClick={toggleMenu}/>
+                                                    <MenuItem text={t('marketplaces')} link={'marketplaces'}
+                                                              onClick={toggleMenu}/>       
                                                 </div>
                                             }
                                             {
