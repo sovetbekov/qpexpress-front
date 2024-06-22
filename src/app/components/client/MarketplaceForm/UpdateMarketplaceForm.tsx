@@ -137,12 +137,12 @@ export default function UpdateMarketplaceForm({ language, data }: Props) {
                     <label htmlFor="photo" className="font-medium text-gray-700 mb-2">Ссылки на фото</label>
                     <input 
                         id="photo" 
-                        name="photo" 
+                        name="photo_link" 
                         type="text" 
                         value={marketplace.photo_link} 
                         onChange={handleChange} 
-                        className="border border-gray-300 rounded-lg p-2"
-                        required
+                        className="border border-gray-300 rounded-lg p-2"   
+                        required  
                     />
                 </div>
                     <button type="submit" className="bg-blue-500 text-white font-medium py-2 rounded-lg hover:bg-blue-600">
