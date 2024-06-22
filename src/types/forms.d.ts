@@ -16,7 +16,7 @@ export type GoodFormData = {
 
 
 export type OrderFormData = {
-    recipient?: RecipientOverview,
+    recipient: RecipientOverview,
     goods: GoodFormData[],
 }
 

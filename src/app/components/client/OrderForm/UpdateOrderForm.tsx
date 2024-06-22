@@ -262,7 +262,7 @@ export default function UpdateOrderForm({ data, language, orderId }: Props) {
                         <label htmlFor="recipient" className="font-medium text-lg mb-1">Получатель</label>
                         <DropdownInput<RecipientOverview>
                             id={`recipient_${index}`}
-                            label="Выбрать получателя"
+                            label={formData.recipient?.firstName + ' ' + formData.recipient?.lastName}
                             options={recipientOptions}
                             nullable={false} searchable={true}
                             selected={formData.recipient?.id ?? ''}
