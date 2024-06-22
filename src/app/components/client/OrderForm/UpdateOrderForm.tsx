@@ -7,6 +7,7 @@ import TextInput from '@/app/components/input/TextInput';
 import MoneyInput from '@/app/components/input/MoneyInput';
 import FileInput from '@/app/components/input/FileInput';
 import CheckboxInput from '@/app/components/input/CheckboxInput';
+import { Option } from '@/app/components/input/DropdownInput/Dropdown';
 
 import { updateOrder } from '@/services/orders';
 import { toast } from 'react-toastify';
@@ -14,6 +15,8 @@ import { useRouter } from 'next/navigation';
 import { getMyRecipients } from '@/services/account'
 import { isError } from '@/app/lib/utils'
 import { getCountries } from '@/services/countries';
+import DropdownInput from '../../input/DropdownInput/DropdownInput';
+import { getNameByLanguage } from '@/util';
 
 type Props = {
     data: OrderFormData;
@@ -52,11 +55,25 @@ export default function UpdateOrderForm({ data, language, orderId }: Props) {
             console.error('Selected country not found');
         }
     };
+    const recipientOptions = recipients.map(recipient => {
+        return {
+            id: recipient.id,
+            value: recipient,
+            label: `${recipient.firstName} ${recipient.lastName}`,
+            searchLabel: `${recipient.firstName} ${recipient.lastName}`,
+        }
+    })
+
+    const countryOptions = countries?.map(country => {
+        return {
+            id: country.id,
+            value: country,
+            label: getNameByLanguage(country, language),
+        }
+    }) ?? []
     
-    
-    const handleRecipientChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const recipientId = e.target.value;
-        const selectedRecipient = recipients.find(recipient => recipient.id === recipientId);
+    const handleRecipientChange = (option: Option<RecipientOverview> | undefined) => {
+        const selectedRecipient = recipients.find(recipient => recipient.id === option?.id);
         if (selectedRecipient) {
             setFormData(prev => ({
                 ...prev,
@@ -69,12 +86,10 @@ export default function UpdateOrderForm({ data, language, orderId }: Props) {
                     patronymic: selectedRecipient.patronymic
                 }
             }));
-            console.info(formData.recipient?.id, "test")
         } else {
-            console.error('Recipient not found')
+            console.error('Recipient not found');
         }
     };
-    
     
     
 
@@ -160,19 +175,27 @@ export default function UpdateOrderForm({ data, language, orderId }: Props) {
                                     required
                                     onChange={(e) => handleInputChange(index, 'link', e.target.value)}
                                 />
-                                    <select
+                                <div className="">
+                                    <DropdownInput<CountryData>
                                         id={`country_${index}`}
-                                        name={`country_${index}`}
-                                        value={productInfo.country?.id}
-                                        onChange={(e) => handleCountryChange(index, e.target.value)}
-                                        className="md:basis-1/4 md:p-4 w-full p-3 placeholder-black rounded-full border border-black"
-                                        required
-                                    >
-                                        <option value="">Выбрать страну</option>
-                                        {countries.map(country => (
-                                            <option key={country.id} value={country.id}>{country.nameRus}</option>
-                                        ))}
-                                    </select>
+                                        label="Выбрать страну"
+                                        options={countryOptions}
+                                        selected={productInfo.country?.id ?? ''}
+                                        setSelected={(option: Option<CountryData> | undefined) => {
+                                            if (option) {
+                                                handleCountryChange(index, option.id);
+                                            } 
+                                        }}
+                                        searchable
+                                        nullable
+                                        wrapperClassname={'w-full'}
+                                        inputClassname={'border cursor-pointer flex items-center justify-between w-full md:text-[0.9rem] md:w-[25rem] p-4 rounded-full border-black disabled:bg-gray disabled:text-[#cccccc] disabled:cursor-not-allowed disabled:border-0'}
+                                        dropdownClassname={'w-[calc(100vw-2.5rem)] z-50 md:max-h-60 md:w-[25rem] overflow-auto bg-white border my-4 rounded-3xl border-solid border-black'}
+                                        dropdownItemClassname={'cursor-pointer px-8 py-4 border-b-black border-b border-solid last:border-b-0 hover:bg-gray'}
+                                    />
+                                </div>
+                                   
+                                    
 
 
                             </div>
@@ -237,26 +260,23 @@ export default function UpdateOrderForm({ data, language, orderId }: Props) {
                     </div>
                     <div className="flex flex-col gap-3">
                         <label htmlFor="recipient" className="font-medium text-lg mb-1">Получатель</label>
-                        <select
+                        <DropdownInput<RecipientOverview>
                             id={`recipient_${index}`}
-                            name={`recipient_${index}`}
-                            value={formData.recipient?.id}
-                            onChange={handleRecipientChange}
-                            className="border cursor-pointer flex items-center justify-between w-full md:text-[0.9rem] md:w-full p-4 rounded-full border-black disabled:bg-gray disabled:text-[#cccccc] disabled:cursor-not-allowed disabled:border-0"
-                            required
-                        >
-                            <option value="">Выбрать получателя</option>
-                            {recipients.map(recipient => (
-                                <option key={recipient.id} value={recipient.id}>
-                                    {recipient.firstName} {recipient.lastName}
-                                </option>
-                            ))}
-                        </select>
+                            label="Выбрать получателя"
+                            options={recipientOptions}
+                            nullable={false} searchable={true}
+                            selected={formData.recipient?.id ?? ''}
+                            setSelected={handleRecipientChange}
+                            wrapperClassname={'w-full relative'}
+                            inputClassname={'border cursor-pointer flex items-center justify-between w-full md:text-[0.9rem] md:w-full p-4 rounded-full border-black disabled:bg-gray disabled:text-[#cccccc] disabled:cursor-not-allowed disabled:border-0'}
+                            dropdownClassname={'w-[calc(100vw-2.5rem)] z-50 md:max-h-60 md:w-full overflow-auto bg-white border my-4 rounded-3xl border-solid border-black'}
+                            dropdownItemClassname={'cursor-pointer px-8 py-4 border-b-black border-b border-solid last:border-b-0 hover:bg-gray'} 
+                        />
                     </div>
                 </div>
             ))}
             
-            <button type="submit" className="self-end p-3 bg-blue-500 text-white rounded-full" disabled={loading}>
+            <button type="submit" className="self-end p-3 bg-qp-blue text-white rounded-full" disabled={loading}>
                 {loading ? 'Loading...' : 'Изменить'}
             </button>
         </form>
