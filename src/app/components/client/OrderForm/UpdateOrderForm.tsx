@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react';
-import { EditOrderData, EditGoodData, RecipientOverview, CountryData } from '@/types/entities';
+import { EditOrderData, EditGoodData, RecipientOverview, CountryData, FileMetaData } from '@/types/entities';
 import { OrderFormData } from '@/types/forms'
 import TextInput from '@/app/components/input/TextInput';
 import MoneyInput from '@/app/components/input/MoneyInput';
@@ -13,10 +13,12 @@ import { updateOrder } from '@/services/orders';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
 import { getMyRecipients } from '@/services/account'
-import { isError } from '@/app/lib/utils'
+import { isError, notEmpty } from '@/app/lib/utils'
 import { getCountries } from '@/services/countries';
 import DropdownInput from '../../input/DropdownInput/DropdownInput';
 import { getNameByLanguage } from '@/util';
+import { uploadFile } from '@/services/files';
+import { SuccessResponse } from '@/types';
 
 type Props = {
     data: OrderFormData;
@@ -103,21 +105,42 @@ export default function UpdateOrderForm({ data, language, orderId }: Props) {
         setFormData(prev => ({ ...prev, goods: updatedGoods }));
     };
         
-
+    
       const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
 
+        const invoices = formData.goods.map(productInfo => productInfo.invoice)
+        
+        const fileResults = await Promise.all(invoices.map(invoice => {
+            if (invoice) {
+                const form = new FormData()
+                form.append('file', invoice)
+                return uploadFile(form)
+            }
+        }))
+        if (fileResults.some(response => response ? isError(response) : false)) {
+            throw fileResults.filter(notEmpty).reduce((acc, result, index) => {
+                if (isError(result)) {
+                    return {...acc, [`invoice_${index}`]: [result.error]}
+                } else {
+                    return acc
+                }
+            }, {})
+        }
+
         try {
             const editOrderData: EditOrderData = {
                 recipientId: formData.recipient?.id ?? '',
-                goods: formData.goods.map((good): EditGoodData => ({
+                goods: formData.goods.map((good, index): EditGoodData => ({
                     id: good.id,
                     name: good.name,
                     customOrderId: good.id,
                     description: good.description,
                     originalBox: good.originalBox,
                     currencyId: good.price!!.currency.id,
+                    trackingNumber: good.trackingNumber,
+                    invoiceUUID: (fileResults[index] as SuccessResponse<FileMetaData> | undefined)?.data.id,
                     quantity: 1,
                     price: good.price?.value,
                     link: good.link,
@@ -162,8 +185,7 @@ export default function UpdateOrderForm({ data, language, orderId }: Props) {
                                     label="Номер трекинга"
                                     type="text"
                                     value={productInfo.trackingNumber}
-                                    className="md:basis-1/4 md:p-4 w-full p-3 placeholder-black rounded-full border border-black"
-                                    readOnly 
+                                    className="md:basis-1/4 md:p-4 w-full p-3 placeholder-black rounded-full border border-black" 
                                     onChange={(e) => handleInputChange(index, 'trackingNumber', e.target.value)}
                                 />
                                 <TextInput
@@ -229,15 +251,14 @@ export default function UpdateOrderForm({ data, language, orderId }: Props) {
                                     required
                                     onChange={(value) => handleInputChange(index, 'price', value)} 
                                 />
-
                                 <FileInput
                                     id="invoice"
-                                    label="Накладная"
+                                    label="Загрузить новую накладную"
                                     file={productInfo.invoice}
                                     wrapperClassname="md:basis-1/3"
-                                    readOnly
                                     inputClassname="w-full p-3 md:p-4 placeholder-black rounded-full border border-black"
                                     onChange={(file) => handleInputChange(index, 'invoice', file)}
+                                
                                 />
                             </div>
                             <TextInput

@@ -20,7 +20,7 @@ export default async function Page({params: {orderId, language}}: Readonly<Props
         return <div>Order not found</div>
     }
     const order = orderResponse.data
-
+    console.log(order.goods[0], 'orderData')
     return (
         <div className={'md:p-20'}>
             <div className={'hidden md:flex md:flex-row md:align-center md:gap-x-4 mb-10'}>

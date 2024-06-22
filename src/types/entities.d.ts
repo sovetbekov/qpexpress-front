@@ -65,6 +65,7 @@ export type GoodData = {
     trackingNumber: string
     status: string
     price: number
+    invoice?: File | FileMetaData
 }
 
 export type OrderData = {
@@ -93,7 +94,8 @@ export type EditGoodData = {
     currencyId?: string,
     trackingNumber?: string, // Add trackingNumber property
     price?: string,
-    invoice?: FileMetaData
+    invoice?: string
+    invoiceUUID?: string
 }
 
 export type DeliveryData = {
