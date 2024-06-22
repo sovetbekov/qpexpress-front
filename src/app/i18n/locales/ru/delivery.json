@@ -14,5 +14,9 @@
   "in_mail_office": "В почтовом отделении",
   "delivered": "Доставлен",
   "deleted": "Удален",
-  "track_delivery": "Отследить доставку"
+  "track_delivery": "Отследить доставку",
+  "goods_details": "Список товаров",
+  "close": "Закрыть",
+  "open": "Посмотреть",
+  "view_more": "Перейти по ссылке"
 }

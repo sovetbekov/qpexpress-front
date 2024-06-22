@@ -14,5 +14,9 @@
   "in_mail_office": "Пошта бөлімінде",
   "delivered": "Жеткізілді",
   "deleted": "Жойылды",
-  "track_delivery": "Жеткізуді қадағалау"
+  "track_delivery": "Жеткізуді қадағалау",
+  "goods_details": "Тауарлар",
+  "close": "Жабу",
+  "open": "Тауарларды көру",
+  "view_more": "Өту"
 }

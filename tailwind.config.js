@@ -52,7 +52,11 @@ module.exports = {
             "red-600": "#b91c1c",
             "red-700": "#991b1b",
             "red-800": "#7f1d1d",
-            "red-900": "#631717"
+            "red-900": "#631717",
+
+            "qp-orange": "#fb7108",
+            "qp-blue": "#06a4fb",
+
         },
         fontFamily: {
             'black': ['Arial Black', 'Arial', 'sans-serif'],

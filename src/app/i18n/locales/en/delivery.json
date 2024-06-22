@@ -14,5 +14,8 @@
   "in_mail_office": "In mail office",
   "delivered": "Delivered",
   "deleted": "Deleted",
-  "track_delivery": "Track delivery"
+  "track_delivery": "Track delivery",
+  "goods_details": "Goods",
+  "close": "Close",
+  "view_more": "Link to the good"
 }

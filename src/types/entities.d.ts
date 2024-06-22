@@ -20,7 +20,8 @@ export type CurrencyData = {
     nameRus: string,
     nameKaz: string,
     nameEng: string,
-    nameChn: string
+    nameChn: string,
+    code?: string
 }
 
 export type AddressData = {
