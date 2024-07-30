@@ -52,7 +52,7 @@ export default function Page({ params: { language } }: Readonly<Props>) {
     }, [selectedCountries, marketplaces]);
 
     if (loading) {
-        return <div>Loading...</div>; // Add your spinner or loading component here
+        return <div className="text-center py-4">Loading...</div>; // Improved loading message
     }
 
     return (
@@ -65,7 +65,7 @@ export default function Page({ params: { language } }: Readonly<Props>) {
                     <h3 className="mb-4 font-medium text-xl text-gray-900">Страны</h3>
                     <ul className="w-full text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg">
                         {Array.from(new Set(marketplaces.map(m => m.country))).map((country, index) => (
-                            <li key={index} className="w-full border-b border-gray-200 rounded-t-lg">
+                            <li key={index} className="w-full border-b border-gray-200 last:border-b-0 rounded-t-lg">
                                 <div className="flex items-center ps-3">
                                     <CheckboxInput
                                         id={`checkbox-${country}`}
@@ -84,18 +84,18 @@ export default function Page({ params: { language } }: Readonly<Props>) {
                 <div className="flex-1">
                     <div className="flex flex-wrap">
                         {filteredData.map((marketplace, index) => (
-                            <div key={index} className="w-full sm:w-1/2 md:w-1/3 lg:w-1/3 p-4">
+                            <div key={index} className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 p-4">
                                 <div className={`${styles.shadow} h-auto p-6 rounded-lg flex flex-col gap-5 items-center justify-center`}>
                                     <div className={styles.imageContainer}>
-                                        <img src={marketplace.photo_link} alt={marketplace.brand} />
+                                        <img src={marketplace.photo_link} alt={marketplace.brand} className="w-full h-auto object-cover" />
                                     </div>
-                                    <p className="brand text-2xl font-semibold">
+                                    <p className="brand text-2xl font-semibold text-center">
                                         {marketplace.brand}
                                     </p>
-                                    <p className="description text-base text-wrap text-center" style={{ maxWidth: 500 }}>
+                                    <p className="description text-base text-center" style={{ maxWidth: '100%' }}>
                                         {marketplace.description}
                                     </p>
-                                    <a href={marketplace.link} className={`${styles.button} text-base font-medium mt-auto`}>
+                                    <a href={marketplace.link} className={`${styles.button} text-base font-medium mt-auto`} aria-label={`Visit ${marketplace.brand} website`}>
                                         Перейти
                                     </a>
                                 </div>
@@ -104,7 +104,7 @@ export default function Page({ params: { language } }: Readonly<Props>) {
                     </div>
                 </div>
             </div>
-            {error && <div className="error text-red-500 mt-4">{error}</div>}
+            {error && <div className="error text-red-500 mt-4 text-center">{error}</div>}
         </div>
     );
 }
