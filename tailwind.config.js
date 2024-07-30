@@ -17,6 +17,7 @@ module.exports = {
             'white': '#FFFFFF',
             'black': '#000000',
             'blue': '#00A7FF',
+            "green": '#06d6a0',
             'orange': '#FE5C00',
             'yellow': '#FF9408',
             'transparent': 'transparent',
@@ -53,6 +54,18 @@ module.exports = {
             "red-700": "#991b1b",
             "red-800": "#7f1d1d",
             "red-900": "#631717",
+
+            "green-50": "#F0FFF4",
+            "green-100": "#C6F6D8",
+            "green-200": "#A2F2BC",
+            "green-300": "#78E8A4",
+            "green-400": "#4ADE80",
+            "green-500": "#22D3EE",
+            "green-600": "#14B8A6",
+            "green-700": "#0D9488",
+            "green-800": "#0F766E",
+            "green-900": "#115E59",
+
 
             "qp-orange": "#fb7108",
             "qp-blue": "#06a4fb",
