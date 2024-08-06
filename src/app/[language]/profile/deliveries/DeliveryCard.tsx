@@ -103,7 +103,18 @@ const DeliveryCard: React.FC<Props> = ({ delivery, language }: Readonly<Props>) 
 
     return (
         <div className="bg-gray rounded-3xl p-5 md:p-8">
-            <h2 className="text-xl">{delivery.deliveryNumber}</h2>
+            <Link
+            href={{
+                pathname: `/profile/deliveries/${delivery.id}`,
+                query: {
+                    deliveryNumber: delivery.deliveryNumber,
+                    status: delivery.status,
+                    kazPostTrackNumber: delivery.kazPostTrackNumber,
+                },
+            }}
+            >
+              <h2 className="text-xl">{delivery.deliveryNumber}</h2>
+            </Link>
             <p className="text-base">{t('delivery_status')}: {statusNames[delivery.status]}</p>
             <div className="flex flex-row gap-2 md:gap-5 mt-2 mb-2">
                 {Array.from({ length: amountOfSticks }).map((_, index) => (
@@ -146,52 +157,7 @@ const DeliveryCard: React.FC<Props> = ({ delivery, language }: Readonly<Props>) 
                     </Button>
                 </DialogActions>
             </Dialog>
-            {trackingData && trackingData.events && (
-                <>
-            <div className="mt-6 grow sm:mt-8 lg:mt-0">
-                <div className="space-y-6 rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
-                    <h3 className="text-xl font-semibold text-gray-900 dark:text-white">{t('order_history')}</h3>
-                    {trackingData.events.map((event: TrackingEvent, index: number) => (
-                     
-
-                     
-                            <>
-                            <ol className="relative ms-3 border-s border-gray-200 dark:border-gray-700">
-                                <li key={index} className="mb-10 ms-6 text-primary-700 dark:text-primary-500">
-                                    <span className="absolute -start-3 flex h-6 w-6 items-center justify-center rounded-full bg-primary-100 ring-8 ring-white dark:blue-900 dark:ring-blue-800">
-                                        <svg className="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 11.917 9.724 16.5 19 7.5" />
-                                        </svg>
-                                    </span>
-                                    <p className="mb-0.5 text-normal font-semibold">{event.date}</p>
-                                    {event.activity.map((activity: TrackingActivity, index: number) => (
-                                        <div key={index} className="my-3">
-                                            <p>{activity.time}</p>
-                                            <p className="text-sm">{activity.city}: {activity.name}</p>
-                                            <div className="mt-2 ">
-                                                {activity.status.includes('ISSPAY') && (
-                                                    <i className="border rounded-md p-1 font-medium text-white bg-green border-green-300">
-                                                    {t(activity.status.join(', '))}
-                                                    </i>
-                                                )}
-                                                {!activity.status.includes('ISSPAY') && (
-                                                    <i className="border rounded-md p-1 font-medium text-white bg-blue border-blue-300">
-                                                    {t(activity.status.join(', '))}
-                                                    </i>
-                                                )}
-                                            </div>                                      
-                                        </div>
-                                    ))}
-                                </li>
-                            </ol>
-                            </>
-                          
-                    ))}
-                </div>
-                 </div>
-                 </>
-            )
-            }
+            
         </div>
     );
 };
