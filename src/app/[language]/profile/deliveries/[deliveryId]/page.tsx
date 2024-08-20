@@ -32,10 +32,16 @@ export default async function Page({ params: { deliveryId, language } }: Readonl
   }
 
   const trackingResponse: any = await getTrackingData(kazPostTrackNumber);
-  if (trackingResponse.data.error) {
+  if (trackingResponse.data?.error) {
     return (
-      <div className="p-10">
-        <p>{trackingResponse.data?.error}</p>
+      <div className="m-0 md:m-4 lg:m-7 py-6 px-4 rounded-lg">
+        <GoodsDetails goods={goods} language={language} />
+      </div>
+    );
+  } else if (!trackingResponse.data) {
+    return (
+      <div className="m-0 md:m-4 lg:m-7 py-6 px-4  rounded-lg">
+        <GoodsDetails goods={goods} language={language} />
       </div>
     );
   }
