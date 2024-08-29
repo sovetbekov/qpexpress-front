@@ -139,8 +139,14 @@ export type MarketplaceData = {
   brand: string
   category: string
   description: string
-  link: string
+  description_en: string
+  description_kz: string
+  description_zh: string
   country: string
+  country_en: string
+  country_kz: string
+  country_zh: string
+  link: string
   photo_link: string
 }
 
@@ -149,8 +155,14 @@ export type MarketplaceDataOverview = {
   brand: string
   category: string
   description: string
-  link: string
+  description_en: string
+  description_kz: string
+  description_zh: string
   country: string
+  country_en: string
+  country_kz: string
+  country_zh: string
+  link: string
   photo_link: string
 }
 

@@ -99,7 +99,7 @@ export default function UpdateMarketplaceForm({ language, data }: Props) {
                     />
                 </div>
                 <div className="flex flex-col">
-                    <label htmlFor="description" className="font-medium text-gray-700 mb-2">Описание маркетплейса</label>
+                    <label htmlFor="description" className="font-medium text-gray-700 mb-2">Описание маркетплейса (RU)</label>
                     <textarea 
                         id="description" 
                         name="description" 
@@ -109,6 +109,87 @@ export default function UpdateMarketplaceForm({ language, data }: Props) {
                         required
                     />
                 </div>
+                <div className="flex flex-col">
+                    <label htmlFor="description_kz" className="font-medium text-gray-700 mb-2">Описание маркетплейса (KZ)</label>
+                    <textarea 
+                        id="description_kz" 
+                        name="description_kz" 
+                        value={marketplace.description_kz} 
+                        onChange={handleChange} 
+                        className="border border-gray-300 rounded-lg p-2"
+                        required
+                    />
+                </div>
+                <div className="flex flex-col">
+                    <label htmlFor="description_en" className="font-medium text-gray-700 mb-2">Описание маркетплейса (EN)</label>
+                    <textarea 
+                        id="description_en" 
+                        name="description_en" 
+                        value={marketplace.description_en} 
+                        onChange={handleChange} 
+                        className="border border-gray-300 rounded-lg p-2"
+                        required
+                    />
+                </div>
+                <div className="flex flex-col">
+                    <label htmlFor="description_zh" className="font-medium text-gray-700 mb-2">Описание маркетплейса (ZH)</label>
+                    <textarea 
+                        id="description_zh" 
+                        name="description_zh" 
+                        value={marketplace.description_zh} 
+                        onChange={handleChange} 
+                        className="border border-gray-300 rounded-lg p-2"
+                        required
+                    />
+                </div>    
+                    <div className="flex flex-col">
+                        <label htmlFor="country" className="font-medium text-gray-700 mb-2">Страна (RU)</label>
+                        <input 
+                            id="country" 
+                            name="country" 
+                            type="text" 
+                            value={marketplace.country} 
+                            onChange={handleChange} 
+                            className="border border-gray-300 rounded-lg p-2"
+                            required
+                        />
+                    </div>
+                    <div className="flex flex-col">
+                        <label htmlFor="country_kz" className="font-medium text-gray-700 mb-2">Страна (KZ)</label>
+                        <input 
+                            id="country_kz" 
+                            name="country_kz" 
+                            type="text" 
+                            value={marketplace.country_kz} 
+                            onChange={handleChange} 
+                            className="border border-gray-300 rounded-lg p-2"
+                            required
+                        />
+                    </div>
+                    <div className="flex flex-col">
+                        <label htmlFor="country_en" className="font-medium text-gray-700 mb-2">Страна (EN)</label>
+                        <input 
+                            id="country_en" 
+                            name="country_en" 
+                            type="text" 
+                            value={marketplace.country_en} 
+                            onChange={handleChange} 
+                            className="border border-gray-300 rounded-lg p-2"
+                            required
+                        />
+                    </div>
+                    <div className="flex flex-col">
+                        <label htmlFor="country_zh" className="font-medium text-gray-700 mb-2">Страна (ZH)</label>
+                        <input 
+                            id="country_zh" 
+                            name="country_zh" 
+                            type="text" 
+                            value={marketplace.country_zh} 
+                            onChange={handleChange} 
+                            className="border border-gray-300 rounded-lg p-2"
+                            required
+                        />
+                    </div>
                 <div className="flex flex-col">
                     <label htmlFor="link" className="font-medium text-gray-700 mb-2">Ссылка на сайт</label>
                     <input 
@@ -122,36 +203,23 @@ export default function UpdateMarketplaceForm({ language, data }: Props) {
                     />
                 </div>
                 <div className="flex flex-col">
-                    <label htmlFor="country" className="font-medium text-gray-700 mb-2">Страна</label>
+                    <label htmlFor="photo_link" className="font-medium text-gray-700 mb-2">Ссылки на фото</label>
                     <input 
-                        id="country" 
-                        name="country" 
+                        id="photo_link" 
+                        name="photo_link" 
                         type="text" 
-                        value={marketplace.country} 
+                        value={marketplace.photo_link} 
                         onChange={handleChange} 
                         className="border border-gray-300 rounded-lg p-2"
                         required
                     />
                 </div>
-                <div className="flex flex-col">
-                    <label htmlFor="photo" className="font-medium text-gray-700 mb-2">Ссылки на фото</label>
-                    <input 
-                        id="photo" 
-                        name="photo_link" 
-                        type="text" 
-                        value={marketplace.photo_link} 
-                        onChange={handleChange} 
-                        className="border border-gray-300 rounded-lg p-2"   
-                        required  
-                    />
-                </div>
-                    <button type="submit" className="bg-blue-500 text-white font-medium py-2 rounded-lg hover:bg-blue-600">
-                        Изменить
-                    </button>
-                    <button type="button" onClick={handleDelete} className="bg-red-500 text-white font-medium py-2 rounded-lg hover:bg-red-600">
-                        Удалить
-                    </button>
-                
+                <button type="submit" className="bg-blue-500 text-white font-medium py-2 rounded-lg hover:bg-blue-600">
+                    Обновить
+                </button>
+                <button type="button" onClick={handleDelete} className="bg-red-500 text-white font-medium py-2 rounded-lg hover:bg-red-600">
+                    Удалить
+                </button>
             </form>
         </div>
     );

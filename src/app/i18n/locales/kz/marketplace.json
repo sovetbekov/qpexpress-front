@@ -1,11 +1,14 @@
 {
-    "add_marketplace": "Нарық қосу",
+    "add_marketplace": "Маркетплейс қосу",
     "update": "Жаңарту",
-    "delete": "Жою",
-    "category": "Санат",
+    "delete": "Өшіру",
+    "category": "Категория",
     "brand": "Бренд",
-    "country": "Ел",
-    "Description": "Сипаттама",
-    "websiteLink": "Веб-сайтқа сілтеме",
-    "photoLink": "Фотосуретке сілтеме"
-    }
+    "country": "Мемлекет",
+    "description": "Сипаттамасы",
+    "websiteLink": "Сайтқа сілтеме",
+    "photoLink": "Фотоға сілтеме",
+    "visit_website": "Ашу",
+    "marketplace": "Маркетплейстар"
+
+}

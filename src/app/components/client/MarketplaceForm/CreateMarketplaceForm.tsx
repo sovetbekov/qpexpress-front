@@ -15,8 +15,14 @@ export default function CreateMarketplaceForm({ language }: Props) {
         brand: '',
         category: '',
         description: '',
-        link: '',
+        description_en: '',
+        description_kz: '',
+        description_zh: '',
         country: '',
+        country_en: '',
+        country_kz: '',
+        country_zh: '',
+        link: '',
         photo_link: ''
     });
 
@@ -83,7 +89,7 @@ export default function CreateMarketplaceForm({ language }: Props) {
                     />
                 </div>
                 <div className="flex flex-col">
-                    <label htmlFor="description" className="font-medium text-gray-700 mb-2">Описание маркетплейса</label>
+                    <label htmlFor="description" className="font-medium text-gray-700 mb-2">Описание маркетплейса (RU)</label>
                     <textarea 
                         id="description" 
                         name="description" 
@@ -94,24 +100,93 @@ export default function CreateMarketplaceForm({ language }: Props) {
                     />
                 </div>
                 <div className="flex flex-col">
-                    <label htmlFor="link" className="font-medium text-gray-700 mb-2">Ссылка на сайт</label>
-                    <input 
-                        id="link" 
-                        name="link" 
-                        type="url" 
-                        value={marketplace.link} 
+                    <label htmlFor="description_kz" className="font-medium text-gray-700 mb-2">Описание маркетплейса (KZ)</label>
+                    <textarea 
+                        id="description_kz" 
+                        name="description_kz" 
+                        value={marketplace.description_kz} 
                         onChange={handleChange} 
                         className="border border-gray-300 rounded-lg p-2"
                         required
                     />
                 </div>
                 <div className="flex flex-col">
-                    <label htmlFor="country" className="font-medium text-gray-700 mb-2">Страна</label>
+                    <label htmlFor="description_en" className="font-medium text-gray-700 mb-2">Описание маркетплейса (EN)</label>
+                    <textarea 
+                        id="description_en" 
+                        name="description_en" 
+                        value={marketplace.description_en} 
+                        onChange={handleChange} 
+                        className="border border-gray-300 rounded-lg p-2"
+                        required
+                    />
+                </div>
+                <div className="flex flex-col">
+                    <label htmlFor="description_zh" className="font-medium text-gray-700 mb-2">Описание маркетплейса (ZH)</label>
+                    <textarea 
+                        id="description_zh" 
+                        name="description_zh" 
+                        value={marketplace.description_zh} 
+                        onChange={handleChange} 
+                        className="border border-gray-300 rounded-lg p-2"
+                        required
+                    />
+                </div>    
+                    <div className="flex flex-col">
+                        <label htmlFor="country" className="font-medium text-gray-700 mb-2">Страна (RU)</label>
+                        <input 
+                            id="country" 
+                            name="country" 
+                            type="text" 
+                            value={marketplace.country} 
+                            onChange={handleChange} 
+                            className="border border-gray-300 rounded-lg p-2"
+                            required
+                        />
+                    </div>
+                    <div className="flex flex-col">
+                        <label htmlFor="country_kz" className="font-medium text-gray-700 mb-2">Страна (KZ)</label>
+                        <input 
+                            id="country_kz" 
+                            name="country_kz" 
+                            type="text" 
+                            value={marketplace.country_kz} 
+                            onChange={handleChange} 
+                            className="border border-gray-300 rounded-lg p-2"
+                            required
+                        />
+                    </div>
+                    <div className="flex flex-col">
+                        <label htmlFor="country_en" className="font-medium text-gray-700 mb-2">Страна (EN)</label>
+                        <input 
+                            id="country_en" 
+                            name="country_en" 
+                            type="text" 
+                            value={marketplace.country_en} 
+                            onChange={handleChange} 
+                            className="border border-gray-300 rounded-lg p-2"
+                            required
+                        />
+                    </div>
+                    <div className="flex flex-col">
+                        <label htmlFor="country_zh" className="font-medium text-gray-700 mb-2">Страна (ZH)</label>
+                        <input 
+                            id="country_zh" 
+                            name="country_zh" 
+                            type="text" 
+                            value={marketplace.country_zh} 
+                            onChange={handleChange} 
+                            className="border border-gray-300 rounded-lg p-2"
+                            required
+                        />
+                    </div>
+                <div className="flex flex-col">
+                    <label htmlFor="link" className="font-medium text-gray-700 mb-2">Ссылка на сайт</label>
                     <input 
-                        id="country" 
-                        name="country" 
-                        type="text" 
-                        value={marketplace.country} 
+                        id="link" 
+                        name="link" 
+                        type="url" 
+                        value={marketplace.link} 
                         onChange={handleChange} 
                         className="border border-gray-300 rounded-lg p-2"
                         required

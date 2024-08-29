@@ -131,9 +131,21 @@ const DeliveryCard: React.FC<Props> = ({ delivery, language }: Readonly<Props>) 
                     </button>
                 </Link>
             )}
-            <button onClick={openModal} className="bg-qp-orange mt-5 mb-5 rounded-full w-full md:px-12 py-3 text-white md:mt-5">
+            <Link
+            href={{
+                pathname: `/profile/deliveries/${delivery.id}`,
+                query: {
+                    deliveryNumber: delivery.deliveryNumber,
+                    status: delivery.status,
+                    kazPostTrackNumber: delivery.kazPostTrackNumber,
+                },
+            }}
+            >
+            <button className="bg-qp-orange mt-5 mb-5 rounded-full w-full md:px-12 py-3 text-white md:mt-5">
                 {t('open')}
             </button>
+            </Link>
+            
             <Dialog open={isModalOpen} onClose={closeModal} fullWidth maxWidth="sm" PaperProps={{ style: { borderRadius: 13 } }}>
                 <DialogTitle>{t('goods_details')}</DialogTitle>
                 <DialogContent dividers>

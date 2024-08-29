@@ -16,7 +16,7 @@ type Props = {
 }
 
 export default function Page({ params: { language } }: Readonly<Props>) {
-    const { t } = useTranslation(language, 'order');
+    const { t } = useTranslation(language, 'marketplace');
     const [selectedCountries, setSelectedCountries] = useState<string[]>([]);
     const [marketplaces, setMarketplaces] = useState<MarketplaceDataOverview[]>([]);
     const [error, setError] = useState<string | null>(null);
@@ -47,9 +47,14 @@ export default function Page({ params: { language } }: Readonly<Props>) {
         );
     };
 
+    const getLocalizedField = (marketplace: MarketplaceDataOverview, field: string) => {
+        const localizedField = `${field}_${language}`;
+        return (marketplace as any)[localizedField] || marketplace[field as keyof MarketplaceDataOverview];
+    };
+
     const filteredData = useMemo(() => {
-        return selectedCountries.length === 0 ? marketplaces : marketplaces.filter(m => selectedCountries.includes(m.country));
-    }, [selectedCountries, marketplaces]);
+        return selectedCountries.length === 0 ? marketplaces : marketplaces.filter(m => selectedCountries.includes(getLocalizedField(m, 'country')));
+    }, [selectedCountries, marketplaces, language]);
 
     if (loading) {
         return <div className="text-center py-4">Loading...</div>; // Improved loading message
@@ -58,13 +63,13 @@ export default function Page({ params: { language } }: Readonly<Props>) {
     return (
         <div className="wrapper p-6 md:p-10">
             <div className="title text-3xl font-bold mb-8">
-                Маркетплейсы
+                {t('marketplace')}
             </div>
             <div className="flex flex-col md:flex-row">
                 <div className="mb-4 md:mb-0 md:w-1/4 lg:w-1/5">
-                    <h3 className="mb-4 font-medium text-xl text-gray-900">Страны</h3>
+                    <h3 className="mb-4 font-medium text-xl text-gray-900">{t('country')}</h3>
                     <ul className="w-full text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg">
-                        {Array.from(new Set(marketplaces.map(m => m.country))).map((country, index) => (
+                        {Array.from(new Set(marketplaces.map(m => getLocalizedField(m, 'country')))).map((country, index) => (
                             <li key={index} className="w-full border-b border-gray-200 last:border-b-0 rounded-t-lg">
                                 <div className="flex items-center ps-3">
                                     <CheckboxInput
@@ -93,10 +98,10 @@ export default function Page({ params: { language } }: Readonly<Props>) {
                                         {marketplace.brand}
                                     </p>
                                     <p className="description text-base text-center" style={{ maxWidth: '100%' }}>
-                                        {marketplace.description}
+                                        {getLocalizedField(marketplace, 'description')}
                                     </p>
                                     <a href={marketplace.link} className={`${styles.button} text-base font-medium mt-auto`} aria-label={`Visit ${marketplace.brand} website`}>
-                                        Перейти
+                                        {t('visit_website')}
                                     </a>
                                 </div>
                             </div>

@@ -9,6 +9,7 @@ import Modal from '@/app/components/modal/Modal'
 import 'react-toastify/dist/ReactToastify.css'
 import { dir } from 'i18next'
 import { languages } from '@/app/i18n/settings'
+import ClientComponent from './gmt'
 
 export const metadata: Metadata = {
     title: 'QP Express',
@@ -43,6 +44,7 @@ export default function RootLayout({
         <body>
         <Providers>
             <div className={'h-[100dvh] overflow-y-auto overflow-x-hidden scroll-pt-20'}>
+                <ClientComponent />
                 <Header language={language}/>
                 <Navigation language={language}/>
                 <div className={'min-h-[calc(100dvh-5rem)] flex flex-col justify-between'}>
