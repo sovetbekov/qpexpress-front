@@ -59,6 +59,13 @@ export default function OrdersTable({orders}: Readonly<Props>) {
             cell: info => info.getValue(),
             footer: props => props.column.id,
         },
+        {
+            accessorFn: row => `${convertToTraditionalDate(row.createdAt)}`,
+            id: 'createdAt',
+            header: 'Дата создания заказа',
+            cell: info => info.getValue(),
+            footer: props => props.column.id,
+        },
 
         // Add more recipient-related columns as needed
     ], [statusText])
@@ -82,6 +89,26 @@ export default function OrdersTable({orders}: Readonly<Props>) {
         debugHeaders: true,
         debugColumns: false,
     })
+
+    function convertToTraditionalDate(dateArray: number[]): string {
+        const [year, month, day, hour, minute, second, nanosecond] = dateArray;
+        const date = new Date(year, month - 1, day, hour, minute, second, nanosecond / 1e6);
+        
+        const dateString = date.toLocaleDateString('en-GB', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+        });
+    
+        const timeString = date.toLocaleTimeString('en-GB', {
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: false
+        });
+    
+        return `${dateString}, ${timeString}`;
+    }
 
     return (
         <div className={'w-full min-h-[50rem] flex flex-col justify-between gap-y-2 p-10 bg-gray rounded-3xl'}>
