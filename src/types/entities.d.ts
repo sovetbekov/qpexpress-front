@@ -98,7 +98,6 @@ export type OrderData = {
   goods: GoodData[]
   orderNumber: string
   status: OrderStatus
-  createdAt: number[]
 }
 
 export type EditOrderData = {

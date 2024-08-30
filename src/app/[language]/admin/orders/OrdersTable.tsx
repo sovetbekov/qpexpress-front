@@ -58,14 +58,7 @@ export default function OrdersTable({orders}: Readonly<Props>) {
             header: 'Статус',
             cell: info => info.getValue(),
             footer: props => props.column.id,
-        },
-        {
-            accessorFn: row => `${convertToTraditionalDate(row.createdAt)}`,
-            id: 'createdAt',
-            header: 'Дата создания заказа',
-            cell: info => info.getValue(),
-            footer: props => props.column.id,
-        },
+        }
 
         // Add more recipient-related columns as needed
     ], [statusText])
