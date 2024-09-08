@@ -24,7 +24,7 @@ type Props = {
     orders: OrderData[],
 }
 
-export default function OrdersTable({orders}: Readonly<Props>) {
+export default function OrdersTable({ orders }: Readonly<Props>) {
     const router = useRouter()
     const statusText: { [key: string]: string } = useMemo(() => ({
         'CREATED': 'Created',
@@ -58,7 +58,19 @@ export default function OrdersTable({orders}: Readonly<Props>) {
             header: 'Статус',
             cell: info => info.getValue(),
             footer: props => props.column.id,
-        }
+        },
+        {
+            accessorFn: row => convertToTraditionalDate(row.createdAt),
+            id: 'createdAt',
+            header: 'Дата создания заказа',
+            cell: info => info.getValue(),
+            footer: props => props.column.id,
+            sortingFn: (a, b) => {
+                const dateA = new Date(a.original.createdAt[0], a.original.createdAt[1] - 1, a.original.createdAt[2], a.original.createdAt[3], a.original.createdAt[4], a.original.createdAt[5], a.original.createdAt[6] / 1e6);
+                const dateB = new Date(b.original.createdAt[0], b.original.createdAt[1] - 1, b.original.createdAt[2], b.original.createdAt[3], b.original.createdAt[4], b.original.createdAt[5], b.original.createdAt[6] / 1e6);
+                return +dateA - +dateB;
+            },
+        },
 
         // Add more recipient-related columns as needed
     ], [statusText])
@@ -78,6 +90,9 @@ export default function OrdersTable({orders}: Readonly<Props>) {
         getFacetedRowModel: getFacetedRowModel(),
         getFacetedUniqueValues: getFacetedUniqueValues(),
         getFacetedMinMaxValues: getFacetedMinMaxValues(),
+        initialState: {
+            sorting: [{ id: 'createdAt', desc: true }],
+        },
         debugTable: true,
         debugHeaders: true,
         debugColumns: false,
@@ -134,7 +149,7 @@ export default function OrdersTable({orders}: Readonly<Props>) {
                                             </div>
                                             {header.column.getCanFilter() ? (
                                                 <div>
-                                                    <Filter column={header.column} table={table}/>
+                                                    <Filter column={header.column} table={table} />
                                                 </div>
                                             ) : null}
                                         </>
@@ -151,10 +166,10 @@ export default function OrdersTable({orders}: Readonly<Props>) {
                         }}>
                             {row.getVisibleCells().map(cell => (
                                 <td key={cell.id} className={'h-[1px] '}>
-                                    <div className={clsx('flex items-center h-full p-5 bg-white' , {
-                                                'justify-start rounded-l-full': cell.column.id === 'recipientName',
-                                                'justify-end rounded-r-full': cell.column.id === 'status',
-                                            })}>
+                                    <div className={clsx('flex items-center h-full p-5 bg-white', {
+                                        'justify-start rounded-l-full': cell.column.id === 'recipientName',
+                                        'justify-end rounded-r-full': cell.column.id === 'createdAt',
+                                    })}>
                                         <p className={'text-base'}>
                                             {flexRender(
                                                 cell.column.columnDef.cell,
@@ -183,7 +198,7 @@ export default function OrdersTable({orders}: Readonly<Props>) {
                     {'<'}
                 </button>
                 <div className={'flex flex-row gap-1'}>
-                    {Array.from({length: 5}, (_, i) => i - 2)
+                    {Array.from({ length: 5 }, (_, i) => i - 2)
                         .map(relativePage => table.getState().pagination.pageIndex + relativePage)
                         .filter(pageIndex => pageIndex >= 0 && pageIndex < table.getPageCount())
                         .map(pageIndex => (
@@ -234,47 +249,11 @@ function Filter({
         [column, firstValue],
     )
 
-    return typeof firstValue === 'number' ? (
-        <div>
-            <div className="flex space-x-2">
-                <DebouncedInput
-                    type="number"
-                    min={Number(column.getFacetedMinMaxValues()?.[0] ?? '')}
-                    max={Number(column.getFacetedMinMaxValues()?.[1] ?? '')}
-                    value={(columnFilterValue as [number, number])?.[0] ?? ''}
-                    onChange={value =>
-                        column.setFilterValue((old: [number, number]) => [value, old?.[1]])
-                    }
-                    placeholder={`Min ${
-                        column.getFacetedMinMaxValues()?.[0]
-                            ? `(${column.getFacetedMinMaxValues()?.[0]})`
-                            : ''
-                    }`}
-                    className="w-24 border shadow rounded"
-                />
-                <DebouncedInput
-                    type="number"
-                    min={Number(column.getFacetedMinMaxValues()?.[0] ?? '')}
-                    max={Number(column.getFacetedMinMaxValues()?.[1] ?? '')}
-                    value={(columnFilterValue as [number, number])?.[1] ?? ''}
-                    onChange={value =>
-                        column.setFilterValue((old: [number, number]) => [old?.[0], value])
-                    }
-                    placeholder={`Max ${
-                        column.getFacetedMinMaxValues()?.[1]
-                            ? `(${column.getFacetedMinMaxValues()?.[1]})`
-                            : ''
-                    }`}
-                    className="w-24 border shadow rounded"
-                />
-            </div>
-            <div className="h-1"/>
-        </div>
-    ) : (
+    return (
         <>
             <datalist id={column.id + 'list'}>
                 {sortedUniqueValues.slice(0, 5000).map((value: any) => (
-                    <option value={value} key={value}/>
+                    <option value={value} key={value} />
                 ))}
             </datalist>
             <DebouncedInput
@@ -285,7 +264,7 @@ function Filter({
                 className="w-36 border shadow rounded"
                 list={column.id + 'list'}
             />
-            <div className="h-1"/>
+            <div className="h-1" />
         </>
     )
 }
@@ -315,7 +294,13 @@ function DebouncedInput({
         return () => clearTimeout(timeout)
     }, [debounce, value])
 
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const newValue = e.target.value
+        setValue(newValue)
+        onChange(newValue)
+    }
+
     return (
-        <input {...props} value={value} onChange={e => setValue(e.target.value)}/>
+        <input {...props} value={value} onChange={handleChange} />
     )
 }
