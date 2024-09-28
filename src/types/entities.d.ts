@@ -15,6 +15,19 @@ export type CityData = {
   countryId: string
 }
 
+export type ContactData = {
+  id: string
+  phone: string
+  fullName: string
+  creationDate: number[]
+  isDeleted: boolean
+}
+
+export type CreateContactData = {
+  phone: string
+  fullName: string
+}
+
 export type CurrencyData = {
   id: string
   nameRus: string

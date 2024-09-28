@@ -3,6 +3,7 @@ import Description from '@/app/components/home/Description'
 import AboutUs from '@/app/components/home/AboutUs'
 import HowItWorks from '@/app/components/home/HowItWorks'
 import Calculator from '@/app/components/home/Calculator'
+import LeaveContacts from '@/app/components/home/LeaveContacts'
 
 type Props = {
     params: {
@@ -17,6 +18,7 @@ export default function Page({params: {language}}: Readonly<Props>) {
             <AboutUs language={language}/>
             <HowItWorks language={language}/>
             <Calculator language={language}/>
+            <LeaveContacts language={language}/>
         </div>
     )
 }

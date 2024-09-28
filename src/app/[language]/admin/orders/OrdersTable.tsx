@@ -62,7 +62,7 @@ export default function OrdersTable({ orders }: Readonly<Props>) {
         {
             accessorFn: row => convertToTraditionalDate(row.createdAt),
             id: 'createdAt',
-            header: 'Дата создания заказа',
+            header: 'Дата создания',
             cell: info => info.getValue(),
             footer: props => props.column.id,
             sortingFn: (a, b) => {
