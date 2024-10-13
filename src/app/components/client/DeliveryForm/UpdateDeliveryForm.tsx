@@ -78,16 +78,18 @@ export default function UpdateDeliveryForm({data, recipients, language}: Readonl
         data.append('currencyId', formData.price.currency.id)
         data.append('weight', formData.weight.toString())
         data.append('kazPostTrackNumber', formData.kazPostTrackNumber)
-        if (formData.invoice) {
-            if (formData.invoice instanceof Blob) {
-                data.append('invoice', formData.invoice)
-            } else {
-                data.append('invoiceId', formData.invoice.id)
-            }
-        }
+        data.append('invoice', formData.invoice as File)
+        // if (formData.invoice) {
+        //     if (formData.invoice instanceof Blob) {
+        //         data.append('invoice', formData.invoice as File)
+        //     } else {
+        //         data.append('invoiceId', formData.invoice.id)
+        //     }
+        // }
         data.append('products', JSON.stringify(Object.keys(selected)))
         const toastId = toast.loading(t('edit_profile.saving'))
         const response = await updateDelivery(formData.id, data)
+        
         if (isSuccess(response)) {
             toast.update(toastId, {
                 render: 'Посылка успешно сохранена',
