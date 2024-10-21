@@ -10,7 +10,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import { dir } from 'i18next'
 import { languages } from '@/app/i18n/settings'
 import ClientComponent from './gmt'
-import { FaWhatsapp } from 'react-icons/fa'
+import Dropdown from '../components/home/Dropdown'
 
 export const metadata: Metadata = {
     title: 'QP Express',
@@ -54,14 +54,7 @@ export default function RootLayout({
                             <Footer language={language} />
                         </div>
                         <Modal language={language} />
-                        <a
-                            href="https://api.whatsapp.com/send/?phone=77000888090&text=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5%21+%D0%AF+%D1%85%D0%BE%D1%82%D0%B5%D0%BB%D0%B0+%D1%81%D0%B4%D0%B5%D0%BB%D0%B0%D1%82%D1%8C+%D0%B7%D0%B0%D0%BA%D0%B0%D0%B7&type=phone_number&app_absent=0"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="whatsapp-button"
-                        >
-                            <FaWhatsapp color="white" size="24px" />
-                        </a>
+                        <Dropdown />
                     </div>
                 </Providers>
             </body>

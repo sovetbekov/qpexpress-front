@@ -44,19 +44,8 @@ export default function LeaveContacts({ language }: Readonly<Props>) {
     }
 
     return (
-        <div className={'flex flex-col w-full px-5 md:p-20 md:gap-10'} id={'about_us'}>
-            <h2 className={'text-[1.5rem] md:text-[3rem]'}>
-                {t('title')}
-            </h2>
-            <div className={'flex flex-col md:flex-row md:justify-between md:col-gap-10 w-full'}>
-                <div className={'relative w-3/6 h-[15rem] md:h-[25rem] order-first md:order-last'}>
-                    <Image src={'/assets/leave_contacts.jpg'} alt={'leave_contacts'} fill={true} placeholder={'empty'}
-                        className={'object-contain'} />
-                </div>
-                <div className={'md:text-black md:leading-8 md:text-left md:w-1/3'}>
-                    <p className={'text-base whitespace-pre-line'}>
-                        {t('description')}
-                    </p>
+        <div className={'flex flex-col w-full mx-auto'} id={'about_us'}>
+                <div className={'md:text-black md:leading-8 md:text-left  w-full '}>
                     <form onSubmit={handleSubmit} className={'flex flex-col gap-4 mt-4'}>
                         <input
                             type="text"
@@ -79,7 +68,6 @@ export default function LeaveContacts({ language }: Readonly<Props>) {
                         </button>
                     </form>
                 </div>
-            </div>
         </div>
     )
 }
