@@ -43,7 +43,7 @@ export default async function Footer({language}: Readonly<Props>) {
             </div>
             <hr className={'w-full border border-white hidden md:block'}/>
             <div className={'flex flex-col md:flex-row justify-between items-center gap-4 h-full'}>
-                <p className={'text-[0.9rem] order-last md:order-first'}>2023 @ QP Express</p>
+                <p className={'text-[0.9rem] order-last md:order-first'}>2024 @ QP Express</p>
                 <div className={'relative w-12 h-12'}>
                     <Link href={'https://instagram.com/qp_express'} target={'_blank'} className={'w-full h-full'}>
                         <Image src={'/assets/instagram.svg'} alt={'instagram'} fill/>
