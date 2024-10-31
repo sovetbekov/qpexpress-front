@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState } from 'react'
-import Image from 'next/image'
 import { useTranslation } from '@/app/i18n/client'
 import { createContact } from '@/services/contacts'
 import { toast } from 'react-toastify';
