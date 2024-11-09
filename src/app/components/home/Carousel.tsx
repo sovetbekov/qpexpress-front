@@ -5,6 +5,8 @@ import React, { useState, useEffect } from 'react';
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
 import Link from 'next/link';
 import { useTranslation } from '@/app/i18n'
+import { getMarketplaces } from '@/services/marketplaces';
+import { MarketplaceDataOverview } from '@/types/entities';
 
 type Props = {
     language: string,
@@ -34,13 +36,33 @@ export default function Carousel({language}: Readonly<Props>) {
         { url: "https://1000logos.net/wp-content/uploads/2021/04/U.S.-Polo-Assn-logo-768x432.png" },
         { url: "https://download.logo.wine/logo/Zara_Home/Zara_Home-Logo.wine.png" },
         { url: "https://fashionunited.com/img/upload/2023/01/13/cos-logo-eqkw9vdkpkumjcczi-k9da2chm-2023-01-13.jpeg" },
-        { url: "http://www.taklip.com/uploads/1/brand/15477240808561.jpg" },
         { url: "https://logolook.net/wp-content/uploads/2023/03/Uniqlo-Logo.png" },
     ];
 
+    const [marketplaces, setMarketplaces] = useState<MarketplaceDataOverview[]>([]);
+    const [error, setError] = useState<string | null>(null);
     const [currentInd, setCurrentInd] = useState(0);
     const totalSlides = slides.length;
     const slidesPerView = 4; 
+
+    useEffect(() => {
+        const fetchMarketplaces = async () => {
+            try {
+                const response = await getMarketplaces();
+                if ('data' in response) {
+                    setMarketplaces(response.data);
+                } else {
+                    setError(response.status);
+                }
+            } catch (err) {
+                setError('Failed to fetch marketplaces');
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchMarketplaces();
+    }, []);
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -80,9 +102,9 @@ export default function Carousel({language}: Readonly<Props>) {
                             className="flex transition-transform duration-500 ease-in-out" 
                             style={{ transform: `translateX(-${(currentInd * 100) / slidesPerView}%)` }}
                         >
-                            {slides.map((slide, index) => (
+                            {marketplaces.map((slide, index) => (
                                 <div key={index} className="w-1/2 md:w-1/4 flex-shrink-0 flex justify-center items-center">
-                                    <img src={slide.url} alt={`Slide ${index + 1}`} className="w-[100px] md:w-[200px] h-auto object-contain" />
+                                    <img src={slide.photo_link} alt={`Slide ${index + 1}`} className="w-[100px] md:w-[200px] h-auto object-contain" />
                                 </div>
                             ))}
                         </div>

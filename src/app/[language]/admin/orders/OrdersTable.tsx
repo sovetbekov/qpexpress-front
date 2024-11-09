@@ -119,13 +119,13 @@ export default function OrdersTable({ orders }: Readonly<Props>) {
     }
 
     return (
-        <div className={'w-full min-h-[50rem] flex flex-col justify-between gap-y-2 p-10 bg-gray rounded-3xl'}>
+        <div className={'w-full min-h-[50rem] flex flex-col justify-between gap-y-2 p-4 md:p-10 bg-gray rounded-3xl'}>
             <div>
-                <h3>Заказы</h3>
+                <h3 className="text-lg md:text-2xl">Заказы</h3>
                 <table className={'w-full border-separate border-spacing-y-5'}>
                     <thead>
                     {table.getHeaderGroups().map(headerGroup => (
-                        <tr key={headerGroup.id} className="flex flex-row gap-6">
+                        <tr key={headerGroup.id} className="flex flex-col md:flex-row gap-2 md:gap-6">
                             {headerGroup.headers.map(header => (
                                 <th key={header.id} colSpan={header.colSpan} className='text-left '>
                                     {header.isPlaceholder ? null : (
@@ -166,11 +166,11 @@ export default function OrdersTable({ orders }: Readonly<Props>) {
                         }}>
                             {row.getVisibleCells().map(cell => (
                                 <td key={cell.id} className={'h-[1px] '}>
-                                    <div className={clsx('flex items-center h-full p-5 bg-white', {
+                                    <div className={clsx('flex items-center h-full p-2 md:p-5 bg-white', {
                                         'justify-start rounded-l-full': cell.column.id === 'recipientName',
                                         'justify-end rounded-r-full': cell.column.id === 'createdAt',
                                     })}>
-                                        <p className={'text-base'}>
+                                        <p className={'text-sm md:text-base'}>
                                             {flexRender(
                                                 cell.column.columnDef.cell,
                                                 cell.getContext(),
@@ -184,16 +184,18 @@ export default function OrdersTable({ orders }: Readonly<Props>) {
                     </tbody>
                 </table>
             </div>
-            <div className={'flex flex-row gap-1 justify-center'}>
+            <div className={'flex flex-row gap-1 justify-center mt-4'}>
                 <button
                     onClick={() => table.setPageIndex(0)}
                     disabled={!table.getCanPreviousPage()}
+                    className="px-2 py-1 border rounded disabled:opacity-50"
                 >
                     {'<<'}
                 </button>
                 <button
                     onClick={() => table.previousPage()}
                     disabled={!table.getCanPreviousPage()}
+                    className="px-2 py-1 border rounded disabled:opacity-50"
                 >
                     {'<'}
                 </button>
@@ -206,6 +208,7 @@ export default function OrdersTable({ orders }: Readonly<Props>) {
                                 key={pageIndex}
                                 onClick={() => table.setPageIndex(pageIndex)}
                                 disabled={pageIndex < 0 || pageIndex >= table.getPageCount()}
+                                className="px-2 py-1 border rounded disabled:opacity-50"
                             >
                                 {pageIndex + 1}
                             </button>
@@ -214,12 +217,14 @@ export default function OrdersTable({ orders }: Readonly<Props>) {
                 <button
                     onClick={() => table.nextPage()}
                     disabled={!table.getCanNextPage()}
+                    className="px-2 py-1 border rounded disabled:opacity-50"
                 >
                     {'>'}
                 </button>
                 <button
                     onClick={() => table.setPageIndex(table.getPageCount() - 1)}
                     disabled={!table.getCanNextPage()}
+                    className="px-2 py-1 border rounded disabled:opacity-50"
                 >
                     {'>>'}
                 </button>

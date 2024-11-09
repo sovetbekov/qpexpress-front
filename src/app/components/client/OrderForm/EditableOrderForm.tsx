@@ -324,8 +324,8 @@ export default function EditableOrderForm({initialData, countries, recipients, l
                                 <CheckboxInput
                                     id={`original_box_${index}`}
                                     label={t('original_box')}
-                                    disabled={!productInfo.country}
-                                    wrapperClassname={'flex items-center gap-x-3 cursor-pointer outline-none w-full'}
+                                    disabled={!productInfo.country || productInfo.country?.id === '8c91de06-cbd7-4389-a8c8-30b9dd9305d2' }
+                                    wrapperClassname={`flex items-center gap-x-3 cursor-pointer outline-none w-full ${(!productInfo.country || productInfo.country?.id === '8c91de06-cbd7-4389-a8c8-30b9dd9305d2') ? 'text-gray-500' : ''}`}
                                     checkboxClassname={'border-none w-6 h-6 outline-none'}
                                     checked={productInfo.originalBox}
                                     onChange={e => updateProductInfoCallback(index, 'originalBox')(e.target.checked)}

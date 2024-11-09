@@ -46,6 +46,15 @@ const DeliveryCard: React.FC<Props> = ({ delivery, language }: Readonly<Props>) 
         DELETED: t('deleted'),
     }), [t]);
 
+    const statusTooltips = useMemo(() => ({
+        CREATED: 'Ваша посылка создана и ожидает отправки в Казахстан.',
+        IN_THE_WAY: 'Посылка отправлена и на пути в Казахстан.',
+        IN_YOUR_COUNTRY: 'Посылка в Казахстане и скоро будет у Вас.',
+        IN_MAIL_OFFICE: 'Посылка в почтовом отделении.',
+        DELIVERED: 'Посылка доставлена.',
+        DELETED: t('deleted'),
+    }), [t]);
+
     const amountOfSticks = useMemo(() => getAmountOfStick(delivery.status), [delivery.status]);
 
     const [isPaidLoading, setIsPaidLoading] = useState(true);
@@ -115,7 +124,12 @@ const DeliveryCard: React.FC<Props> = ({ delivery, language }: Readonly<Props>) 
             >
               <h2 className="text-xl">{delivery.deliveryNumber}</h2>
             </Link>
-            <p className="text-base">{t('delivery_status')}: {statusNames[delivery.status]}</p>
+            <p className="text-base relative group">
+                {t('delivery_status')}: {statusNames[delivery.status]}
+                <span className="absolute left-0 top-full mb-2 w-max px-2 py-1 bg-black text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity">
+                    {statusTooltips[delivery.status]}
+                </span>
+            </p>
             <div className="flex flex-row gap-2 md:gap-5 mt-2 mb-2">
                 {Array.from({ length: amountOfSticks }).map((_, index) => (
                     <div key={index} className="w-1/6 h-1.5 md:h-2 bg-blue rounded-full" />
