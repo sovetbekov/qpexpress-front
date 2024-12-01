@@ -12,6 +12,7 @@ import {
 } from '@/types'
 import MoneyInput from '@/app/components/input/MoneyInput'
 import { v4 as uuidv4 } from 'uuid'
+import { AiOutlineInfoCircle } from 'react-icons/ai';
 import { useImmer } from 'use-immer'
 import { useRouter } from 'next/navigation'
 import DropdownInput from '@/app/components/input/DropdownInput/DropdownInput'
@@ -51,6 +52,7 @@ type Props = {
 }
 
 export default function EditableOrderForm({initialData, countries, recipients, language}: Readonly<Props>) {
+    const [currentCountry, setCurrentCountry] = useState<CountryData | null>(null);
     const {t} = useTranslation(language, 'order')
     const [formData, updateFormData] = useImmer<OrderFormData>(initialData ?? {
         recipient: undefined,
@@ -192,7 +194,21 @@ export default function EditableOrderForm({initialData, countries, recipients, l
                     return (
                         <div className={'flex flex-col md:gap-y-5'} key={productInfo.id}>
                             <div className={'flex flex-col md:gap-y-5'}>
-                                <p className={'hidden md:block md:text-2xl'}>{t('product_information')}</p>
+                            <div className="flex items-center ">
+                                    <p className="md:text-2xl">{t('product_information')}</p>
+                                    <div className="relative group flex items-center">
+                                        <AiOutlineInfoCircle
+                                            className="text-gray-500 hover:text-gray-700 cursor-pointer text-lg md:text-xl"
+                                            style={{ marginLeft: 15 }}
+                                        />
+                                        <div
+                                            className="absolute right-0 top-full mt-1 hidden w-60 p-3 bg-white border border-gray-300 rounded-lg shadow-lg text-sm text-gray-700 group-hover:block"
+                                            style={{ zIndex: 3 }}
+                                        >
+                                            {t('volume_weight_info')}
+                                        </div>
+                                    </div>
+                                </div>
                                 <h2 className={'text-xl md:hidden mb-3'}>{t('product_information')}</h2>
                                 <div className={'flex flex-col gap-y-3'}>
                                     <div className={'flex flex-col md:flex-row gap-y-3 md:gap-x-10'}>
@@ -207,7 +223,11 @@ export default function EditableOrderForm({initialData, countries, recipients, l
                                                 errorsClassname={'absolute top-0 right-0 flex flex-row items-center h-full pr-10 text-[#EF4444]'}
                                                 label={t('country')}
                                                 selected={productInfo.country?.id}
-                                                setSelected={(option) => updateProductInfoCallback(index, 'country')(option?.value)}
+                                                // setSelected={(option) => updateProductInfoCallback(index, 'country')(option?.value)}
+                                                setSelected={(option) => {
+                                                    updateProductInfoCallback(index, 'country')(option?.value);
+                                                    setCurrentCountry(option?.value || null);
+                                                }}
                                                 errors={errors}
                                                 setErrors={setErrors}
                                                 searchable={true}
@@ -323,12 +343,20 @@ export default function EditableOrderForm({initialData, countries, recipients, l
                                 </div>
                                 <CheckboxInput
                                     id={`original_box_${index}`}
-                                    label={t('original_box')}
-                                    disabled={!productInfo.country || productInfo.country?.id === '8c91de06-cbd7-4389-a8c8-30b9dd9305d2' }
-                                    wrapperClassname={`flex items-center gap-x-3 cursor-pointer outline-none w-full ${(!productInfo.country || productInfo.country?.id === '8c91de06-cbd7-4389-a8c8-30b9dd9305d2') ? 'text-gray-500' : ''}`}
+                                    label={currentCountry?.id === "f356c176-de9e-4479-909f-12b36900a314" ? t('original_box_for_korea') : t('original_box')}
+                                    disabled={!productInfo.country}
+                                    wrapperClassname={'flex items-center gap-x-3 cursor-pointer outline-none w-full'}
                                     checkboxClassname={'border-none w-6 h-6 outline-none'}
                                     checked={productInfo.originalBox}
-                                    onChange={e => updateProductInfoCallback(index, 'originalBox')(e.target.checked)}
+                                    // onChange={e => updateProductInfoCallback(index, 'originalBox')(e.target.checked)}
+                                    onChange={(e) => {
+                                        // toast.success(t('checkbox_toast_message'));
+                                        const isChecked = e.target.checked;                                
+                                        isChecked
+                                            ? toast.success(t('checkbox_toast_message'))
+                                            : null;
+                                        updateProductInfoCallback(index, 'originalBox')(isChecked);
+                                    }}
                                 />
                             </div>
                         </div>

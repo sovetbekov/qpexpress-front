@@ -1,6 +1,6 @@
 {
   "title": "Calculator",
-  "description": "Calculate your delivery cost",
+  "description": "Calculate your delivery cost. We take into account the volumetric weight.",
   "country": "Country of delivery",
   "weight": "Weight (kg)",
   "price": "Price",

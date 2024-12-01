@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 /* eslint-disable react-hooks/rules-of-hooks */
 'use client';
 
@@ -84,6 +85,10 @@ export default function Carousel({language}: Readonly<Props>) {
         );
     };
 
+    const filteredMarketplaces = marketplaces.filter((marketplace) => marketplace.isFeatured);
+
+
+
     return (
         <div className="carousel-container relative p-4 md:p-8">
             {!loading ? ( 
@@ -102,9 +107,11 @@ export default function Carousel({language}: Readonly<Props>) {
                             className="flex transition-transform duration-500 ease-in-out" 
                             style={{ transform: `translateX(-${(currentInd * 100) / slidesPerView}%)` }}
                         >
-                            {marketplaces.map((slide, index) => (
+                            {filteredMarketplaces.map((slide, index) => (
                                 <div key={index} className="w-1/2 md:w-1/4 flex-shrink-0 flex justify-center items-center">
-                                    <img src={slide.photo_link} alt={`Slide ${index + 1}`} className="w-[100px] md:w-[200px] h-auto object-contain" />
+                                    <Link href={slide.link} target='_blank'>
+                                        <img src={slide.photo_link} alt={`Slide ${index + 1}`} className="w-[100px] md:w-[200px] h-auto object-contain" />
+                                    </Link>
                                 </div>
                             ))}
                         </div>

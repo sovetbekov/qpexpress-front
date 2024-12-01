@@ -4,6 +4,7 @@ import { updateMarketplace, deleteMarketplaceById } from '@/services/marketplace
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
 import { t } from 'i18next';
+import CheckboxInput from '../../input/CheckboxInput';
 
 type Props = {
     language: string;
@@ -14,10 +15,15 @@ export default function UpdateMarketplaceForm({ language, data }: Props) {
     const [marketplace, setMarketplace] = useState<MarketplaceDataOverview>(data);
 
     useEffect(() => {
-        // Update state when data prop changes
         setMarketplace(data);
     }, [data]);
-
+    const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { checked } = e.target;
+        setMarketplace((prev) => ({
+          ...prev,
+          isFeatured: checked,
+        }));
+      };
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
         setMarketplace(prev => ({
@@ -214,6 +220,18 @@ export default function UpdateMarketplaceForm({ language, data }: Props) {
                         required
                     />
                 </div>
+                
+                <div className="flex flex-col">
+                    <CheckboxInput
+                        id={`isFeatured`}
+                        label="Лучший магазин"
+                        wrapperClassname={'flex items-center gap-x-3 cursor-pointer outline-none w-full'}
+                        checkboxClassname={'border-none w-6 h-6 outline-none'}
+                        checked={marketplace.isFeatured}
+                        onChange={handleCheckboxChange}
+                    />
+                </div>
+
                 <button type="submit" className="bg-blue-500 text-white font-medium py-2 rounded-lg hover:bg-blue-600">
                     Обновить
                 </button>

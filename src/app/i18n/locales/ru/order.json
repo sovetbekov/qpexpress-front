@@ -14,6 +14,7 @@
   "invoice": "Накладная",
   "description": "Описание товара",
   "original_box": "Оставить оригинальную коробку товара",
+  "original_box_for_korea": "Убрать лишние коробки за 3$",
   "add_product": "+ Добавить товар",
   "recipient": "Получатель",
   "create_order": "Добавить",
@@ -24,5 +25,7 @@
   "in_the_way": "В пути",
   "in_your_country": "В вашей стране",
   "in_mail_office": "В почтовом отделении",
-  "delivered": "Доставлен"
+  "delivered": "Доставлен",
+  "checkbox_toast_message": "Это поможет снизить объемный вес",
+  "volume_weight_info": "При получении посылки, учитываем объемный вес"
 }
