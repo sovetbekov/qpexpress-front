@@ -14,6 +14,7 @@
   "invoice": "Invoice",
   "description": "Description",
   "original_box": "Leave the original product box",
+  "original_box_for_korea": "Remove extra boxes for $3",
   "add_product": "+ Add Product",
   "recipient": "Recipient",
   "create_order": "Save",
@@ -24,5 +25,7 @@
   "in_the_way": "In the way",
   "in_your_country": "In your country",
   "in_mail_office": "In mail office",
-  "delivered": "Delivered"
+  "delivered": "Delivered",
+  "checkbox_toast_message": "This will help reduce bulk weight",
+  "volume_weight_info": "When receiving a parcel, we take into account the volumetric weight"
 }

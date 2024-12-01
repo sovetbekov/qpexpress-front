@@ -11,6 +11,7 @@ import {
     SuccessResponse,
 } from '@/types'
 import MoneyInput from '@/app/components/input/MoneyInput'
+import { AiOutlineInfoCircle } from 'react-icons/ai';
 import { v4 as uuidv4 } from 'uuid'
 import { useImmer } from 'use-immer'
 import { useRouter } from 'next/navigation'
@@ -51,6 +52,7 @@ type Props = {
 }
 
 export default function EditableOrderForm({initialData, countries, recipients, language}: Readonly<Props>) {
+    const [currentCountry, setCurrentCountry] = useState<CountryData | null>(null);
     const {t} = useTranslation(language, 'order')
     const [formData, updateFormData] = useImmer<OrderFormData>(initialData ?? {
         recipient: undefined,
@@ -117,6 +119,7 @@ export default function EditableOrderForm({initialData, countries, recipients, l
         } as Option<RecipientData>
     })
     const countryOptions = countries.map(country => {
+        console.log(country)
         return {
             id: country.id,
             value: country,
@@ -192,7 +195,21 @@ export default function EditableOrderForm({initialData, countries, recipients, l
                     return (
                         <div className={'flex flex-col md:gap-y-5'} key={productInfo.id}>
                             <div className={'flex flex-col md:gap-y-5'}>
-                                <p className={'hidden md:block md:text-2xl'}>{t('product_information')}</p>
+                                <div className="flex items-center ">
+                                    <p className="md:text-2xl">{t('product_information')}</p>
+                                    <div className="relative group flex items-center">
+                                        <AiOutlineInfoCircle
+                                            className="text-gray-500 hover:text-gray-700 cursor-pointer text-lg md:text-xl"
+                                            style={{ marginLeft: 15 }}
+                                        />
+                                        <div
+                                            className="absolute right-0 top-full mt-1 hidden w-60 p-3 bg-white border border-gray-300 rounded-lg shadow-lg text-sm text-gray-700 group-hover:block"
+                                            style={{ zIndex: 3 }}
+                                        >
+                                            {t('volume_weight_info')}
+                                        </div>
+                                    </div>
+                                </div>
                                 <h2 className={'text-xl md:hidden mb-3'}>{t('product_information')}</h2>
                                 <div className={'flex flex-col gap-y-3'}>
                                     <div className={'flex flex-col md:flex-row gap-y-3 md:gap-x-10'}>
@@ -207,7 +224,14 @@ export default function EditableOrderForm({initialData, countries, recipients, l
                                                 errorsClassname={'absolute top-0 right-0 flex flex-row items-center h-full pr-10 text-[#EF4444]'}
                                                 label={t('country')}
                                                 selected={productInfo.country?.id}
-                                                setSelected={(option) => updateProductInfoCallback(index, 'country')(option?.value)}
+                                                // setSelected={(option) => updateProductInfoCallback(index, 'country')(option?.value)}
+                                                setSelected={(option) => {
+                                                    // Обновляем продукт
+                                                    updateProductInfoCallback(index, 'country')(option?.value);
+                                    
+                                                    // Сохраняем в currentCountry
+                                                    setCurrentCountry(option?.value || null);
+                                                }}
                                                 errors={errors}
                                                 setErrors={setErrors}
                                                 searchable={true}
@@ -216,7 +240,7 @@ export default function EditableOrderForm({initialData, countries, recipients, l
                                                 required
                                             />
                                         </div>
-                                        <div
+                                        {/* <div
                                             className={'w-[calc(100vw-2.5rem)] md:w-[calc(33%-6rem)] md:basis-1/3 relative'}>
                                             <TextInput
                                                 id={`custom_order_id_${index}`}
@@ -230,7 +254,7 @@ export default function EditableOrderForm({initialData, countries, recipients, l
                                                 onChange={(e) => updateProductInfoCallback(index, 'customOrderId')(e.target.value)}
                                                 required
                                             />
-                                        </div>
+                                        </div> */}
                                         <div
                                             className={'w-[calc(100vw-2.5rem)] md:w-[calc(33%-6rem)] md:basis-1/3 relative'}>
                                             <TextInput
@@ -323,12 +347,20 @@ export default function EditableOrderForm({initialData, countries, recipients, l
                                 </div>
                                 <CheckboxInput
                                     id={`original_box_${index}`}
-                                    label={t('original_box')}
+                                    label={currentCountry?.id === "f356c176-de9e-4479-909f-12b36900a314" ? t('original_box_for_korea') : t('original_box')}
                                     disabled={!productInfo.country}
                                     wrapperClassname={'flex items-center gap-x-3 cursor-pointer outline-none w-full'}
                                     checkboxClassname={'border-none w-6 h-6 outline-none'}
                                     checked={productInfo.originalBox}
-                                    onChange={e => updateProductInfoCallback(index, 'originalBox')(e.target.checked)}
+                                    // onChange={e => updateProductInfoCallback(index, 'originalBox')(e.target.checked)}
+                                    onChange={(e) => {
+                                        // toast.success(t('checkbox_toast_message'));
+                                        const isChecked = e.target.checked;                                
+                                        isChecked
+                                            ? toast.success(t('checkbox_toast_message'))
+                                            : null;
+                                        updateProductInfoCallback(index, 'originalBox')(isChecked);
+                                    }}
                                 />
                             </div>
                         </div>

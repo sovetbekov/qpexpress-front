@@ -14,6 +14,7 @@
   "invoice": "Жүкқұжат",
   "description": "Сипаттама",
   "original_box": "Түпнұсқа тауар қорабын қалдырыңыз",
+  "original_box_for_korea": "Қосымша қораптарды 3 долларға алып тастаңыз",
   "add_product": "+ Тауарды қосу",
   "recipient": "Алушы",
   "create_order": "Сақтау",
@@ -24,5 +25,7 @@
   "in_the_way": "Жолда",
   "in_your_country": "Сіздің еліңізде",
   "in_mail_office": "Пошта кеңсесінде",
-  "delivered": "Жеткізілген"
+  "delivered": "Жеткізілген",
+  "checkbox_toast_message": "Бұл салмақты азайтуға көмектеседі",
+  "volume_weight_info": "Сәлемдемені алу кезінде көлемдік салмақты ескереміз"
 }
