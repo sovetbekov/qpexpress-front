@@ -146,7 +146,7 @@ export default function ReadOnlyOrderForm({data, language}: Readonly<Props>) {
                 <p className={'hidden md:block md:text-2xl'}>Получатель</p>
                 <TextInput id={'recipient'}
                        type={'text'}
-                       value={`${data.recipient?.firstName} ${data.recipient?.lastName}` ?? ''}
+                       value={`${data.recipient?.firstName ?? ''} ${data.recipient?.lastName ?? ''}`}//+
                        className={'border border-black rounded-full p-3 md:p-4 cursor-pointer disabled:bg-gray-2 disabled:text-light-gray disabled:placeholder-light-gray disabled:cursor-not-allowed disabled:border-0'}
                        label={'Получатель'}
                        readOnly/>

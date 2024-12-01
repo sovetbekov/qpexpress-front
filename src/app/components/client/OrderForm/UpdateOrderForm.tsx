@@ -15,6 +15,7 @@ import { useRouter } from 'next/navigation';
 import { getMyRecipients } from '@/services/account'
 import { isError, notEmpty } from '@/app/lib/utils'
 import { getCountries } from '@/services/countries';
+import { FiUser, FiCheckCircle, FiXCircle } from 'react-icons/fi';
 import DropdownInput from '../../input/DropdownInput/DropdownInput';
 import { getNameByLanguage } from '@/util';
 import { uploadFile } from '@/services/files';
@@ -216,10 +217,6 @@ export default function UpdateOrderForm({ data, language, orderId }: Props) {
                                         dropdownItemClassname={'cursor-pointer px-8 py-4 border-b-black border-b border-solid last:border-b-0 hover:bg-gray'}
                                     />
                                 </div>
-                                   
-                                    
-
-
                             </div>
                         </div>
                     </div>
@@ -279,20 +276,29 @@ export default function UpdateOrderForm({ data, language, orderId }: Props) {
                             onChange={(e) => handleInputChange(index, 'originalBox', e.target.checked)}
                         />
                     </div>
-                    <div className="flex flex-col gap-3">
-                        <label htmlFor="recipient" className="font-medium text-lg mb-1">Получатель</label>
-                        <DropdownInput<RecipientOverview>
-                            id={`recipient_${index}`}
-                            label={formData.recipient?.firstName + ' ' + formData.recipient?.lastName}
-                            options={recipientOptions}
-                            nullable={false} searchable={true}
-                            selected={formData.recipient?.id ?? ''}
-                            setSelected={handleRecipientChange}
-                            wrapperClassname={'w-full relative'}
-                            inputClassname={'border cursor-pointer flex items-center justify-between w-full md:text-[0.9rem] md:w-full p-4 rounded-full border-black disabled:bg-gray disabled:text-[#cccccc] disabled:cursor-not-allowed disabled:border-0'}
-                            dropdownClassname={'w-[calc(100vw-2.5rem)] z-50 md:max-h-60 md:w-full overflow-auto bg-white border my-4 rounded-3xl border-solid border-black'}
-                            dropdownItemClassname={'cursor-pointer px-8 py-4 border-b-black border-b border-solid last:border-b-0 hover:bg-gray'} 
-                        />
+                    <label htmlFor="recipient" className="font-medium text-lg mb-1">Получатель</label>
+                    <div
+                        className={`flex items-center p-4 border rounded-xl shadow-lg transition-transform hover:scale-105 cursor-pointer ${
+                            formData.recipient?.status === 'ACTIVE' ? 'bg-green-50 border-green-300' : 'bg-red-50 border-red-300'
+                        }`}
+                        >
+                        <div className="flex items-center justify-center w-16 h-16 text-white rounded-full shadow-md bg-gradient-to-br from-blue-400 to-blue-600">
+                            <FiUser size={32} />
+                        </div>
+                        <div className="flex-1 ml-4">
+                            <h3 className="text-lg font-semibold text-gray-800">{`${formData.recipient?.firstName} ${formData.recipient?.lastName}`}</h3>
+                            <p className="text-sm text-gray-500">{formData.recipient?.patronymic}</p>
+                            <div className="flex items-center mt-2 space-x-2">
+                            {formData.recipient?.status === 'ACTIVE' ? (
+                                <FiCheckCircle className="text-green-500" size={20} />
+                            ) : (
+                                <FiXCircle className="text-red-500" size={20} />
+                            )}
+                            <span className="text-sm font-medium text-gray-700">
+                                {formData.recipient?.status === 'ACTIVE' ? 'Активен' : 'Неактивен'}
+                            </span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             ))}

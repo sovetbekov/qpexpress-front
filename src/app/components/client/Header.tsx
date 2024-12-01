@@ -63,7 +63,8 @@ export default function Header({language}: Readonly<Props>) {
                         onClick={toggle}
                         className="md:cursor-pointer md:text-white md:px-5 md:py-3 md:rounded-full md:border-none md:bg-none md:flex md:flex-row md:gap-x-5 md:items-center"
                     >
-                        <Image src="/assets/call_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.svg" alt="phone" width={34} height={34} />
+                        <Image src="/assets/call_24dp_E8EAED_FILL0_wght400_GRAD0_opsz24.svg" alt="phone" width={24} height={24} />
+                        {t('call_us')}
                     </button>
 
                     {isOpen && (
