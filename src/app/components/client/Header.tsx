@@ -28,36 +28,8 @@ export default function Header({language}: Readonly<Props>) {
                     <div className={'md:h-3 md:bg-dark-gray md:rounded md:col-span-2 md:w-28'}></div>
                 </div>
             }
-            {
-                auth?.status === 'unauthenticated' &&
-                <>
-                    <button className={'md:cursor-pointer md:text-white md:px-5 md:py-3 md:rounded-full md:border-none md:bg-none'}
-                            onClick={onLoginClick}>
-                        <span className={'md:text-base md:font-normal'}>{t('login')}</span>
-                    </button>
-                    <button
-                        className={'md:cursor-pointer md:text-white md:bg-blue md:px-5 md:py-3 md:rounded-full md:border-none md:hover:text-black'}
-                        onClick={onSignUpClick}>
-                        <span className={'md:text-base md:font-normal'}>{t('register')}</span>
-                    </button>
-                </>
-            }
-            {
-                auth?.status === 'authenticated' && auth?.roles?.includes('admin:read') &&
-                <>
-                    <Link href={'/admin'}
-                          className={'md:cursor-pointer md:text-white md:px-5 md:py-3 md:rounded-full md:border-none md:bg-none md:flex md:flex-row md:gap-x-5 md:items-center'}>
-                        <Image src={'/assets/user-circle-white.svg'} alt={'user-avatar'} width={24} height={24}/>
-                        <span className={'md:text-base md:font-normal'}>{auth.session.user.name}</span>
-                    </Link>
-                    <button className={'md:cursor-pointer md:text-white md:px-5 md:py-3 md:rounded-full md:border-0 md:bg-none'}
-                            onClick={onSignOutClick}>
-                        <span className={'md:text-base md:font-normal'}>{t('logout')}</span>
-                    </button>
-                </>
-            }
-            {
-                auth?.status === 'authenticated' && !auth?.roles?.includes('admin:read') &&
+                        {
+                // auth?.status === 'authenticated' && !auth?.roles?.includes('admin:read') &&
                 <>
                     <button
                         onClick={toggle}
@@ -92,6 +64,35 @@ export default function Header({language}: Readonly<Props>) {
                 </>
 
             }
+            {
+                auth?.status === 'unauthenticated' &&
+                <>
+                    <button className={'md:cursor-pointer md:text-white md:px-5 md:py-3 md:rounded-full md:border-none md:bg-none'}
+                            onClick={onLoginClick}>
+                        <span className={'md:text-base md:font-normal'}>{t('login')}</span>
+                    </button>
+                    <button
+                        className={'md:cursor-pointer md:text-white md:bg-blue md:px-5 md:py-3 md:rounded-full md:border-none md:hover:text-black'}
+                        onClick={onSignUpClick}>
+                        <span className={'md:text-base md:font-normal'}>{t('register')}</span>
+                    </button>
+                </>
+            }
+            {
+                auth?.status === 'authenticated' && auth?.roles?.includes('admin:read') &&
+                <>
+                    <Link href={'/admin'}
+                          className={'md:cursor-pointer md:text-white md:px-5 md:py-3 md:rounded-full md:border-none md:bg-none md:flex md:flex-row md:gap-x-5 md:items-center'}>
+                        <Image src={'/assets/user-circle-white.svg'} alt={'user-avatar'} width={24} height={24}/>
+                        <span className={'md:text-base md:font-normal'}>{auth.session.user.name}</span>
+                    </Link>
+                    <button className={'md:cursor-pointer md:text-white md:px-5 md:py-3 md:rounded-full md:border-0 md:bg-none'}
+                            onClick={onSignOutClick}>
+                        <span className={'md:text-base md:font-normal'}>{t('logout')}</span>
+                    </button>
+                </>
+            }
+
             {
                 auth?.status === 'authenticated' && !auth?.roles?.includes('admin:read') &&
                 <>

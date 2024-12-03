@@ -20,6 +20,8 @@ import DropdownInput from '../../input/DropdownInput/DropdownInput';
 import { getNameByLanguage } from '@/util';
 import { uploadFile } from '@/services/files';
 import { SuccessResponse } from '@/types';
+import { useTranslation } from '@/app/i18n/client';
+import Link from 'next/link';
 
 type Props = {
     data: OrderFormData;
@@ -31,6 +33,7 @@ export default function UpdateOrderForm({ data, language, orderId }: Props) {
     const [formData, setFormData] = useState<OrderFormData>(data);
     const [loading, setLoading] = useState(false);
     const router = useRouter();
+    const {t} = useTranslation(language, 'order')
 
     const [recipients, setRecipients] = useState<RecipientOverview[]>([])
     const [countries, setCountries] = useState<CountryData[]>([]); // State to store countries
@@ -267,17 +270,19 @@ export default function UpdateOrderForm({ data, language, orderId }: Props) {
                                 required
                                 onChange={(e) => handleInputChange(index, 'description', e.target.value)}
                             />
-                        </div>
-                        <CheckboxInput
-                            label="Оставить оригинальную коробку товара"
+                        </div>                        
+                        {productInfo.country?.id === "f356c176-de9e-4479-909f-12b36900a314" ?
+                            <CheckboxInput
+                            label={ t('original_box_for_korea')}
                             checked={productInfo.originalBox}
                             wrapperClassname="flex items-center gap-x-3 cursor-pointer outline-none w-fit"
                             checkboxClassname="border-none w-6 h-6 outline-none"
                             onChange={(e) => handleInputChange(index, 'originalBox', e.target.checked)}
-                        />
+                        />:null}
                     </div>
-                    <label htmlFor="recipient" className="font-medium text-lg mb-1">Получатель</label>
+                    <label htmlFor="recipient" className="font-medium text-lg mb-1">Получатель</label>                    
                     <div
+                        onClick={() => router.push(`/${language}/admin/users/${formData.recipient?.id}`)}
                         className={`flex items-center p-4 border rounded-xl shadow-lg transition-transform hover:scale-105 cursor-pointer ${
                             formData.recipient?.status === 'ACTIVE' ? 'bg-green-50 border-green-300' : 'bg-red-50 border-red-300'
                         }`}

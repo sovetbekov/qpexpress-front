@@ -12,7 +12,7 @@ import { toast } from 'react-toastify'
 import { isSuccess } from '@/app/lib/utils'
 import TextInput from '@/app/components/input/TextInput'
 import MaskInput from '@/app/components/input/MaskInput'
-
+import { IoMdCopy } from "react-icons/io";
 type Props = {
     data: UserWithRecipientsData
     language: string
@@ -147,13 +147,27 @@ export default function UserReviewForm({data: {user, recipients}, language}: Rea
                                        value={`${recipient.district}`}
                                        readOnly/>
                         </div>
-                        <div className={'md:w-[calc(33%-0.51rem)] w-full'}>
+                        <div 
+                            className={'md:w-[calc(33%-0.51rem)] w-full relative group'}
+                            onClick={async () => {
+                                await navigator.clipboard.writeText(`${recipient.phoneNumber}`);
+                                toast.success("Copied to clipboard!")
+                                }}
+                            >
                             <MaskInput id={'phoneNumber'}
                                        label={'Номер телефона'}
                                        format={'+7 (###) ###-##-##'}
-                                       className={'md:p-5 p-3 border rounded-full border-black placeholder:text-black w-full'}
+                                       className={'md:cursor-pointer md:p-5 p-3 border rounded-full border-black placeholder:text-black w-full'}
                                        value={`${recipient.phoneNumber}`}
+
                                        readOnly/>
+                                       <div
+                                            className="absolute right-0 top-50 mt-1 hidden w-60 p-3 bg-white border border-gray-300 rounded-lg shadow-lg text-sm text-gray-700 group-hover:block"
+                                            style={{ zIndex: 3 }}
+                                        >
+                                            Click to copy to clipboard
+                                        </div>
+                                       {/* <IoMdCopy/> */}
                         </div>
                         <div className={'md:w-[calc(33%-0.51rem)] w-full'}>
                             <TextInput id={'address'}

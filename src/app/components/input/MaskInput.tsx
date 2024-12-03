@@ -5,6 +5,7 @@ import { Errors } from '@/types'
 import Label from '@/app/components/input/Label'
 import { PatternFormat, PatternFormatProps } from 'react-number-format'
 import { animated, useSpring } from '@react-spring/web'
+import { IoMdCopy } from 'react-icons/io'
 
 type Props = {
     id: string
@@ -59,6 +60,7 @@ const MaskInput = forwardRef<HTMLInputElement, Props>(({customInput, ...props}, 
                    disabled={props.disabled}>
                 {props.label}
             </Label>
+            {/* {label === 'Номер телефона' ? <IoMdCopy /> : null} */}
             <AnimatedPatternFormat style={inputAnimation}
                                    value={!props.value ? '' : props.value}
                                    getInputRef={ref}
@@ -83,7 +85,7 @@ const MaskInput = forwardRef<HTMLInputElement, Props>(({customInput, ...props}, 
                                            [props.id]: [],
                                        })
                                    }}
-                                   {...restProps}/>
+                                   {...restProps}/>                                       
         </div>)
 })
 

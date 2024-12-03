@@ -341,9 +341,10 @@ export default function EditableOrderForm({initialData, countries, recipients, l
                                         required
                                     />
                                 </div>
+                                {currentCountry?.id === "f356c176-de9e-4479-909f-12b36900a314" ?
                                 <CheckboxInput
                                     id={`original_box_${index}`}
-                                    label={currentCountry?.id === "f356c176-de9e-4479-909f-12b36900a314" ? t('original_box_for_korea') : t('original_box')}
+                                    label={t('original_box_for_korea')}
                                     disabled={!productInfo.country}
                                     wrapperClassname={'flex items-center gap-x-3 cursor-pointer outline-none w-full'}
                                     checkboxClassname={'border-none w-6 h-6 outline-none'}
@@ -357,7 +358,8 @@ export default function EditableOrderForm({initialData, countries, recipients, l
                                             : null;
                                         updateProductInfoCallback(index, 'originalBox')(isChecked);
                                     }}
-                                />
+                                />:null
+                                }
                             </div>
                         </div>
                     )

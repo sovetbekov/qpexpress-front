@@ -102,9 +102,12 @@ const TrackingEvents: React.FC<TrackingEventsProps> = ({ events, language }) => 
     'RDRSCSTR_UNDO_I',
     'RDRSCSTR_UNDO_O',
     'SRTRPOREG_UNDO_I',
-    'SRTRPOREG_UNDO_O'
+    'SRTRPOREG_UNDO_O',
+    'Send_act',
+    'New_act_B',
+    'New_act_A',
   ];
-
+console.log(events);
   return (
     <div className="mt-3 m-1 grow sm:mt-8 lg:mt-0">
       <div className="space-y-6 bg-white p-6">

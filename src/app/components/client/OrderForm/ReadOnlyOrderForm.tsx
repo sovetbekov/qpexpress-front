@@ -8,6 +8,8 @@ import { OrderFormData } from '@/types'
 import TextInput from '@/app/components/input/TextInput'
 import { getNameByLanguage } from '@/util'
 import { useTranslation } from '@/app/i18n/client'
+import { FiCheckCircle, FiUser, FiXCircle } from 'react-icons/fi'
+import Link from 'next/link'
 
 type Props = {
     data: OrderFormData,
@@ -130,7 +132,7 @@ export default function ReadOnlyOrderForm({data, language}: Readonly<Props>) {
                                     />
                                 </div>
                                 <CheckboxInput
-                                    label={'Оставить оригинальную коробку товара'}
+                                    label={productInfo.country?.id === "f356c176-de9e-4479-909f-12b36900a314" ? t('original_box_for_korea') : t('original_box')}
                                     disabled={!productInfo.country}
                                     wrapperClassname={'flex items-center gap-x-3 cursor-pointer outline-none w-fit'}
                                     checkboxClassname={'border-none w-6 h-6 outline-none'}
@@ -144,12 +146,31 @@ export default function ReadOnlyOrderForm({data, language}: Readonly<Props>) {
             }
             <div className={'flex flex-col gap-5'}>
                 <p className={'hidden md:block md:text-2xl'}>Получатель</p>
-                <TextInput id={'recipient'}
-                       type={'text'}
-                       value={`${data.recipient?.firstName ?? ''} ${data.recipient?.lastName ?? ''}`}//+
-                       className={'border border-black rounded-full p-3 md:p-4 cursor-pointer disabled:bg-gray-2 disabled:text-light-gray disabled:placeholder-light-gray disabled:cursor-not-allowed disabled:border-0'}
-                       label={'Получатель'}
-                       readOnly/>
+                <Link href={``}>
+                    <div
+                        className={`flex items-center p-4 border rounded-xl shadow-lg transition-transform hover:scale-105 cursor-pointer ${
+                            data.recipient?.status === 'ACTIVE' ? 'bg-green-50 border-green-300' : 'bg-red-50 border-red-300'
+                        }`}
+                        >
+                        <div className="flex items-center justify-center w-16 h-16 text-white rounded-full shadow-md bg-gradient-to-br from-blue-400 to-blue-600">
+                            <FiUser size={32} />
+                        </div>
+                        <div className="flex-1 ml-4">
+                            <h3 className="text-lg font-semibold text-gray-800">{`${data.recipient?.firstName} ${data.recipient?.lastName}`}</h3>
+                            <p className="text-sm text-gray-500">{data.recipient?.patronymic}</p>
+                            <div className="flex items-center mt-2 space-x-2">
+                            {data.recipient?.status === 'ACTIVE' ? (
+                                <FiCheckCircle className="text-green-500" size={20} />
+                            ) : (
+                                <FiXCircle className="text-red-500" size={20} />
+                            )}
+                            <span className="text-sm font-medium text-gray-700">
+                                {data.recipient?.status === 'ACTIVE' ? 'Активен' : 'Неактивен'}
+                            </span>
+                            </div>
+                        </div>
+                    </div>
+                </Link>
             </div>
         </div>
     )
