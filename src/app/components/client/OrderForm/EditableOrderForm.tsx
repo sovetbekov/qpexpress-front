@@ -41,6 +41,7 @@ function createDefaultProductInfo(): GoodFormData {
         customOrderId: '',
         invoice: undefined,
         originalBox: false,
+        quantity: 1
     }
 }
 
@@ -103,7 +104,7 @@ export default function EditableOrderForm({initialData, countries, recipients, l
                     trackingNumber: productInfo.trackingNumber,
                     link: productInfo.link,
                     recipientId,
-                    quantity: 1,
+                    quantity: productInfo.quantity,
                     userId,
                 }
             }),
@@ -239,15 +240,17 @@ export default function EditableOrderForm({initialData, countries, recipients, l
                                         <div
                                             className={'w-[calc(100vw-2.5rem)] md:w-[calc(33%-6rem)] md:basis-1/3 relative'}>
                                             <TextInput
-                                                id={`custom_order_id_${index}`}
-                                                label={t('order_id')}
-                                                type={'text'}
+                                                id={`quantity_${index}`}
+                                                label={t('quantity')}
+                                                type={'number'}
+                                                min={0}
+                                                step={1}
                                                 disabled={!productInfo.country}
                                                 errors={errors}
                                                 setErrors={setErrors}
-                                                value={productInfo.customOrderId}
+                                                value={productInfo.quantity}
                                                 className={'md:p-4 w-full p-3 placeholder-black rounded-full border border-black disabled:bg-gray-2 disabled:text-light-gray disabled:placeholder-light-gray disabled:cursor-not-allowed disabled:border-0 required:invalid:border-red-500'}
-                                                onChange={(e) => updateProductInfoCallback(index, 'customOrderId')(e.target.value)}
+                                                onChange={(e) => updateProductInfoCallback(index, 'quantity')(Number(e.target.value))}
                                                 required
                                             />
                                         </div>

@@ -38,13 +38,20 @@ export default function DeliveriesTable({deliveries}: Readonly<Props>) {
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>(
         [],
     )
-
+    // console.log(deliveries);
     const columns = useMemo<ColumnDef<DeliveryData, any>[]>(
         () => [
             {
                 accessorFn: row => row.deliveryNumber,
                 id: 'deliveryNumber',
                 header: 'Delivery number',
+                cell: info => info.getValue(),
+                footer: props => props.column.id,
+            },
+            {
+                accessorFn: row => `${row.recipient.firstName} ${row.recipient.lastName}`,
+                id: 'recipientName',
+                header: 'Recipient',
                 cell: info => info.getValue(),
                 footer: props => props.column.id,
             },
@@ -139,12 +146,14 @@ export default function DeliveriesTable({deliveries}: Readonly<Props>) {
                                                 'justify-end rounded-r-full': cell.column.id === 'status',
                                             })}>
                                                 <p className={'text-base'}>
-                                                    {flexRender(
-                                                        cell.column.columnDef.cell,
-                                                        cell.getContext(),
-                                                    )}
+                                                    {
+                                                        flexRender(
+                                                            cell.column.columnDef.cell,
+                                                            cell.getContext(),
+                                                        )
+                                                    }
                                                 </p>
-                                            </div>
+                                            </div>                                            
                                         </td>
                                     )
                                 })}

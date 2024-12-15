@@ -1,0 +1,10 @@
+{
+    "title": "联系我们",
+    "description": "请留下您的联系方式，我们会尽快与您联系。",
+    "full_name_placeholder": "请输入您的姓名",
+    "phone_number_placeholder": "请输入您的电话号码",
+    "submit_button": "提交",
+    "submit_loading": "提交中...",
+    "success_message": "我们会尽快与您联系！",
+    "error_message": "发生错误，请重试。"
+  }

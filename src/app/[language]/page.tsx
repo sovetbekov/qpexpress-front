@@ -4,6 +4,7 @@ import AboutUs from '@/app/components/home/AboutUs'
 import HowItWorks from '@/app/components/home/HowItWorks'
 import Calculator from '@/app/components/home/Calculator'
 import Carousel from '@/app/components/home/Carousel'
+import ContactUs from '../components/home/ContactUs'
 
 type Props = {
     params: {
@@ -17,6 +18,7 @@ export default function Page({params: {language}}: Readonly<Props>) {
             <Description language={language}/>
             <Carousel language={language}/>
             <AboutUs language={language}/>
+            <ContactUs language={language}/>
             <HowItWorks language={language}/>
             <Calculator language={language}/>
         </div>
