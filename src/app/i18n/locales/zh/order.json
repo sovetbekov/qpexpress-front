@@ -6,6 +6,7 @@
   "order_information": "产品信息",
   "country": "出发国家",
   "order_id": "订单号",
+  "quantity": "数量",
   "tracking_number": "追踪号码",
   "good_link": "产品链接",
   "declaration": "宣言",

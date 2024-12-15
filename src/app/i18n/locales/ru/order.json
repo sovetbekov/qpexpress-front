@@ -6,6 +6,7 @@
   "order_information": "Информация о товаре",
   "country": "Страна отправления",
   "order_id": "ID заказа",
+  "quantity": "Количество",
   "tracking_number": "Номер трекинга",
   "good_link": "Ссылка на товар",
   "declaration": "Декларация",
