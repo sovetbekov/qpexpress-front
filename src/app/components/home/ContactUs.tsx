@@ -46,7 +46,7 @@ export default function ContactUs({ language }: Readonly<Props>) {
     };
 
     return (
-        <div className={'flex flex-col items-center w-full min-h-screen bg-gray-100 px-5 py-10'} id={'contact_us'}>
+        <div className={'flex flex-col items-center w-full bg-gray-100 px-5 py-14'} id={'contact_us'}>
             <h2 className={'text-[1.5rem] md:text-[3rem] mb-6 text-center'}>
                 {t('title')}
             </h2>
