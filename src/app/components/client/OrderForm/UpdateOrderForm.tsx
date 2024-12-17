@@ -282,7 +282,7 @@ export default function UpdateOrderForm({ data, language, orderId }: Props) {
                     </div>
                     <label htmlFor="recipient" className="font-medium text-lg mb-1">Получатель</label>                    
                     <div
-                        onClick={() => router.push(`/${language}/admin/users/${formData.recipient?.id}`)}
+                        onClick={() => router.push(`/${language}/admin/recipient/${formData.recipient?.id}`)}
                         className={`flex items-center p-4 border rounded-xl shadow-lg transition-transform hover:scale-105 cursor-pointer ${
                             formData.recipient?.status === 'ACTIVE' ? 'bg-green-50 border-green-300' : 'bg-red-50 border-red-300'
                         }`}
