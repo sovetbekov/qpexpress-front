@@ -27,6 +27,7 @@ export default async function AdminOrderForm({ order, language }: Readonly<Props
             price: { value: good.price, currency: good.currency } as Money, 
             description: good.description,
             originalBox: good.originalBox,
+            quantity: good.quantity
         })),
     };
 

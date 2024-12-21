@@ -145,7 +145,7 @@ export default function UpdateOrderForm({ data, language, orderId }: Props) {
                     currencyId: good.price!!.currency.id,
                     trackingNumber: good.trackingNumber,
                     invoiceUUID: (fileResults[index] as SuccessResponse<FileMetaData> | undefined)?.data.id,
-                    quantity: 1,
+                    quantity: good.quantity,
                     price: good.price?.value,
                     link: good.link,
                     countryId: good.country?.id, 
@@ -200,6 +200,19 @@ export default function UpdateOrderForm({ data, language, orderId }: Props) {
                                     className="md:basis-1/4 md:p-4 w-full p-3 placeholder-black rounded-full border border-black"
                                     required
                                     onChange={(e) => handleInputChange(index, 'link', e.target.value)}
+                                />
+
+                                <TextInput
+                                    id={`quantity_${index}`}
+                                    label={t('quantity')}
+                                    type={'number'}
+                                    min={0}
+                                    step={1}
+                                    disabled={!productInfo.country}
+                                    value={productInfo.quantity}
+                                    className={'md:p-4 w-full p-3 placeholder-black rounded-full border border-black disabled:bg-gray-2 disabled:text-light-gray disabled:placeholder-light-gray disabled:cursor-not-allowed disabled:border-0 required:invalid:border-red-500'}
+                                    onChange={(e) => handleInputChange(index, 'quantity', Number(e.target.value))}
+                                    required
                                 />
                                 <div className="">
                                     <DropdownInput<CountryData>

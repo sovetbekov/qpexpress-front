@@ -150,7 +150,7 @@ export default function UserReviewForm({data: {user, recipients}, language}: Rea
                         <div 
                             className={'md:w-[calc(33%-0.51rem)] w-full relative group'}
                             onClick={async () => {
-                                await navigator.clipboard.writeText(`${recipient.phoneNumber}`);
+                                await navigator.clipboard.writeText(`7${recipient.phoneNumber}`);
                                 toast.success("Copied to clipboard!")
                                 }}
                             >

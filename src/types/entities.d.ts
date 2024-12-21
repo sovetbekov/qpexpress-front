@@ -78,6 +78,7 @@ export type GoodData = {
   trackingNumber: string;
   status: string;
   price: number;
+  quantity: number;
   invoice?: File | FileMetaData;
 };
 
