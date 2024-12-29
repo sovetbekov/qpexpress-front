@@ -88,7 +88,7 @@ export default function RecipientReviewForm({data: recipient, language}: Readonl
                     <div 
                         className={'md:w-[calc(33%-0.51rem)] w-full relative group'}
                         onClick={async () => {
-                            await navigator.clipboard.writeText(`${recipient.phoneNumber}`);
+                            await navigator.clipboard.writeText(`7${recipient.phoneNumber}`);
                             toast.success(t('recipient_review.copied'));
                         }}
                     >
