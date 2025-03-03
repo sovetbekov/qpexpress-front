@@ -7,5 +7,6 @@
     "approved": "Получатель одобрен",
     "error_approving": "Ошибка одобрения получателя"
   },
-  "marketplaces": "Маркетплейсы"
+  "marketplaces": "Маркетплейсы",
+  "shipments": "Поставки"
 }

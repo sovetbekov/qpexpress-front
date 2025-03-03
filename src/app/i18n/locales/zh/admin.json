@@ -6,5 +6,7 @@
     "approving": "批准用户...",
     "approved": "用户已批准",
     "error_approving": "批准用户时出错"
-  }
+  },
+  "shipments": "出货量",
+  "marketplaces": "市场"
 }
