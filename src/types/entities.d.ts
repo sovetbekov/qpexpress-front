@@ -28,6 +28,67 @@ export type CreateContactData = {
   fullName: string;
 };
 
+export interface ProductData {
+  id: string
+  createdAt: string
+  updatedAt: string
+  name: string
+  description: string
+  quantity: number
+  price: number
+  weight: number
+  barCode: string
+  hsCode: string
+  isDeleted: boolean
+}
+
+export interface ShipmentData {
+  id: string
+  createdAt: string
+  sendDate: string
+  updatedAt: string
+  orderNumber: string
+  trackingNumber: string
+  senderCompany: string
+  senderPerson: string
+  senderPhone: string
+  senderTown: string
+  senderAddress: string
+  receiverPerson: string
+  receiverPhone: string
+  receiverEmail: string
+  receiverTown: string
+  receiverAddress: string
+  receiverInn: string
+  zipCode: string
+  products: ProductData[]
+  quantity: number
+  price: number
+  status: string
+  isDeleted: boolean
+  enclosure: string
+  labelNumber: string
+  spedxOrderResponseNumber: string
+}
+
+/**
+ * Type definition for statusHistory.
+ */
+export interface StatusHistory {
+  statuses: Array<{
+    eventStore: string
+    eventTime: string
+    createTimeGmt: string
+    message: string
+    title: string
+    eventTown: string
+    country: string
+    value: string
+  }>
+}
+
+export type ShipmentDataOverview = Omit<ShipmentData, 'products'>
+
 export type CurrencyData = {
   id: string;
   nameRus: string;
