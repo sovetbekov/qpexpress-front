@@ -6,12 +6,12 @@
 
     // Translation mapping for statuses
     const statusTranslations: { [key: string]: string } = {
-        // PENDING: 'В ожидании',
+        AT_PICKUP_POINT: 'В пункте выдачи',
         WAITING_AT_THE_WAREHOUSE: 'Ожидает на складе',
-        // DELIVERED: 'Доставлено',
+        DELIVERED: 'Доставлено',
         SENT_TO_KAZAKHSTAN: 'Отправлено в Казахстан',
         GOING_THROUGH_CUSTOMS: 'Проходит таможню',
-        // RETURNED: 'Возвращено',
+        DELIVERING: 'Доставляется',
         // Add more statuses as needed
     }
 
