@@ -231,99 +231,105 @@
             )
         }
 
-        return (
-            <div className={'md:p-2'}>
-                <h1 className={'text-xl font-bold mb-4'}>Посылки</h1>
+        // ...existing code...
+return (
+    <div className={'md:p-2'}>
+        <h1 className={'text-xl font-bold mb-4'}>Посылки</h1>
 
-                {/* Button to trigger handleShipmentClick */}
-                
-
-                {/* Actions for selected shipment */}
-                {selectedShipment && (
-                    <div className={'mb-4 p-4 bg-gray-100 rounded-md'}>
-                        <div className="flex flex-row gap-6 items-center">
-                            <h2 className={'text-lg font-bold mb-2'}>Выбранная посылка: {selectedShipment.orderNumber}</h2>
+        <div style={{ maxHeight: '70vh', overflowY: 'auto', position: 'relative' }}>
+            {/* Actions for selected shipment */}
+            {selectedShipment && (
+                <div
+                    className={'mb-4 p-4 bg-gray-100 rounded-md z-10'}
+                    style={{
+                        position: 'sticky',
+                        top: 0,
+                        boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
+                    }}
+                >
+                    <div className="flex flex-row gap-6 items-center">
+                        <h2 className={'text-lg font-bold mb-2'}>
+                            Выбранная посылка: {selectedShipment.orderNumber}
+                        </h2>
                         <div className={'mb-4'}>
-                                <button
-                                    onClick={() => handleShipmentClick(selectedShipment.id)}
-                                    className={'text-blue px-0 pt-2 rounded-md'}
-                                >
-                                    Показать детали
-                                </button>
-                        </div>
-                        </div>
-                        
-                        <div className={'flex items-center'}>
-                            
-                            <label htmlFor="status" className={'block font-bold mr-2'}>
-                                Изменить статус:
-                            </label>
-                            <select
-                                id="status"
-                                value={newStatus}
-                                onChange={(e) => setNewStatus(e.target.value)}
-                                className={'border border-gray-300 rounded-md px-4 py-2 mr-4'}
-                            >
-                                <option value="">Выберите статус</option>
-                                {Object.keys(statusTranslations).map((status) => (
-                                    <option key={status} value={status}>
-                                        {statusTranslations[status]}
-                                    </option>
-                                ))}
-                            </select>
                             <button
-                                onClick={handleStatusChange}
-                                className={'bg-blue-500 text-white px-4 py-2 rounded-md mr-4'}
+                                onClick={() => handleShipmentClick(selectedShipment.id)}
+                                className={'text-blue px-0 pt-2 rounded-md'}
                             >
-                                Обновить статус
+                                Показать детали
                             </button>
-                            <button
-                                onClick={handleCreateOrder}
-                                className={'bg-green-500 text-white px-4 py-2 rounded-md'}
-                            >
-                                Создать заказ
-                            </button>
-                            
                         </div>
-                        
                     </div>
-                )}
+                    <div className={'flex items-center'}>
+                        <label htmlFor="status" className={'block font-bold mr-2'}>
+                            Изменить статус:
+                        </label>
+                        <select
+                            id="status"
+                            value={newStatus}
+                            onChange={(e) => setNewStatus(e.target.value)}
+                            className={'border border-gray-300 rounded-md px-4 py-2 mr-4'}
+                        >
+                            <option value="">Выберите статус</option>
+                            {Object.keys(statusTranslations).map((status) => (
+                                <option key={status} value={status}>
+                                    {statusTranslations[status]}
+                                </option>
+                            ))}
+                        </select>
+                        <button
+                            onClick={handleStatusChange}
+                            className={'bg-blue-500 text-white px-4 py-2 rounded-md mr-4'}
+                        >
+                            Обновить статус
+                        </button>
+                        <button
+                            onClick={handleCreateOrder}
+                            className={'bg-green-500 text-white px-4 py-2 rounded-md'}
+                        >
+                            Создать заказ
+                        </button>
+                    </div>
+                </div>
+            )}
 
-                {/* Table of shipments */}
-                <table className={'table-auto w-full border-collapse border border-gray-300'}>
-                    <thead>
-                        <tr className={'bg-gray-100'}>
-                            <th className={'border border-gray-300 px-4 py-2'}>Номер заказа</th>
-                            <th className={'border border-gray-300 px-4 py-2'}>Номер отслеживания</th>
-                            <th className={'border border-gray-300 px-4 py-2'}>Отправитель</th>
-                            <th className={'border border-gray-300 px-4 py-2'}>Получатель</th>
-                            <th className={'border border-gray-300 px-4 py-2'}>Статус</th>
+            {/* Table of shipments */}
+            <table className={'table-auto w-full border-collapse border border-gray-300'}>
+                <thead>
+                    <tr className={'bg-gray-100'}>
+                        <th className={'border border-gray-300 px-4 py-2'}>Номер заказа</th>
+                        <th className={'border border-gray-300 px-4 py-2'}>Номер отслеживания</th>
+                        <th className={'border border-gray-300 px-4 py-2'}>Отправитель</th>
+                        <th className={'border border-gray-300 px-4 py-2'}>Получатель</th>
+                        <th className={'border border-gray-300 px-4 py-2'}>Статус</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {shipments.map((shipment: any) => (
+                        <tr
+                            key={shipment.id}
+                            className={`cursor-pointer ${
+                                selectedShipment?.id === shipment.id ? 'bg-blue-100' : ''
+                            }`}
+                            onClick={() => handleRowClick(shipment)}
+                        >
+                            <td className={'border border-gray-300 px-4 py-2'}>{shipment.orderNumber}</td>
+                            <td className={'border border-gray-300 px-4 py-2'}>{shipment.trackingNumber}</td>
+                            <td className={'border border-gray-300 px-4 py-2'}>
+                                {shipment.senderCompany} ({shipment.senderPerson})
+                            </td>
+                            <td className={'border border-gray-300 px-4 py-2'}>
+                                {shipment.receiverPerson} ({shipment.receiverPhone})
+                            </td>
+                            <td className={'border border-gray-300 px-4 py-2'}>
+                                {statusTranslations[shipment.status] || shipment.status}
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        {shipments.map((shipment: any) => (
-                            <tr
-                                key={shipment.id}
-                                className={` cursor-pointer ${
-                                    selectedShipment?.id === shipment.id ? 'bg-blue-100' : ''
-                                }`}
-                                onClick={() => handleRowClick(shipment)}
-                            >
-                                <td className={'border border-gray-300 px-4 py-2'}>{shipment.orderNumber}</td>
-                                <td className={'border border-gray-300 px-4 py-2'}>{shipment.trackingNumber}</td>
-                                <td className={'border border-gray-300 px-4 py-2'}>
-                                    {shipment.senderCompany} ({shipment.senderPerson})
-                                </td>
-                                <td className={'border border-gray-300 px-4 py-2'}>
-                                    {shipment.receiverPerson} ({shipment.receiverPhone})
-                                </td>
-                                <td className={'border border-gray-300 px-4 py-2'}>
-                                    {statusTranslations[shipment.status] || shipment.status}
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
-        )
+                    ))}
+                </tbody>
+            </table>
+        </div>
+    </div>
+)
+
     }
