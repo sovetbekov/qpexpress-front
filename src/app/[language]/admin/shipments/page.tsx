@@ -1,335 +1,453 @@
-    'use client'
+'use client'
 
-    import React, { useState, useEffect } from 'react'
-    import { getShipments, getShipmentById, changeShipmentStatus, createSpedxOrder, getTrackingInfoByShipmentId } from '@/services/shipments'
-    import { isError } from '@/app/lib/utils'
+import React, { useState, useEffect } from 'react'
+import { getShipments, getShipmentById, changeShipmentStatus, createSpedxOrder, getTrackingInfoByShipmentId } from '@/services/shipments'
+import { isError } from '@/app/lib/utils'
+import ShipmentUpdateForm from './ShipmentUpdateForm'
 
-    // Translation mapping for statuses
-    const statusTranslations: { [key: string]: string } = {
-        AT_PICKUP_POINT: 'В пункте выдачи',
-        WAITING_AT_THE_WAREHOUSE: 'Ожидает на складе',
-        DELIVERED: 'Доставлено',
-        SENT_TO_KAZAKHSTAN: 'Отправлено в Казахстан',
-        GOING_THROUGH_CUSTOMS: 'Проходит таможню',
-        DELIVERING: 'Доставляется',
-        // Add more statuses as needed
+// Translation mapping for statuses
+const statusTranslations: { [key: string]: string } = {
+    AT_PICKUP_POINT: 'В пункте выдачи',
+    WAITING_AT_THE_WAREHOUSE: 'Ожидает на складе',
+    DELIVERED: 'Доставлено',
+    SENT_TO_KAZAKHSTAN: 'Отправлено в Казахстан',
+    GOING_THROUGH_CUSTOMS: 'Проходит таможню',
+    DELIVERING: 'Доставляется',
+    // Add more statuses as needed
+}
+
+// Translation mapping for field names
+const fieldTranslations: { [key: string]: string } = {
+    id: 'ID',
+    createdAt: 'Дата создания',
+    sendDate: 'Дата отправки',
+    updatedAt: 'Дата обновления',
+    orderNumber: 'Номер заказа',
+    trackingNumber: 'Номер отслеживания',
+    senderCompany: 'Компания отправителя',
+    senderPerson: 'Контактное лицо отправителя',
+    senderPhone: 'Телефон отправителя',
+    senderTown: 'Город отправителя',
+    senderAddress: 'Адрес отправителя',
+    receiverPerson: 'Получатель',
+    receiverPhone: 'Телефон получателя',
+    receiverEmail: 'Email получателя',
+    receiverTown: 'Город получателя',
+    receiverAddress: 'Адрес получателя',
+    receiverInn: 'ИНН получателя',
+    zipCode: 'Почтовый индекс',
+    products: 'Продукты',
+    quantity: 'Количество',
+    price: 'Цена',
+    status: 'Статус',
+    isDeleted: 'Удалено',
+    enclosure: 'Вложение',
+    labelNumber: 'Номер этикетки',
+    spedxOrderResponseNumber: 'Номер ответа Spedx',
+}
+
+export default function Page() {
+    const [shipments, setShipments] = useState<any[]>([])
+    const [selectedShipment, setSelectedShipment] = useState<any | null>(null)
+    const [trackingInfo, setTrackingInfo] = useState<any | null>(null)
+    const [loading, setLoading] = useState<boolean>(true)
+    const [showDetails, setShowDetails] = useState<boolean>(false)
+    const [error, setError] = useState<string | null>(null)
+    const [newStatus, setNewStatus] = useState<string>('')
+    const [statusFilter, setStatusFilter] = useState<string>('')
+    const [showUpdateForm, setShowUpdateForm] = useState<boolean>(false)
+    const [selectedShipmentIds, setSelectedShipmentIds] = useState<string[]>([])
+
+    // Fetch all shipments on component mount
+    useEffect(() => {
+        async function fetchShipments() {
+            setLoading(true)
+            const response = await getShipments()
+            if (isError(response)) {
+                setError('Ошибка при загрузке списка посылок')
+            } else {
+                setShipments(response.data)
+            }
+            setLoading(false)
+        }
+        fetchShipments()
+    }, [])
+
+    // Fetch details of a specific shipment
+    async function handleShipmentClick(shipmentId: string) {
+        setLoading(true)
+        setShowDetails(true)
+        const response = await getShipmentById(shipmentId)
+        if (isError(response)) {
+            setError('Ошибка при загрузке данных о посылке')
+        } else {
+            setSelectedShipment(response.data)
+            setTrackingInfo(null)
+        }
+        setLoading(false)
     }
 
-    // Translation mapping for field names
-    const fieldTranslations: { [key: string]: string } = {
-        id: 'ID',
-        createdAt: 'Дата создания',
-        sendDate: 'Дата отправки',
-        updatedAt: 'Дата обновления',
-        orderNumber: 'Номер заказа',
-        trackingNumber: 'Номер отслеживания',
-        senderCompany: 'Компания отправителя',
-        senderPerson: 'Контактное лицо отправителя',
-        senderPhone: 'Телефон отправителя',
-        senderTown: 'Город отправителя',
-        senderAddress: 'Адрес отправителя',
-        receiverPerson: 'Получатель',
-        receiverPhone: 'Телефон получателя',
-        receiverEmail: 'Email получателя',
-        receiverTown: 'Город получателя',
-        receiverAddress: 'Адрес получателя',
-        receiverInn: 'ИНН получателя',
-        zipCode: 'Почтовый индекс',
-        products: 'Продукты',
-        quantity: 'Количество',
-        price: 'Цена',
-        status: 'Статус',
-        isDeleted: 'Удалено',
-        enclosure: 'Вложение',
-        labelNumber: 'Номер этикетки',
-        spedxOrderResponseNumber: 'Номер ответа Spedx',
+    // Fetch tracking info for a specific shipment
+    async function handleSpedxShipmentClick(shipmentId: string) {
+        setLoading(true)
+        const response = await getTrackingInfoByShipmentId(shipmentId)
+        if (isError(response)) {
+            setError('Ошибка при загрузке информации о трекинге')
+        } else {
+            setTrackingInfo(response.data.order?.statusHistory?.statuses || [])
+        }
+        setLoading(false)
     }
-    export default function Page() {
-        const [shipments, setShipments] = useState<any[]>([])
-        const [selectedShipment, setSelectedShipment] = useState<any | null>(null)
-        const [trackingInfo, setTrackingInfo] = useState<any | null>(null)
-        const [loading, setLoading] = useState<boolean>(true)
-        const [showDetails, setShowDetails] = useState<boolean>(false)
-        const [error, setError] = useState<string | null>(null)
-        const [newStatus, setNewStatus] = useState<string>('')
 
-        // Fetch all shipments on component mount
-        useEffect(() => {
-            async function fetchShipments() {
-                setLoading(true)
-                const response = await getShipments()
-                if (isError(response)) {
-                    setError('Ошибка при загрузке списка посылок')
-                } else {
-                    setShipments(response.data)
-                }
-                setLoading(false)
-            }
-            fetchShipments()
-        }, [])
-
-
-        // Fetch details of a specific shipment
-        async function handleShipmentClick(shipmentId: string) {
-            setLoading(true)
-                    setShowDetails(true)
-
-            const response = await getShipmentById(shipmentId)
+    // Handle status change for multiple shipments
+    async function handleStatusChange() {
+        if (!selectedShipmentIds.length || !newStatus) return
+        setLoading(true)
+        let errorOccurred = false
+        const updatedShipments = [...shipments]
+        for (const id of selectedShipmentIds) {
+            const response = await changeShipmentStatus(id, newStatus)
             if (isError(response)) {
-                setError('Ошибка при загрузке данных о посылке')
+                errorOccurred = true
             } else {
-                setSelectedShipment(response.data)
-                setTrackingInfo(null) // Reset tracking info when viewing shipment details
+                const idx = updatedShipments.findIndex(s => s.id === id)
+                if (idx !== -1) updatedShipments[idx].status = newStatus
             }
-            setLoading(false)
         }
-
-        // Fetch tracking info for a specific shipment
-        async function handleSpedxShipmentClick(shipmentId: string) {
-            setLoading(true)
-            const response = await getTrackingInfoByShipmentId(shipmentId)
-            console.log('Tracking info response:', response)
-            if (isError(response)) {
-                setError('Ошибка при загрузке информации о трекинге')
-            } else {
-                setTrackingInfo(response.data.order?.statusHistory?.statuses || [])
-            }
-            setLoading(false)
+        setShipments(updatedShipments)
+        setLoading(false)
+        if (errorOccurred) {
+            setError('Ошибка при изменении статуса одной или нескольких посылок')
+        } else {
+            alert('Статус успешно обновлен для выбранных посылок')
         }
+    }
 
-        // Handle status change
-        async function handleStatusChange() {
-            if (!selectedShipment || !newStatus) return
-            setLoading(true)
-            const response = await changeShipmentStatus(selectedShipment.id, newStatus)
-            if (isError(response)) {
-                setError('Ошибка при изменении статуса')
-            } else {
-                alert('Статус успешно обновлен')
-                const updatedShipments = shipments.map((shipment) =>
-                    shipment.id === selectedShipment.id ? { ...shipment, status: newStatus } : shipment
-                )
-                setShipments(updatedShipments)
-                setSelectedShipment({ ...selectedShipment, status: newStatus })
-            }
-            setLoading(false)
+    // Handle create Spedx order
+    async function handleCreateOrder() {
+        if (!selectedShipment) return
+        setLoading(true)
+        const response = await createSpedxOrder(selectedShipment.id)
+        if (isError(response)) {
+            setError(`Ошибка при создании заказа: ${response.error}`)
+        } else {
+            alert(`Заказ успешно создан!`)
         }
+        setLoading(false)
+    }
 
-        // Handle create Spedx order
-        async function handleCreateOrder() {
-            if (!selectedShipment) return
-            setLoading(true)
-            const response = await createSpedxOrder(selectedShipment.id)
-            if (isError(response)) {
-                setError(`Ошибка при создании заказа: ${response.error}`)
-            } else {
-                alert(`Заказ успешно создан!`)
-            }
-            setLoading(false)
-        }
+    // Handle row click to select a shipment
+    function handleRowClick(shipment: any) {
+        setSelectedShipment(shipment)
+    }
 
-        // Handle row click to select a shipment
-        function handleRowClick(shipment: any) {
-            setSelectedShipment(shipment)
-        }
+    // Handle checkbox selection for bulk actions
+    function handleCheckboxChange(id: string) {
+        setSelectedShipmentIds(prev =>
+            prev.includes(id)
+                ? prev.filter(sid => sid !== id)
+                : [...prev, id]
+        )
+    }
 
-        function reset() {
-            setShowDetails(false);
-            setTrackingInfo(null);
-        }
+    function reset() {
+        setShowDetails(false)
+        setTrackingInfo(null)
+    }
 
-        // Render loading state
-        if (loading) {
-            return <div>Загрузка...</div>
-        }
+    // Filtered shipments
+    const filteredShipments = statusFilter
+        ? shipments.filter((shipment) => shipment.status === statusFilter)
+        : shipments
 
-        // Render error state
-        if (error) {
-            return <div>{error}</div>
-        }
+    // Render loading state
+    if (loading) {
+        return <div>Загрузка...</div>
+    }
 
-        // Render tracking info if available
-        if (trackingInfo) {
-            return (
-                <div className={'md:p-2'}>
-                    <button
-                        onClick={() => reset()}
-                        className={'text-blue-500 underline mb-4'}
-                    >
-                        Назад к деталям посылки
-                    </button>
-                    <div className={'bg-white p-6 rounded-lg shadow-md'}>
-                        <h1 className={'text-xl font-bold mb-4'}>История трекинга</h1>
-                        <ul className={'list-disc pl-6'}>
-                            {trackingInfo.map((status: any, index: number) => (
-                                <li key={index} className={'mb-4'}>
-                                    <p><strong>Событие:</strong> {status.title}</p>
-                                    <p><strong>Сообщение:</strong> {status.message}</p>
-                                    <p><strong>Время:</strong> {status.eventTime}</p>
-                                    <p><strong>Местоположение:</strong> {status.eventTown}, {status.country}</p>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-                </div>
-            )
-        }
+    // Render error state
+    if (error) {
+        return <div>{error}</div>
+    }
 
-        // Render shipment details if a shipment is selected
-        if (showDetails) {
-            return (
-                <div className={'md:p-2'}>
-                    <button
-                        onClick={() => reset()}
-                        className={'text-blue-500 underline mb-4'}
-                    >
-                        Назад к списку
-                    </button>
-                    <div className={'bg-white p-6 rounded-lg shadow-md'}>
-                        <h1 className={'text-xl font-bold mb-4'}>Детали посылки</h1>
-                    
-                        <div className={'mt-6 mb-6'}>
-                            <button
-                                onClick={() => handleSpedxShipmentClick(selectedShipment.id)}
-                                className={'bg-blue-500 text-white px-4 py-2 ml-2 rounded-md'}
-                            >
-                                Получить инфо SpedX
-                            </button>
-                        </div>
-                        {selectedShipment && Object.entries(selectedShipment).map(([key, value]) => {
-                            if (key === 'products' && Array.isArray(value)) {
-                                return (
-                                    <div key={key}>
-                                        <p><strong>{fieldTranslations[key] || key}:</strong></p>
-                                        <ul className={'list-disc pl-6'}>
-                                            {value.map((product: any) => (
-                                                <li key={product.id} className={'mb-4'}>
-                                                    <p><strong>ID:</strong> {product.id}</p>
-                                                    <p><strong>Название:</strong> {product.name}</p>
-                                                    <p><strong>Описание:</strong> {product.description}</p>
-                                                    <p><strong>Количество:</strong> {product.quantity}</p>
-                                                    <p><strong>Цена:</strong> {product.price}</p>
-                                                    <p><strong>Вес:</strong> {product.weight}</p>
-                                                    <p><strong>Штрихкод:</strong> {product.barCode}</p>
-                                                    <p><strong>HS-код:</strong> {product.hsCode}</p>
-                                                    <p><strong>Удалено:</strong> {product.isDeleted ? 'Да' : 'Нет'}</p>
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    </div>
-                                )
-                            }
-                            return (
-                                <p key={key}>
-                                    <strong>{fieldTranslations[key] || key}:</strong>{' '}
-                                    {Array.isArray(value) ? JSON.stringify(value) : String(value)}
-                                </p>
-                            )
-                        })}
-                    </div>
-                </div>
-            )
-        }
-
-        // ...existing code...
-return (
-    <div className={'md:p-2'}>
-        <h1 className={'text-xl font-bold mb-4'}>Посылки</h1>
-
-        <div style={{ maxHeight: '70vh', overflowY: 'auto', position: 'relative' }}>
-            {/* Actions for selected shipment */}
-            {selectedShipment && (
-                <div
-                    className={'mb-4 p-4 bg-gray-100 rounded-md z-10'}
-                    style={{
-                        position: 'sticky',
-                        top: 0,
-                        boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
-                    }}
+    // Render tracking info if available
+    if (trackingInfo) {
+        return (
+            <div className={'md:p-2'}>
+                <button
+                    onClick={() => reset()}
+                    className={'text-blue-500 underline mb-4'}
                 >
-                    <div className="flex flex-row gap-6 items-center">
-                        <h2 className={'text-lg font-bold mb-2'}>
-                            Выбранная посылка: {selectedShipment.orderNumber}
-                        </h2>
-                        <div className={'mb-4'}>
-                            <button
-                                onClick={() => handleShipmentClick(selectedShipment.id)}
-                                className={'text-blue px-0 pt-2 rounded-md'}
-                            >
-                                Показать детали
-                            </button>
-                        </div>
-                    </div>
-                    <div className={'flex items-center'}>
-                        <label htmlFor="status" className={'block font-bold mr-2'}>
-                            Изменить статус:
-                        </label>
-                        <select
-                            id="status"
-                            value={newStatus}
-                            onChange={(e) => setNewStatus(e.target.value)}
-                            className={'border border-gray-300 rounded-md px-4 py-2 mr-4'}
-                        >
-                            <option value="">Выберите статус</option>
-                            {Object.keys(statusTranslations).map((status) => (
-                                <option key={status} value={status}>
-                                    {statusTranslations[status]}
-                                </option>
-                            ))}
-                        </select>
-                        <button
-                            onClick={handleStatusChange}
-                            className={'bg-blue-500 text-white px-4 py-2 rounded-md mr-4'}
-                        >
-                            Обновить статус
-                        </button>
-                        <button
-                            onClick={handleCreateOrder}
-                            className={'bg-green-500 text-white px-4 py-2 rounded-md'}
-                        >
-                            Создать заказ
-                        </button>
-                    </div>
+                    Назад к деталям посылки
+                </button>
+                <div className={'bg-white p-6 rounded-lg shadow-md'}>
+                    <h1 className={'text-xl font-bold mb-4'}>История трекинга</h1>
+                    <ul className={'list-disc pl-6'}>
+                        {trackingInfo.map((status: any, index: number) => (
+                            <li key={index} className={'mb-4'}>
+                                <p><strong>Событие:</strong> {status.title}</p>
+                                <p><strong>Сообщение:</strong> {status.message}</p>
+                                <p><strong>Время:</strong> {status.eventTime}</p>
+                                <p><strong>Местоположение:</strong> {status.eventTown}, {status.country}</p>
+                            </li>
+                        ))}
+                    </ul>
                 </div>
+            </div>
+        )
+    }
+
+    // Render shipment details if a shipment is selected
+    if (showDetails) {
+        return (
+            <div className={'md:p-2'}>
+                <button
+                    onClick={() => reset()}
+                    className={'text-blue-500 underline mb-4'}
+                >
+                    Назад к списку
+                </button>
+                <div className={'bg-white p-6 rounded-lg shadow-md'}>
+                    <h1 className={'text-xl font-bold mb-4'}>Детали посылки</h1>
+                    <div className={'mt-6 mb-6'}>
+                        <button
+                            onClick={() => handleSpedxShipmentClick(selectedShipment.id)}
+                            className={'bg-blue-500 text-white px-4 py-2 ml-2 rounded-md'}
+                        >
+                            Получить инфо SpedX
+                        </button>
+                    </div>
+                    {selectedShipment && Object.entries(selectedShipment).map(([key, value]) => {
+                        if (key === 'products' && Array.isArray(value)) {
+                            return (
+                                <div key={key}>
+                                    <p><strong>{fieldTranslations[key] || key}:</strong></p>
+                                    <ul className={'list-disc pl-6'}>
+                                        {value.map((product: any) => (
+                                            <li key={product.id} className={'mb-4'}>
+                                                <p><strong>ID:</strong> {product.id}</p>
+                                                <p><strong>Название:</strong> {product.name}</p>
+                                                <p><strong>Описание:</strong> {product.description}</p>
+                                                <p><strong>Количество:</strong> {product.quantity}</p>
+                                                <p><strong>Цена:</strong> {product.price}</p>
+                                                <p><strong>Вес:</strong> {product.weight}</p>
+                                                <p><strong>Штрихкод:</strong> {product.barCode}</p>
+                                                <p><strong>HS-код:</strong> {product.hsCode}</p>
+                                                <p><strong>Удалено:</strong> {product.isDeleted ? 'Да' : 'Нет'}</p>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            )
+                        }
+                        return (
+                            <p key={key}>
+                                <strong>{fieldTranslations[key] || key}:</strong>{' '}
+                                {Array.isArray(value) ? JSON.stringify(value) : String(value)}
+                            </p>
+                        )
+                    })}
+                </div>
+            </div>
+        )
+    }
+
+    return (
+        <div className={'md:p-2'}>
+            <h1 className={'text-xl font-bold mb-4'}>Посылки</h1>
+
+            {selectedShipment && showUpdateForm && (
+                <ShipmentUpdateForm
+                    shipment={selectedShipment}
+                    onUpdated={(updated) => {
+                        setSelectedShipment(updated)
+                        setShowUpdateForm(false)
+                        // Optionally update shipments list here
+                    }}
+                    onCancel={() => setShowUpdateForm(false)}
+                />
             )}
 
-            {/* Table of shipments */}
-            <table className={'table-auto w-full border-collapse border border-gray-300'}>
-                <thead>
-                    <tr className={'bg-gray-100'}>
-                        <th className={'border border-gray-300 px-4 py-2'}>Номер заказа</th>
-                        <th className={'border border-gray-300 px-4 py-2'}>Номер отслеживания</th>
-                        <th className={'border border-gray-300 px-4 py-2'}>Отправитель</th>
-                        <th className={'border border-gray-300 px-4 py-2'}>Получатель</th>
-                        <th className={'border border-gray-300 px-4 py-2'}>Статус</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {shipments.map((shipment: any) => (
-                        <tr
-                            key={shipment.id}
-                            className={`cursor-pointer ${
-                                selectedShipment?.id === shipment.id ? 'bg-blue-100' : ''
-                            }`}
-                            onClick={() => handleRowClick(shipment)}
-                        >
-                            <td className={'border border-gray-300 px-4 py-2'}>{shipment.orderNumber}</td>
-                            <td className={'border border-gray-300 px-4 py-2'}>{shipment.trackingNumber}</td>
-                            <td className={'border border-gray-300 px-4 py-2'}>
-                                {shipment.senderCompany} ({shipment.senderPerson})
-                            </td>
-                            <td className={'border border-gray-300 px-4 py-2'}>
-                                {shipment.receiverPerson} ({shipment.receiverPhone})
-                            </td>
-                            <td className={'border border-gray-300 px-4 py-2'}>
-                                {statusTranslations[shipment.status] || shipment.status}
-                            </td>
-                        </tr>
+            {/* Status filter dropdown */}
+            <div className="mb-4 mt-4 flex items-center gap-4">
+                <label htmlFor="statusFilter" className="font-bold">
+                    Фильтр по статусу:
+                </label>
+                <select
+                    id="statusFilter"
+                    value={statusFilter}
+                    onChange={(e) => setStatusFilter(e.target.value)}
+                    className="border border-gray-300 rounded-md px-4 py-2"
+                >
+                    <option value="">Все</option>
+                    {Object.keys(statusTranslations).map((status) => (
+                        <option key={status} value={status}>
+                            {statusTranslations[status]}
+                        </option>
                     ))}
-                </tbody>
-            </table>
-        </div>
-    </div>
-)
+                </select>
+            </div>
 
-    }
+            {/* Bulk status update actions */}
+            {/* <div className="mb-4 flex items-center gap-4">
+                <label htmlFor="bulkStatus" className="font-bold">
+                    Изменить статус выбранных:
+                </label>
+                <select
+                    id="bulkStatus"
+                    value={newStatus}
+                    onChange={(e) => setNewStatus(e.target.value)}
+                    className="border border-gray-300 rounded-md px-4 py-2"
+                >
+                    <option value="">Выберите статус</option>
+                    {Object.keys(statusTranslations).map((status) => (
+                        <option key={status} value={status}>
+                            {statusTranslations[status]}
+                        </option>
+                    ))}
+                </select>
+                <button
+                    onClick={handleStatusChange}
+                    className={'bg-blue-500 text-white px-4 py-2 rounded-md'}
+                    disabled={!selectedShipmentIds.length || !newStatus}
+                >
+                    Обновить статус выбранных
+                </button>
+            </div> */}
+
+            <div style={{ maxHeight: '70vh', overflowY: 'auto', position: 'relative' }}>
+                {/* Actions for selected shipment */}
+                {selectedShipment && (
+                    <div
+                        className={'mb-4 p-4 bg-gray-100 rounded-md z-10'}
+                        style={{
+                            position: 'sticky',
+                            top: 0,
+                            boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
+                        }}
+                    >
+                        <div className="flex flex-row gap-6 items-center">
+                        {selectedShipmentIds.length < 2 && (
+                            <div className='flex flex-row items-center gap-4'>
+                                <h2 className={'text-lg font-bold mb-2'}>
+                                    Выбранная посылка: {selectedShipment.orderNumber}
+                                </h2>
+                                <div className={'mb-4'}>
+                                    <button
+                                        onClick={() => handleShipmentClick(selectedShipment.id)}
+                                        className={'text-blue px-0 pt-2 rounded-md'}
+                                    >
+                                        Показать детали
+                                    </button>
+                                </div>
+                                {selectedShipment && !showUpdateForm && (
+                                    <div className="mb-4">
+                                        <button onClick={() => setShowUpdateForm(true)} className="text-blue px-0 pt-2 rounded-md">
+                                            Редактировать
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+                        )}
+                            
+                            
+                        </div>
+                        <div className={'flex items-center'}>
+                            <label htmlFor="status" className={'block font-bold mr-2'}>
+                                Изменить статус:
+                            </label>
+                            <select
+                                id="status"
+                                value={newStatus}
+                                onChange={(e) => setNewStatus(e.target.value)}
+                                className={'border border-gray-300 rounded-md px-4 py-2 mr-4'}
+                            >
+                                <option value="">Выберите статус</option>
+                                {Object.keys(statusTranslations).map((status) => (
+                                    <option key={status} value={status}>
+                                        {statusTranslations[status]}
+                                    </option>
+                                ))}
+                            </select>
+                            <button
+                                onClick={() => {
+                                    setSelectedShipmentIds([selectedShipment.id])
+                                    handleStatusChange()
+                                }}
+                                className={'bg-blue-500 text-white px-4 py-2 rounded-md mr-4'}
+                                disabled={!newStatus}
+                            >
+                                Обновить статус
+                            </button>
+                            <button
+                                onClick={handleCreateOrder}
+                                className={'bg-green-500 text-white px-4 py-2 rounded-md'}
+                            >
+                                Создать заказ
+                            </button>
+                        </div>
+                    </div>
+                )}
+
+                {/* Table of shipments */}
+                <table className={'table-auto w-full border-collapse border border-gray-300'}>
+                    <thead>
+                        <tr className={'bg-gray-100'}>
+                            <th className={'border border-gray-300 px-4 py-2'}>
+                                <input
+                                    type="checkbox"
+                                    checked={filteredShipments.length > 0 && selectedShipmentIds.length === filteredShipments.length}
+                                    onChange={e => {
+                                        if (e.target.checked) {
+                                            setSelectedShipmentIds(filteredShipments.map(s => s.id))
+                                        } else {
+                                            setSelectedShipmentIds([])
+                                        }
+                                    }}
+                                />
+                            </th>
+                            <th className={'border border-gray-300 px-4 py-2'}>Номер заказа</th>
+                            <th className={'border border-gray-300 px-4 py-2'}>Номер отслеживания</th>
+                            <th className={'border border-gray-300 px-4 py-2'}>Отправитель</th>
+                            <th className={'border border-gray-300 px-4 py-2'}>Получатель</th>
+                            <th className={'border border-gray-300 px-4 py-2'}>Статус</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {filteredShipments.map((shipment: any) => (
+                            <tr
+                                key={shipment.id}
+                                className={`cursor-pointer ${
+                                    selectedShipmentIds.includes(shipment.id) ? 'bg-blue-100' : ''
+                                }`}
+                                onClick={() => handleRowClick(shipment)}
+                            >
+                                <td className={'border border-gray-300 px-4 py-2'}>
+                                    <input
+                                        type="checkbox"
+                                        checked={selectedShipmentIds.includes(shipment.id)}
+                                        onChange={e => {
+                                            e.stopPropagation()
+                                            handleCheckboxChange(shipment.id)
+                                        }}
+                                    />
+                                </td>
+                                <td className={'border border-gray-300 px-4 py-2'}>{shipment.orderNumber}</td>
+                                <td className={'border border-gray-300 px-4 py-2'}>{shipment.trackingNumber}</td>
+                                <td className={'border border-gray-300 px-4 py-2'}>
+                                    {shipment.senderCompany} ({shipment.senderPerson})
+                                </td>
+                                <td className={'border border-gray-300 px-4 py-2'}>
+                                    {shipment.receiverPerson} ({shipment.receiverPhone})
+                                </td>
+                                <td className={'border border-gray-300 px-4 py-2'}>
+                                    {statusTranslations[shipment.status] || shipment.status}
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    )
+}

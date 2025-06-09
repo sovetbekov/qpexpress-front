@@ -68,6 +68,8 @@ export interface ShipmentData {
   isDeleted: boolean
   enclosure: string
   labelNumber: string
+  service: string
+  pickupDate: string
   spedxOrderResponseNumber: string
 }
 

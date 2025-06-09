@@ -51,6 +51,24 @@ export async function changeShipmentStatus(id: string, status: string) {
 }
 
 /**
+ * Update a shipment by its ID.
+ * @param {string} id - The UUID of the shipment.
+ * @param {object} data - The shipment data to update.
+ * @returns {Promise<any>} A promise resolving to the updated shipment.
+ */
+export async function updateShipment(id: string, data: any) {
+  return await makeRequest<any>(`v1/shipments/${id}`, {
+    requestOptions: {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    },
+  })
+}
+
+/**
  * Create an order in Spedx for a shipment.
  * @param {string} shipmentId - The UUID of the shipment.
  * @returns {Promise<any>} A promise resolving to the Spedx order creation response.
