@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { getShipments, getShipmentById, changeShipmentStatus, createSpedxOrder, getTrackingInfoByShipmentId } from '@/services/shipments'
+import { getShipments, getShipmentById, changeShipmentStatus, createSpedxOrder, createPickupRequest, getTrackingInfoByShipmentId } from '@/services/shipments'
 import { isError } from '@/app/lib/utils'
 import ShipmentUpdateForm from './ShipmentUpdateForm'
 
@@ -132,6 +132,21 @@ export default function Page() {
             setError(`Ошибка при создании заказа: ${response.error}`)
         } else {
             alert(`Заказ успешно создан!`)
+        }
+        setLoading(false)
+    }
+
+    // Handle create pick order
+    async function handlePickupRequest() {
+        if (!selectedShipment) return
+        setLoading(true)
+        console.log(selectedShipment.id)
+
+        const response = await createPickupRequest(selectedShipment.id)
+            if (isError(response)) {
+            setError(`Ошибка при создании заявки на забор: ${response.error}`)
+        } else {
+            alert(`Заявка на забор успешно создан!`)
         }
         setLoading(false)
     }
@@ -311,7 +326,7 @@ export default function Page() {
                 </select>
             </div>
 
-            <div className="w-full overflow-x-auto" style={{ maxHeight: '70vh' }}>
+            <div className="w-full overflow-x-auto" style={{ maxHeight: '90vh' }}>
                 <div
                     className="min-w-[1000px] max-w-full"
                     style={{
@@ -341,17 +356,17 @@ export default function Page() {
                                         <h2 className="text-lg font-bold mb-2 md:mb-0">
                                             Выбранная посылка: {selectedShipment.orderNumber}
                                         </h2>
-                                        <div>
+                                        <div className='ml-2'>
                                             <button
                                                 onClick={() => handleShipmentClick(selectedShipment.id)}
-                                                className="text-blue px-0 pt-2 rounded-md"
+                                                className="text-blue px-0 pt-0 rounded-md"
                                             >
                                                 Показать детали
                                             </button>
                                         </div>
                                         {selectedShipment && !showUpdateForm && (
                                             <div>
-                                                <button onClick={() => setShowUpdateForm(true)} className="text-blue px-0 pt-2 rounded-md">
+                                                <button onClick={() => setShowUpdateForm(true)} className="text-blue px-0 pt-0 rounded-md">
                                                     Редактировать
                                                 </button>
                                             </div>
@@ -360,7 +375,9 @@ export default function Page() {
                                 )}
                             </div>
                             <div className="flex flex-col md:flex-row items-start md:items-center gap-4 mt-4">
-                                <label htmlFor="status" className="block font-bold mr-2">
+                                  
+                                <div className="">
+                                      <label htmlFor="status" className="block font-bold mr-1 mb-1">
                                     Изменить статус:
                                 </label>
                                 <select
@@ -376,23 +393,33 @@ export default function Page() {
                                         </option>
                                     ))}
                                 </select>
-                                <button
-                                    onClick={() => {
-                                        setSelectedShipmentIds([selectedShipment.id])
-                                        handleStatusChange()
-                                    }}
-                                    className="bg-blue-500 text-white px-4 py-2 rounded-md mr-4"
-                                    disabled={!newStatus}
-                                >
-                                    Обновить статус
-                                </button>
-                                <button
+                                </div>
+                                <div className="flex flex-row gap-4 mt-4">
+                                    <button
+                                        onClick={() => {
+                                            setSelectedShipmentIds([selectedShipment.id])
+                                            handleStatusChange()
+                                        }}
+                                        className="bg-blue-500 text-white px-4 py-2 rounded-md "
+                                        disabled={!newStatus}
+                                    >
+                                        Обновить статус
+                                    </button>
+                                    <button
                                     onClick={handleCreateOrder}
                                     className="bg-green-500 text-white px-4 py-2 rounded-md"
                                 >
                                     Создать заказ
                                 </button>
+                                <button
+                                    onClick={handlePickupRequest}
+                                    className="bg-green-500 text-white px-4 py-2 rounded-md"
+                                >
+                                    Подать заявку на забор
+                                </button>
+                                </div>
                             </div>
+                            
                         </div>
                     )}
 

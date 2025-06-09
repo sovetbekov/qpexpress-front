@@ -81,6 +81,14 @@ export async function createSpedxOrder(shipmentId: string) {
   })
 }
 
+export async function createPickupRequest(shipmentId: string) {
+  return await makeRequest<any>(`v1/spedx-service/create-request/${shipmentId}`, {
+    requestOptions: {
+      method: 'POST',
+    },
+  })
+}
+
 /**
  * Fetch tracking information by shipment ID.
  * @param {string} shipmentId - The UUID of the shipment.
