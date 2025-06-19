@@ -9,6 +9,38 @@ export type CountryData = {
   nameChn: string;
 };
 
+
+// Successful response data item interface
+export interface ShipterOrderSuccessItem {
+  OrderNum: string;
+  TrackingNo: string;
+  ReceiptNum: string;
+}
+
+// Error response data item interface
+export interface ShipterOrderErrorItem {
+  OrderNo1: string;
+  ErrMsgs: string[];
+}
+
+// Base response interface with common properties
+export interface ShipterServiceBaseResponse {
+  result: "success" | "fail";
+  data: string;
+}
+
+// Success response interface
+export interface ShipterServiceSuccessResponse extends ShipterServiceBaseResponse {
+  result: "success";
+  data2: ShipterOrderSuccessItem[];
+}
+
+// Error response interface
+export interface ShipterServiceErrorResponse extends ShipterServiceBaseResponse {
+  result: "fail";
+  data2: ShipterOrderErrorItem[];
+}
+
 export type CityData = {
   id: string;
   name: string;

@@ -1,7 +1,7 @@
 'use server'
 
 import { revalidateTag } from 'next/cache'
-import { EditOrderData, FileMetaData, GoodData, OrderData } from '@/types/entities'
+import { EditOrderData, FileMetaData, GoodData, OrderData, ShipterServiceErrorResponse, ShipterServiceSuccessResponse } from '@/types/entities'
 import { getLanguageBundle, makeRequest } from '@/services/utils'
 
 type CreateOrderRequest = {
@@ -40,6 +40,23 @@ export async function createGood(goodData: FormData) {
     },
     postRequest: () => revalidateTag('goods'),
   })
+}
+
+
+// Combined type that can be either success or error
+type ShipterServiceResponse = ShipterServiceSuccessResponse | ShipterServiceErrorResponse;
+
+/**
+ * Create a Shipter service order
+ * @param orderId - UUID of the order
+ * @returns Response with order information or error messages
+ */
+export async function createShipterServiceOrder(orderId: string) {
+  return await makeRequest<ShipterServiceResponse>(`v1/shipter-service/${orderId}`, {
+    requestOptions: {
+      method: 'POST'
+    }
+  });
 }
 
 export async function createOrder(orderData: CreateOrderRequest, language: string) {
@@ -122,3 +139,5 @@ export async function updateOrder(data: EditOrderData, orderId: string) {
     },
   })
 }
+
+
