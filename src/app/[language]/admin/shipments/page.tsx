@@ -14,6 +14,7 @@ const statusTranslations: { [key: string]: string } = {
     GOING_THROUGH_CUSTOMS: 'Проходит таможню',
     DELIVERING: 'Доставляется',
     // Add more statuses as needed
+    DELIVERED_IN_ALMATY_HUB: "Доставлено сортировочный цент Алматы"
 }
 
 // Translation mapping for field names

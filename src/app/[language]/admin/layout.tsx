@@ -64,7 +64,12 @@ export default function Layout({children, params: {language}}: Readonly<Props>) 
         {
             link: `/${language}/admin/shipments`,
             title: t('shipments'),
-        }
+        },
+        {
+            link: `/${language}/admin/products`,
+            title: t('products'),
+        },
+
     ]
 
     return (
