@@ -68,6 +68,19 @@ export async function updateShipment(id: string, data: any) {
   });
 }
 
+type SpedxPickupRequest = {
+  service: string;
+  pickupDate: string;
+};
+
+type SpedxPickupResponse = {
+  SpedxOrderNo: string;
+  Error: number;
+  ErrorMessage: string;
+  ErrorMessageRu: string;
+  SpedxOrderPrice: number;
+};
+
 /**
  * Create an order in Spedx for a shipment.
  * @param {string} shipmentId - The UUID of the shipment.
@@ -83,19 +96,6 @@ export async function createSpedxOrder(shipmentId: string) {
     }
   );
 }
-
-type SpedxPickupRequest = {
-  service: string;
-  pickupDate: string;
-};
-
-type SpedxPickupResponse = {
-  SpedxOrderNo: string;
-  Error: number;
-  ErrorMessage: string;
-  ErrorMessageRu: string;
-  SpedxOrderPrice: number;
-};
 
 export async function createPickupRequest(data: SpedxPickupRequest) {
   console.log("API Request data:", data); // Debug log

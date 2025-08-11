@@ -2,13 +2,43 @@
 
 import { makeRequest } from "@/services/utils";
 
-// Types for the products API
-export interface ProductItem {
-  productId: string;
-  poolTotal: number;
+// Types for the search products API
+export interface SearchProductsRequest {
+  pageSize: number;
+  currentPage: number;
+  keyword: string;
 }
 
-// Types for detailed product information
+export interface ProductSearchResult {
+  productId: string;
+  mainImageUrl: string;
+  title: string;
+  titleCn: string;
+  price: number;
+  repurchaseRate: string;
+  monthSold: number;
+  tradeScore: string;
+  firstCategoryId: number;
+  secondCategoryId: number;
+  thirdCategoryId: number;
+}
+
+export interface SearchProductsData {
+  totalRecords: number;
+  totalPage: number;
+  pageSize: number;
+  currentPage: number;
+  records: ProductSearchResult[];
+}
+
+export interface SearchProductsResponse {
+  code: number;
+  msg: string;
+  data: SearchProductsData[];
+  requestId: string;
+}
+
+// Types for detailed product information (keep for reference if needed)
 export interface ProductAttribute {
   attrId: string;
   attrName: string;
@@ -17,49 +47,24 @@ export interface ProductAttribute {
   valueCn: string;
 }
 
-// Update your ProductDetails interface to match the actual API response structure
-export interface ProductDetails {
-  status: string;
-
-    code: number;
-    msg: string;
-    data: Array<{
-      productId: string;
-      title: string;
-      titleCn: string;
-      categoryId: string;
-      description: string;
-      mainVideo?: string;
-      images: string[];
-      attributes: ProductAttribute[];
-      skuInfos?: any[];
-      saleInfo?: any;
-      minOrderQuantity?: number;
-      sellerDataInfo?: any;
-      status?: string;
-    }>;
-    requestId: string;
-
+// Excel generation request type
+export interface ExcelGenerationRequest {
+  pageSize: number;
+  currentPage: number;
+  keyword: string;
 }
 
 /**
- * Fetches a paginated list of products from the API
+ * Search for products using keyword
  *
- * @param {Object} options - Request parameters
- * @param {string} options.language - The language code (e.g., 'en', 'ru')
- * @param {number} options.pageSize - Number of items per page
- * @param {number} options.currentPage - Current page number
- * @returns {Promise<ProductItem[]>} A promise resolving to the product list
+ * @param {SearchProductsRequest} params - Search parameters
+ * @returns {Promise<SearchProductsResponse>} A promise resolving to the search results
  */
-export async function getProducts({
-  language = "en",
-  pageSize = 10,
-  currentPage = 1,
-} = {}) {
-  return await makeRequest<ProductItem[]>("v1/yatobuy-client/products", {
+export async function searchProducts(params: SearchProductsRequest) {
+  return await makeRequest<SearchProductsResponse>("v1/yatobuy-client/search-products", {
     requestOptions: {
       method: "POST",
-      body: JSON.stringify({ language, pageSize, currentPage }),
+      body: JSON.stringify(params),
       headers: {
         "Content-Type": "application/json",
       },
@@ -69,29 +74,53 @@ export async function getProducts({
 }
 
 /**
- * Fetches detailed information for a specific product
+ * Generate Excel file for searched products
  *
- * @param {string|number} productId - The ID of the product to fetch details for
- * @param {string} language - The language code (e.g., 'en', 'ru')
- * @returns {Promise<ProductDetails>} A promise resolving to the detailed product information
+ * @param {ExcelGenerationRequest} params - Excel generation parameters
+ * @returns {Promise<Blob>} A promise resolving to the Excel file blob
  */
-export async function getProductDetails(
-  productId: string | number,
-  language: string = "en"
-) {
-  return await makeRequest<ProductDetails>(
-    "v1/yatobuy-client/product-details",
-    {
-      requestOptions: {
-        method: "POST",
-        body: JSON.stringify({ productId, language }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-        next: {
-          tags: [`product-${productId}`],
-        },
-      },
-    }
-  );
+export async function generateProductsExcel(params: ExcelGenerationRequest) {
+  const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+  if (!backendUrl) {
+    throw new Error('NEXT_PUBLIC_BACKEND_URL is not configured');
+  }
+
+  // Special handling for file download
+  const response = await fetch(`${backendUrl}/v1/yatobuy-client/excel`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(params),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to generate Excel: ${response.status}`);
+  }
+
+  return await response.blob();
+}
+
+/**
+ * Download Excel file with proper filename
+ *
+ * @param {ExcelGenerationRequest} params - Excel generation parameters
+ * @param {string} filename - Optional filename for the download
+ */
+export async function downloadProductsExcel(params: ExcelGenerationRequest, filename?: string) {
+  const blob = await generateProductsExcel(params);
+  
+  // Create download link
+  const url = window.URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = filename || `products_${params.keyword}_page${params.currentPage}.xlsx`;
+  
+  // Trigger download
+  document.body.appendChild(link);
+  link.click();
+  
+  // Cleanup
+  document.body.removeChild(link);
+  window.URL.revokeObjectURL(url);
 }
