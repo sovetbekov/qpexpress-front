@@ -1,20 +1,20 @@
-'use server'
+"use server";
 
-import { makeRequest, makeRequestNoAuth } from '@/services/utils'
-import { ShipmentData } from '@/types/entities'
+import { makeRequest, makeRequestNoAuth } from "@/services/utils";
+import { ShipmentData } from "@/types/entities";
 
 /**
  * Fetch all shipments.
  * @returns {Promise<any[]>} A promise resolving to the list of shipments.
  */
 export async function getShipments() {
-  return await makeRequest<ShipmentData[]>('v1/shipments', {
+  return await makeRequest<ShipmentData[]>("v1/shipments", {
     requestOptions: {
       next: {
-        tags: ['shipments'],
+        tags: ["shipments"],
       },
     },
-  })
+  });
 }
 
 /**
@@ -26,10 +26,10 @@ export async function getShipmentById(id: string) {
   return await makeRequest<any>(`v1/shipments/${id}`, {
     requestOptions: {
       next: {
-        tags: ['shipments'],
+        tags: ["shipments"],
       },
     },
-  })
+  });
 }
 
 /**
@@ -41,13 +41,13 @@ export async function getShipmentById(id: string) {
 export async function changeShipmentStatus(id: string, status: string) {
   return await makeRequest<any>(`v1/shipments/${id}/status`, {
     requestOptions: {
-      method: 'PATCH',
+      method: "PATCH",
       body: JSON.stringify({ status }),
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
     },
-  })
+  });
 }
 
 /**
@@ -59,13 +59,13 @@ export async function changeShipmentStatus(id: string, status: string) {
 export async function updateShipment(id: string, data: any) {
   return await makeRequest<any>(`v1/shipments/${id}`, {
     requestOptions: {
-      method: 'PATCH',
+      method: "PATCH",
       body: JSON.stringify(data),
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
     },
-  })
+  });
 }
 
 /**
@@ -74,19 +74,43 @@ export async function updateShipment(id: string, data: any) {
  * @returns {Promise<any>} A promise resolving to the Spedx order creation response.
  */
 export async function createSpedxOrder(shipmentId: string) {
-  return await makeRequest<any>(`v1/spedx-service/create-order/${shipmentId}`, {
-    requestOptions: {
-      method: 'POST',
-    },
-  })
+  return await makeRequest<SpedxPickupResponse>(
+    `v1/spedx-service/create-order/${shipmentId}`,
+    {
+      requestOptions: {
+        method: "POST",
+      },
+    }
+  );
 }
 
-export async function createPickupRequest(shipmentId: string) {
-  return await makeRequest<any>(`v1/spedx-service/create-request/${shipmentId}`, {
-    requestOptions: {
-      method: 'POST',
-    },
-  })
+type SpedxPickupRequest = {
+  service: string;
+  pickupDate: string;
+};
+
+type SpedxPickupResponse = {
+  SpedxOrderNo: string;
+  Error: number;
+  ErrorMessage: string;
+  ErrorMessageRu: string;
+  SpedxOrderPrice: number;
+};
+
+export async function createPickupRequest(data: SpedxPickupRequest) {
+  console.log("API Request data:", data); // Debug log
+  return await makeRequest<SpedxPickupResponse>(
+    "v1/spedx-service/create-application",
+    {
+      requestOptions: {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      },
+    }
+  );
 }
 
 /**
@@ -94,13 +118,14 @@ export async function createPickupRequest(shipmentId: string) {
  * @param {string} shipmentId - The UUID of the shipment.
  * @returns {Promise<any>} A promise resolving to the full tracking response.
  */
-export async function getTrackingInfoByShipmentId(shipmentId: string): Promise<any> {
+export async function getTrackingInfoByShipmentId(
+  shipmentId: string
+): Promise<any> {
   return await makeRequest<any>(`v1/spedx-service/tracking/${shipmentId}`, {
     requestOptions: {
       next: {
-        tags: ['tracking'],
+        tags: ["tracking"],
       },
     },
-  })
+  });
 }
-
