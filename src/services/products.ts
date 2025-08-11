@@ -1,7 +1,3 @@
-"use server";
-
-import { makeRequest } from "@/services/utils";
-
 // Types for the search products API
 export interface SearchProductsRequest {
   pageSize: number;
@@ -55,72 +51,31 @@ export interface ExcelGenerationRequest {
 }
 
 /**
- * Search for products using keyword
+ * Search for products using keyword (client-side)
  *
  * @param {SearchProductsRequest} params - Search parameters
  * @returns {Promise<SearchProductsResponse>} A promise resolving to the search results
  */
-export async function searchProducts(params: SearchProductsRequest) {
-  return await makeRequest<SearchProductsResponse>("v1/yatobuy-client/search-products", {
-    requestOptions: {
-      method: "POST",
-      body: JSON.stringify(params),
-      headers: {
-        "Content-Type": "application/json",
-      },
-      cache: "no-store",
-    },
-  });
-}
-
-/**
- * Generate Excel file for searched products
- *
- * @param {ExcelGenerationRequest} params - Excel generation parameters
- * @returns {Promise<Blob>} A promise resolving to the Excel file blob
- */
-export async function generateProductsExcel(params: ExcelGenerationRequest) {
+export async function searchProducts(params: SearchProductsRequest): Promise<SearchProductsResponse> {
   const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
   if (!backendUrl) {
-    throw new Error('NEXT_PUBLIC_BACKEND_URL is not configured');
+    throw new Error("NEXT_PUBLIC_BACKEND_URL is not configured");
   }
 
-  // Special handling for file download
-  const response = await fetch(`${backendUrl}/v1/yatobuy-client/excel`, {
+  const response = await fetch(`${backendUrl}/v1/yatobuy-client/search-products`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(params),
+    cache: "no-store",
   });
 
   if (!response.ok) {
-    throw new Error(`Failed to generate Excel: ${response.status}`);
+    throw new Error(`Failed to search products: ${response.status}`);
   }
 
-  return await response.blob();
+  return await response.json();
 }
 
-/**
- * Download Excel file with proper filename
- *
- * @param {ExcelGenerationRequest} params - Excel generation parameters
- * @param {string} filename - Optional filename for the download
- */
-export async function downloadProductsExcel(params: ExcelGenerationRequest, filename?: string) {
-  const blob = await generateProductsExcel(params);
-  
-  // Create download link
-  const url = window.URL.createObjectURL(blob);
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = filename || `products_${params.keyword}_page${params.currentPage}.xlsx`;
-  
-  // Trigger download
-  document.body.appendChild(link);
-  link.click();
-  
-  // Cleanup
-  document.body.removeChild(link);
-  window.URL.revokeObjectURL(url);
-}
+

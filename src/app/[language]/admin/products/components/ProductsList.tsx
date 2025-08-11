@@ -4,11 +4,10 @@ import React, { useState, useCallback } from "react";
 import Image from "next/image";
 import {
   searchProducts,
-  downloadProductsExcel,
   ProductSearchResult,
   SearchProductsRequest,
+  ExcelGenerationRequest,
 } from "@/services/products";
-import { isError } from "@/app/lib/utils";
 
 interface ProductsListProps {
   language: string;
@@ -58,15 +57,15 @@ export default function ProductsList({ language }: ProductsListProps) {
 
         const response = await searchProducts(searchParams);
 
-        if (isError(response)) {
-          setError("Failed to search products");
-          setProducts([]);
-        } else {
-          const searchData = response.data.data[0]; // Get first (and likely only) data item
+        if (response.code === 200) {
+          const searchData = response.data[0]; // Get first (and likely only) data item
           setProducts(searchData?.records || []);
           setTotalPages(searchData?.totalPage || 0);
           setTotal(searchData?.totalRecords || 0);
           setCurrentPage(page);
+        } else {
+          setError(response.msg || "Failed to search products");
+          setProducts([]);
         }
       } catch (err) {
         setError("An error occurred while searching");
@@ -77,6 +76,47 @@ export default function ProductsList({ language }: ProductsListProps) {
       }
     },
     [pageSize]
+  );
+
+  // Generate and download Excel file (client-side)
+  const downloadProductsExcel = useCallback(
+    async (params: ExcelGenerationRequest, filename?: string) => {
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+      if (!backendUrl) {
+        throw new Error("NEXT_PUBLIC_BACKEND_URL is not configured");
+      }
+
+      const response = await fetch(`${backendUrl}/v1/yatobuy-client/excel`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(params),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to generate Excel: ${response.status}`);
+      }
+
+      const blob = await response.blob();
+      console.log("Response from yatobuy: ", { blob });
+      
+      // Create download link
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download =
+        filename || `products_${params.keyword}_page${params.currentPage}.xlsx`;
+
+      // Trigger download
+      document.body.appendChild(link);
+      link.click();
+
+      // Cleanup
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    },
+    []
   );
 
   // Handle Excel generation and download
@@ -95,15 +135,17 @@ export default function ProductsList({ language }: ProductsListProps) {
         currentPage,
         pageSize,
       };
+      console.log("Excel params", { params });
 
       await downloadProductsExcel(params);
+      console.log("Excel download completed");
     } catch (err) {
       setError("Failed to generate Excel file");
       console.error("Excel generation error:", err);
     } finally {
       setExcelLoading(false);
     }
-  }, [keyword, currentPage, pageSize]);
+  }, [keyword, currentPage, pageSize, downloadProductsExcel]);
 
   // Handle keyword change with debouncing
   const [debounceTimer, setDebounceTimer] = useState<NodeJS.Timeout | null>(
