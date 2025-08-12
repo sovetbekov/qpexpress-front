@@ -167,7 +167,7 @@ export default function Page() {
     const createOrderResponse = response.data;
 
     if ((createOrderResponse.ErrorMessage = "Success")) {
-      alert(`Заказ успешно создан! ${createOrderResponse.ErrorMessageRu}`);
+      alert(`${createOrderResponse.ErrorMessageRu}`);
     } else {
       alert(
         `Ошибка при создании заказа: ${createOrderResponse.ErrorMessageRu}`
